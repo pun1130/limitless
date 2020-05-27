@@ -1,0 +1,13 @@
+apply plugin: "maven"
+apply from: "project.gradle"
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+    mavenLocal()
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}

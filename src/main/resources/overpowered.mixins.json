@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "package": "transfarmer.overpowered.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "EnchantCommandMixin",
+        "EnchantedBookItemMixin",
+        "ItemStackMixin"
+    ],
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
