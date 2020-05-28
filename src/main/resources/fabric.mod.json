@@ -1,8 +1,8 @@
 {
     "schemaVersion": 1,
-    "id": "overpowered",
+    "id": "overpoweredenchantments",
     "version": "0.0.0",
-    "name": "overpowered",
+    "name": "overpowered enchantments",
     "description": "a mod that removes the hardcoded enchantment limit",
     "authors": [
         "user11681"
@@ -10,16 +10,16 @@
     "contact": {
         "sources": "https://github.com/user11681/overpowered"
     },
-    "license": "CC0-1.0",
+    "license": "GNU GPL v3.0",
     "icon": "assets/overpowered/icon.png",
     "environment": "*",
     "entrypoints": {
         "main": [
-            "user11681.overpowered.Main"
+            "user11681.overpoweredenchantments.Main"
         ]
     },
     "mixins": [
-        "overpowered.mixins.json"
+        "mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.8.4+build.198",

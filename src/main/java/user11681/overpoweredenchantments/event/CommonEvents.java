@@ -1,4 +1,4 @@
-package user11681.overpowered.event;
+package user11681.overpoweredenchantments.event;
 
 import user11681.anvil.event.Anvil;
 import user11681.anvil.event.Listener;

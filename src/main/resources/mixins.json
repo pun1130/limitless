@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "user11681.overpowered.mixin",
+    "package": "user11681.overpoweredenchantments.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
         "EnchantCommandMixin",
