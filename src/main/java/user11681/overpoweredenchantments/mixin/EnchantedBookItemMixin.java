@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(EnchantedBookItem.class)
-public class EnchantedBookItemMixin {
+public abstract class EnchantedBookItemMixin {
     @Redirect(method = "addEnchantment", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putShort(Ljava/lang/String;S)V"))
     private static void removeLimit(final CompoundTag compoundTag, final String key, final short value, final ItemStack itemStack, final InfoEnchantment info) {
         compoundTag.putInt("lvl", info.level);
