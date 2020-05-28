@@ -1,4 +1,4 @@
-package transfarmer.overpowered.mixin;
+package user11681.overpowered.mixin;
 
 import net.minecraft.enchantment.InfoEnchantment;
 import net.minecraft.item.EnchantedBookItem;

@@ -1,21 +1,21 @@
 {
     "schemaVersion": 1,
     "id": "overpowered",
-    "version": "${version}",
+    "version": "0.0.0",
     "name": "overpowered",
     "description": "a mod that removes the hardcoded enchantment limit",
     "authors": [
-        "transfarmer"
+        "user11681"
     ],
     "contact": {
-        "sources": "https://github.com/transfarmer/overpowered"
+        "sources": "https://github.com/user11681/overpowered"
     },
     "license": "CC0-1.0",
     "icon": "assets/overpowered/icon.png",
     "environment": "*",
     "entrypoints": {
         "main": [
-            "transfarmer.overpowered.Main"
+            "user11681.overpowered.Main"
         ]
     },
     "mixins": [
