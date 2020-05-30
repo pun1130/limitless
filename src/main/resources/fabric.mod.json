@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "limitless",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "name": "limitless",
     "description": "a mod that removes the hardcoded enchantment limit",
     "authors": [
