@@ -24,7 +24,7 @@ public class Main implements ListenerInitializer {
         final String key = event.getKey();
 
         if (key.matches("enchantment\\.level\\.\\d+")) {
-            event.setValue(RomanNumerals.fromDecimal(Integer.parseInt(key.replaceAll("\\D", ""))));;
+            event.setValue(RomanNumerals.fromDecimal(Integer.parseInt(key.replaceAll("\\D", ""))));
         }
     }
 }
