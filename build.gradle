@@ -18,7 +18,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.apiVersion}"
 
-    modImplementation "${project.anvil}"
+    compileOnly "${project.anvil}"
 
     modImplementation "${project.anvilevents}"
     include "${project.anvilevents}"

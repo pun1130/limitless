@@ -14,7 +14,7 @@
     "icon": "assets/limitless/icon.png",
     "environment": "*",
     "entrypoints": {
-        "anvilListeners": [
+        "anvilCommonListeners": [
             "user11681.limitless.Main"
         ]
     },
