@@ -1,4 +1,4 @@
-package user11681.overpoweredenchantments.mixin;
+package user11681.limitless.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;

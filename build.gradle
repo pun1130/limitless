@@ -23,8 +23,10 @@ dependencies {
     modImplementation "${project.anvilevents}"
     include "${project.anvilevents}"
 
-    modImplementation "${project.farmerlib}"
-    include "${project.farmerlib}"
+    modImplementation "${project.usersmanual}"
+    include "${project.usersmanual}"
+
+    modImplementation "${project.modmenu}"
 }
 
 processResources {
