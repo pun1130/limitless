@@ -12,7 +12,7 @@ import user11681.usersmanual.math.RomanNumerals;
 public class Main implements CommonListenerInitializer {
     public static final String MOD_ID = "limitless";
 
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);;
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     @Override
     public Collection<Class<?>> get() {
