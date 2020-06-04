@@ -1,1 +1,13 @@
 version = "0.1.0"
+
+dependencies {
+    modImplementation "${project.anvil}"
+
+    modImplementation "${project.anvilevents}"
+    include "${project.anvilevents}"
+
+    modImplementation "${project.usersmanual}"
+    include "${project.usersmanual}"
+
+    modImplementation "${project.modmenu}"
+}

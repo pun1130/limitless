@@ -14,11 +14,6 @@ public class Main implements CommonListenerInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    @Override
-    public Collection<Class<?>> get() {
-        return Collections.singleton(Main.class);
-    }
-
     @Listener
     public static void onTranslation(final TranslationEvent event) {
         final String key = event.getKey();
@@ -26,5 +21,10 @@ public class Main implements CommonListenerInitializer {
         if (key.matches("enchantment\\.level\\.\\d+")) {
             event.setValue(RomanNumerals.fromDecimal(Integer.parseInt(key.replaceAll("\\D", ""))));
         }
+    }
+
+    @Override
+    public Collection<Class<?>> get() {
+        return Collections.singleton(Main.class);
     }
 }
