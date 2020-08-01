@@ -32,10 +32,10 @@ public class Limitless {
 
         final StringBuilder roman = new StringBuilder();
         final int index = DECIMAL.size() - 1;
-        final int largest = DECIMAL.get(index);
+        final int largest = DECIMAL.getInt(index);
 
         while (decimal >= largest) {
-            roman.append(ROMAN.get(index));
+            roman.append(ROMAN.getChar(index));
             decimal -= largest;
         }
 
@@ -74,6 +74,6 @@ public class Limitless {
     }
 
     public static char toRoman(final int decimal) {
-        return ROMAN.get(DECIMAL.indexOf(decimal));
+        return ROMAN.getChar(DECIMAL.indexOf(decimal));
     }
 }
