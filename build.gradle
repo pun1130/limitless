@@ -1,6 +1,6 @@
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'
-    id 'maven-publish'
+    id "fabric-loom" version "0.5-SNAPSHOT"
+    id "maven-publish"
 }
 
 apply plugin: "maven"
@@ -17,17 +17,36 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+
+    maven {
+        url "https://maven.jamieswhiteshirt.com/libs-release"
+    }
+
+    maven {
+        name "Cotton"
+        url "https://server.bbkr.space/artifactory/libs-release"
+    }
+
+    maven {
+        url "https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master"
+    }
+
+    maven {
+        url "https://repository.ow2.org/nexus/content/repositories/snapshots"
+    }
 }
 
 dependencies {
-    minecraft "${project.minecraft}"
-    mappings "${project.yarn}"
+    minecraft "com.mojang:minecraft:${project.minecraftVersion}"
+    mappings "${"net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarn}:v2"}"
     modImplementation "${project.loader}"
 
-    modImplementation "${project.api}"
-
+    compileOnly "${project.jetbrainsAnnotations}"
     compileOnly "${project.jsr}"
+
+//    modImplementation "com.jamieswhiteshirt:developer-mode:1.0.15"
 }
+
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
@@ -82,6 +101,6 @@ publishing {
     // select the repositories you want to publish to
     repositories {
         // uncomment to publish to the local maven
-         mavenLocal()
+        mavenLocal()
     }
 }

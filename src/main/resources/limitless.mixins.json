@@ -4,7 +4,11 @@
     "compatibilityLevel": "JAVA_8",
     "mixins": [
         "EnchantCommandMixin",
-        "ItemStackMixin"
+        "ItemStackMixin",
+        "i18n.LanguageMixin"
+    ],
+    "client": [
+        "i18n.I18nMixin"
     ],
     "injectors": {
         "defaultRequire": 1
