@@ -3,7 +3,7 @@
     "id": "limitless",
     "version": "0.3.0",
     "name": "limitless",
-    "description": "a mod that removes the hardcoded enchantment limit",
+    "description": "a mod for exceeding Minecraft's limits",
     "authors": [
         "user11681"
     ],
@@ -19,8 +19,5 @@
     "entrypoints": {},
     "depends": {
         "fabricloader": "*"
-    },
-    "custom": {
-        "modmenu:api": true
     }
 }
