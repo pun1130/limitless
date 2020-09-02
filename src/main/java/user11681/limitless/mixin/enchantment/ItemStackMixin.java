@@ -1,4 +1,4 @@
-package user11681.limitless.mixin;
+package user11681.limitless.mixin.enchantment;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class ItemStackMixin {
     @Redirect(method = "addEnchantment", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putShort(Ljava/lang/String;S)V"))
     protected void removeLimit(final CompoundTag compoundTag, final String key, final short value, final Enchantment enchantment, final int level) {
-        compoundTag.putShort("lvl", (short) level);
+        compoundTag.putInt("lvl", level);
     }
 }

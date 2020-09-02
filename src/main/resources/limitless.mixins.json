@@ -3,8 +3,8 @@
     "package": "user11681.limitless.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
-        "EnchantCommandMixin",
-        "ItemStackMixin",
+        "enchantment.EnchantCommandMixin",
+        "enchantment.ItemStackMixin",
         "i18n.LanguageMixin"
     ],
     "client": [

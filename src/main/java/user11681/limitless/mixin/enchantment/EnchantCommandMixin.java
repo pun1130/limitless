@@ -1,4 +1,4 @@
-package user11681.limitless.mixin;
+package user11681.limitless.mixin.enchantment;
 
 import java.util.Collection;
 import net.minecraft.enchantment.Enchantment;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class EnchantCommandMixin {
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     private static int disableLimitCheck(final Enchantment enchantment) {
-        return Short.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z"))
