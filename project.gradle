@@ -1,5 +1,12 @@
-version = "0.3.0"
+version = "0.4.0"
 
 dependencies {
     modApi include("${project.commonFormatting}")
+    modApi include("${project.GFH}")
+    implementation include("${project.shortcode}") {
+        transitive false
+    }
+    modApi "${project.phormat}"
+    modApi "${project.fabricASM}"
+    modApi "${project.smartEntrypoints}"
 }

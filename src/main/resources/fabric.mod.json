@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "limitless",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "name": "limitless",
     "description": "a mod for exceeding Minecraft's limits",
     "authors": [
@@ -16,7 +16,11 @@
     "mixins": [
         "limitless.mixins.json"
     ],
-    "entrypoints": {},
+    "entrypoints": {
+        "gfh:prePrePreLaunch": [
+            "user11681.limitless.asm.LimitlessTransformer"
+        ]
+    },
     "depends": {
         "fabricloader": "*"
     }

@@ -1,10 +1,14 @@
 {
     "required": true,
-    "package": "user11681.limitless.mixin",
+    "package": "user11681.limitless.asm.mixin",
     "compatibilityLevel": "JAVA_8",
+    "plugin": "user11681.limitless.asm.LimitlessMixinConfigPlugin",
     "mixins": [
         "enchantment.EnchantCommandMixin",
-        "enchantment.ItemStackMixin",
+        "enchantment.EnchantedBookItemMixin",
+        "enchantment.dummy.AnvilScreenDummyMixin",
+        "enchantment.dummy.AnvilScreenHandlerDummyMixin",
+        "enchantment.dummy.EnchantmentHelperDummyMixin",
         "i18n.LanguageMixin"
     ],
     "client": [

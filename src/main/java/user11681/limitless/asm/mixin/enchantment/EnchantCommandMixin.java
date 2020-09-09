@@ -1,4 +1,4 @@
-package user11681.limitless.mixin.enchantment;
+package user11681.limitless.asm.mixin.enchantment;
 
 import java.util.Collection;
 import net.minecraft.enchantment.Enchantment;

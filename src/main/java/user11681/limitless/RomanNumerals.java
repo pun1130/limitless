@@ -7,10 +7,10 @@ import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import user11681.commonformatting.CommonFormatting;
 
-public class Limitless {
+public class RomanNumerals {
     private static final String[] BASE_NUMERALS = {"I", "V", "X", "L", "C", "D", "M"};
 
-    private static transient final Long2ReferenceOpenHashMap<String> CACHE = new Long2ReferenceOpenHashMap<>(new long[]{0}, new String[]{"nulla"});
+    private static final Long2ReferenceOpenHashMap<String> CACHE = new Long2ReferenceOpenHashMap<>(new long[]{0}, new String[]{"nulla"});
 
     protected static final ReferenceArrayList<String> ROMAN = new ReferenceArrayList<String>(BASE_NUMERALS, false) {{
         this.size = this.a.length;
