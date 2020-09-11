@@ -21,7 +21,5 @@
             "user11681.limitless.asm.LimitlessTransformer"
         ]
     },
-    "depends": {
-        "fabricloader": "*"
-    }
+    "depends": {}
 }
