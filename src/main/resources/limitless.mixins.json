@@ -6,13 +6,14 @@
     "mixins": [
         "enchantment.EnchantCommandMixin",
         "enchantment.EnchantedBookItemMixin",
-        "enchantment.dummy.AnvilScreenDummyMixin",
         "enchantment.dummy.AnvilScreenHandlerDummyMixin",
         "enchantment.dummy.EnchantmentHelperDummyMixin",
         "i18n.LanguageMixin"
     ],
     "client": [
-        "i18n.I18nMixin"
+        "enchantment.dummy.AnvilScreenDummyMixin",
+        "i18n.I18nMixin",
+        "i18n.TranslationStorageMixin"
     ],
     "injectors": {
         "defaultRequire": 1
