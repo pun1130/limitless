@@ -6,6 +6,8 @@
     "mixins": [
         "enchantment.EnchantCommandMixin",
         "enchantment.EnchantedBookItemMixin",
+        "enchantment.EnchantmentMixin",
+        "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.dummy.AnvilScreenHandlerDummyMixin",
         "enchantment.dummy.EnchantmentHelperDummyMixin",
         "i18n.LanguageMixin"
@@ -13,7 +15,8 @@
     "client": [
         "enchantment.dummy.AnvilScreenDummyMixin",
         "i18n.I18nMixin",
-        "i18n.TranslationStorageMixin"
+        "i18n.TranslationStorageMixin",
+        "rei.DefaultPluginMixin"
     ],
     "injectors": {
         "defaultRequire": 1

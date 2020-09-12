@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import user11681.shortcode.Shortcode;
+import user11681.shortcode.instruction.DelegatingInsnList;
 
 public class LimitlessTransformer {
     public static final MappingResolver MAPPING_RESOLVER = FabricLoader.getInstance().getMappingResolver();
@@ -35,34 +36,66 @@ public class LimitlessTransformer {
     }};
 
     private static void transform(final String name, final ClassNode klass) {
-        if (ENCHANTMENTS.contains(klass.superName) || REMAPPED_ENCHANTMENT_CLASS_NAME.equals(name)) {
+        final List<MethodNode> methods = klass.methods;
+        final int methodCount = methods.size();
+        AbstractInsnNode instruction;
+        MethodInsnNode methodInstruction;
+        MethodNode method;
+        int i;
 
+        if (ENCHANTMENTS.contains(klass.superName) || REMAPPED_ENCHANTMENT_CLASS_NAME.equals(name)) {
             if (!REMAPPED_ENCHANTMENT_CLASS_NAME.equals(name)) {
                 ENCHANTMENTS.add(klass.superName);
-            } else {
-                klass.interfaces.add("user11681/limitless/asm/access/EnchantmentAccess");
             }
 
-            final MethodNode[] methods = klass.methods.toArray(new MethodNode[0]);
-            final int methodCount = methods.length;
 
-            for (int i = 0; i < methodCount; i++) {
-                if (GET_MAX_LEVEL_METHOD_NAME.equals(methods[i].name)) {
+            for (i = 0; i != methodCount; i++) {
+                if (GET_MAX_LEVEL_METHOD_NAME.equals((method = methods.get(i)).name) && method.desc.equals("()I")) {
                     final MethodNode newGetMaxLevel = (MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, GET_MAX_LEVEL_METHOD_NAME, "()I", null, null);
-                    final MethodNode method = methods[i];
+
+                    newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_maxLevel", "I");
+                    newGetMaxLevel.visitInsn(Opcodes.IRETURN);
 
                     method.name = "limitless_getOriginalMaxLevel";
 
-                    Shortcode.findForward(method.instructions.iterator(),
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == Opcodes.ICONST_1 && instruction.getNext().getOpcode() == Opcodes.IRETURN,
-                        () -> method.accept(newGetMaxLevel),
-                        () -> {
-                            newGetMaxLevel.visitLdcInsn(Integer.MAX_VALUE);
-                            newGetMaxLevel.visitInsn(Opcodes.IRETURN);
+                    final DelegatingInsnList setField = new DelegatingInsnList();
+
+                    setField.addVarInsn(Opcodes.ALOAD, 0);
+
+                    instruction = method.instructions.getFirst();
+
+                    while (instruction != null) {
+                        if (instruction.getOpcode() == Opcodes.ICONST_1 && instruction.getNext().getOpcode() == Opcodes.IRETURN) {
+                            setField.addInsn(Opcodes.ICONST_1);
+
+                            break;
                         }
-                    );
-                } else if (GET_MAX_POWER_METHOD_NAME.equals(methods[i].name)) {
-                    methods[i].name = "limitless_getOriginalMaxPower";
+
+                        instruction = instruction.getNext();
+                    }
+
+                    if (instruction == null) {
+                        setField.addLdcInsn(Integer.MAX_VALUE);
+                    }
+
+                    setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, "limitless_maxLevel", "I");
+
+                    for (int j = 0; j != methodCount; j++) {
+                        if ("<init>".equals(methods.get(j).name)) {
+                            instruction = methods.get(j).instructions.getFirst();
+
+                            while (instruction != null) {
+                                if (instruction.getOpcode() == Opcodes.RETURN) {
+                                    methods.get(j).instructions.insertBefore(instruction, Shortcode.copyInstructions(setField));
+                                }
+
+                                instruction = instruction.getNext();
+                            }
+                        }
+                    }
+                } else if (GET_MAX_POWER_METHOD_NAME.equals(methods.get(i).name)) {
+                    methods.get(i).name = "limitless_getOriginalMaxPower";
 
                     final MethodNode newGetMaxPower = (MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, GET_MAX_POWER_METHOD_NAME, "(I)I", null, null);
 
@@ -72,11 +105,7 @@ public class LimitlessTransformer {
             }
         }
 
-        final List<MethodNode> methods = klass.methods;
-        AbstractInsnNode instruction;
-        MethodInsnNode methodInstruction;
-
-        for (int i = 0, size = methods.size(); i < size; i++) {
+        for (i = 0; i < methodCount; i++) {
             instruction = methods.get(i).instructions.getFirst();
 
             while (instruction != null) {
