@@ -15,6 +15,10 @@ public interface EnchantmentAccess {
      */
     int limitless_getOriginalMaxLevel();
 
+    void limitless_setUseGlobalMaxLevel(boolean useGlobalMaxLevel);
+
+    boolean limitless_useGlobalMaxLevel();
+
     /**
      * This method is the original {@link Enchantment#getMaxPower(int)} implementation with a different name.
      *

@@ -1,10 +1,10 @@
 package user11681.limitless;
 
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.LimitlessSerializer;
 import user11681.limitless.config.MapTypeProvider;
 
 public class Limitless implements ModInitializer {
@@ -12,8 +12,8 @@ public class Limitless implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AutoConfig.register(LimitlessConfiguration.Instance.class, LimitlessSerializer::new);
+        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, GsonConfigSerializer::new).getConfig();
 
-        AutoConfig.getGuiRegistry(LimitlessConfiguration.Instance.class).registerTypeProvider(new MapTypeProvider(), Object2IntOpenHashMap.class);
+        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerTypeProvider(new MapTypeProvider(), ReferenceArrayList.class);
     }
 }

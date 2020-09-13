@@ -7,18 +7,16 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import user11681.shortcode.Shortcode;
+import user11681.shortcode.instruction.DelegatingInsnList;
 
 public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
     @Override
@@ -110,17 +108,36 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                     final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
                     // replace the getMaxLevel invocation with a getMinLevel invocation
-                    // add a flag that determines whether to add an enchantment to the list or not and initialize it to false
+                    // add a variable containing the last suitable level
                     Shortcode.findForward(iterator,
                         (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(LimitlessTransformer.GET_MAX_LEVEL_METHOD_NAME),
                         (final AbstractInsnNode instruction) -> {
-                            ((MethodInsnNode) instruction).name = getMinLevel;
+//                            ((MethodInsnNode) instruction).name = getMinLevel;
+//
+//                            iterator.next();
+//                            iterator.add(new LdcInsnNode(Integer.MIN_VALUE));
+//                            iterator.add(new VarInsnNode(ISTORE, 9));
+                            Shortcode.removeBetweenInclusive(iterator, AbstractInsnNode.LINE, AbstractInsnNode.IINC_INSN);
 
                             iterator.next();
-                            iterator.add(new InsnNode(ICONST_0));
-                            iterator.add(new VarInsnNode(ISTORE, 9));
+                            iterator.remove();
+
+                            final DelegatingInsnList insertion = new DelegatingInsnList();
+                            insertion.addVarInsn(ILOAD, 0);
+                            insertion.addVarInsn(ALOAD, 7);
+                            insertion.addVarInsn(ALOAD, 3);
+                            insertion.addMethodInsn(
+                                INVOKESTATIC,
+                                targetClass.name,
+                                "limitless_getHighestSuitableLevel",
+                                "(IL" + LimitlessTransformer.REMAPPED_ENCHANTMENT_CLASS_NAME + ";Ljava/util/List;)V",
+                                false
+                            );
+
+                            instructions.insert(iterator.previous(), insertion);
                         }
                     );
+/*
 
                     // replace the getMinLevel invocation with a getMaxLevel invocation
                     Shortcode.findForward(iterator,
@@ -130,7 +147,7 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                         }
                     );
 
-                    // remove substraction of 1 from the getMaxValue call
+                    // remove substraction of 1 after the getMaxValue call
                     Shortcode.findForward(iterator,
                         (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_1,
                         () -> {
@@ -148,25 +165,22 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                     );
 
                     // invert if_icmpgt to if_icmple
-                    final JumpInsnNode icmple = Shortcode.findForward(iterator,
+                    Shortcode.findForward(iterator,
                         (final AbstractInsnNode instruction) -> instruction.getOpcode() == IF_ICMPGT,
                         (final AbstractInsnNode instruction) -> {
                             final JumpInsnNode jumpInstruction = (JumpInsnNode) instruction;
 
-                            jumpInstruction.setOpcode(Opcodes.IF_ICMPLE);
+                            jumpInstruction.setOpcode(IF_ICMPLE);
 
                             final LabelNode label = jumpInstruction.label;
 
                             instructions.insert(label, new VarInsnNode(ISTORE, 9));
                             instructions.insert(label, new InsnNode(ICONST_1));
-
-                            return jumpInstruction;
                         }
                     );
 
                     // go to L19
-                    // redirect if_icmpge to L19 (add to list) instead of L18 (next iteration)
-                    // redirect if_icmple to L19 (add to list) instead of L18 (next iteration)
+                    // redirect if_icmplt to L19 (add to list) instead of L18 (next iteration)
                     final LabelNode L19 = Shortcode.findForward(iterator,
                         LabelNode.class::isInstance,
                         (final AbstractInsnNode instruction) -> {
@@ -177,17 +191,15 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                     );
 
                     Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == Opcodes.ILOAD,
-                        () -> {
-                            iterator.add(new InsnNode(Opcodes.ICONST_1));
-                            iterator.add(new InsnNode(Opcodes.ISUB));
-                        }
+                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD,
+                        (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).var = 9
                     );
 
                     Shortcode.findForward(iterator,
                         JumpInsnNode.class::isInstance,
                         (final AbstractInsnNode instruction) -> {
-                            instructions.insert(L19, new JumpInsnNode(IFEQ, ((JumpInsnNode) instruction).label));
+                            instructions.insert(L19, new JumpInsnNode(IF_ICMPEQ, ((JumpInsnNode) instruction).label));
+                            instructions.insert(L19, new LdcInsnNode(Integer.MIN_VALUE));
                             instructions.insert(L19, new VarInsnNode(ILOAD, 9));
                         }
                     );
@@ -196,6 +208,7 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                         (final AbstractInsnNode instruction) -> instruction.getOpcode() == IINC,
                         (final AbstractInsnNode instruction) -> ((IincInsnNode) instruction).incr = 1
                     );
+*/
                 } else if (calculateRequiredExperienceLevel.equals(method.name)) {
                     final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 

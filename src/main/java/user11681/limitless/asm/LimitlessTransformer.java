@@ -5,6 +5,7 @@ import java.util.List;
 import net.devtech.grossfabrichacks.transformer.TransformerApi;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -48,11 +49,18 @@ public class LimitlessTransformer {
                 ENCHANTMENTS.add(klass.superName);
             }
 
-
             for (i = 0; i != methodCount; i++) {
                 if (GET_MAX_LEVEL_METHOD_NAME.equals((method = methods.get(i)).name) && method.desc.equals("()I")) {
                     final MethodNode newGetMaxLevel = (MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, GET_MAX_LEVEL_METHOD_NAME, "()I", null, null);
+                    final Label getCustom = new Label();
 
+                    newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_useGlobalMaxLevel", "Z");
+                    newGetMaxLevel.visitJumpInsn(Opcodes.IFEQ, getCustom);
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETSTATIC, "user11681/limitless/config/LimitlessConfiguration", "instance", "Luser11681/limitless/config/LimitlessConfiguration;");
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, "user11681/limitless/config/LimitlessConfiguration", "globalMaxLevel", "I");
+                    newGetMaxLevel.visitInsn(Opcodes.IRETURN);
+                    newGetMaxLevel.visitLabel(getCustom);
                     newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);
                     newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_maxLevel", "I");
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);

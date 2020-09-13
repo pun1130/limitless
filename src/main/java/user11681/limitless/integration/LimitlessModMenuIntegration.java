@@ -9,6 +9,6 @@ import user11681.limitless.config.LimitlessConfiguration;
 public class LimitlessModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return (final Screen parent) -> AutoConfig.getConfigScreen(LimitlessConfiguration.Instance.class, parent).get();
+        return (final Screen parent) -> AutoConfig.getConfigScreen(LimitlessConfiguration.class, parent).get();
     }
 }
