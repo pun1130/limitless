@@ -1,19 +1,26 @@
 package user11681.limitless;
 
-import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+import java.lang.reflect.Field;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.MapTypeProvider;
+import user11681.limitless.config.provider.EnchantmentListProvider;
 
-public class Limitless implements ModInitializer {
+public class Limitless implements ModInitializer, ClientModInitializer {
     public static final String ID = "limitless";
 
     @Override
     public void onInitialize() {
-        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, GsonConfigSerializer::new).getConfig();
+        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new).getConfig();
+    }
 
-        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerTypeProvider(new MapTypeProvider(), ReferenceArrayList.class);
+    @Override
+    public void onInitializeClient() {
+        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantmentListProvider(), (final Field field) -> field.getName().equals("maxLevels"));
+
+        // disabled until Cloth Config should update for more complex entries
+//        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantingBlockListProvider(), (final Field field) -> field.getName().equals("enchantingBlocks"));
     }
 }

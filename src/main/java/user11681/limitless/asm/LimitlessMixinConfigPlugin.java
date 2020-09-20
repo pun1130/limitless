@@ -3,6 +3,8 @@ package user11681.limitless.asm;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.MappingResolver;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -41,201 +43,183 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
     }
 
     @Override
-    public void preApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
-        final String creativeModeFieldName = LimitlessTransformer.MAPPING_RESOLVER.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z");
+    public void preApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {}
 
-        if (mixinClassName.endsWith("AnvilScreenHandlerDummyMixin")) {
-            final String getNextCost = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_1706", "method_20398", "(I)I");
-            final String updateResult = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_4861", "method_24928", "()V");
-            final List<MethodNode> methods = targetClass.methods;
-            final int methodCount = methods.size();
+    @Override
+    public void postApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
+        switch (mixinClassName) {
+            case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenDummyMixin":
+                transformAnvilScreen(targetClass, LimitlessTransformer.MAPPING_RESOLVER.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
+            case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenHandlerDummyMixin":
+                transformAnvilScreenHandler(targetClass, LimitlessTransformer.MAPPING_RESOLVER.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
+            case "user11681.limitless.asm.mixin.enchantment.EnchantmentHelperMixin":
+                transformEnchantmentHelper(targetClass); break;
+            case "user11681.limitless.asm.mixin.enchantment.EnchantmentScreenHandlerMixin":
+                transformEnchantmentScreenHandler(targetClass); break;
+        }
+    }
 
-            for (int i = methodCount - 1; i >= 0; i--) {
-                final MethodNode method = methods.get(i);
+    private static void transformAnvilScreen(final ClassNode targetClass, final String creativeModeFieldName) {
+        final String drawForeground = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_465", "method_2388", "(Lnet/minecraft/class_4587;II)V");
+        final List<MethodNode> methods = targetClass.methods;
+        final int methodCount = methods.size();
 
-                if (getNextCost.equals(method.name)) {
-                    method.instructions.clear();
-                    method.visitVarInsn(Opcodes.ILOAD, 0);
-                    method.visitInsn(Opcodes.IRETURN);
-                } else if (updateResult.equals(method.name)) {
-                    final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+        for (int i = methodCount - 1; i >= 0; --i) {
+            if (drawForeground.equals(methods.get(i).name)) {
+                final ListIterator<AbstractInsnNode> iterator = methods.get(i).instructions.iterator();
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
-                        () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.LINE)
-                    );
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
+                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
+                );
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
-                        () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-                    );
-                }
-            }
-        } else if (mixinClassName.endsWith("AnvilScreenDummyMixin")) {
-            final String drawForeground = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_465", "method_2388", "(Lnet/minecraft/class_4587;II)V");
-            final List<MethodNode> methods = targetClass.methods;
-            final int methodCount = methods.size();
-
-            for (int i = methodCount - 1; i >= 0; i--) {
-                if (drawForeground.equals(methods.get(i).name)) {
-                    final ListIterator<AbstractInsnNode> iterator = methods.get(i).instructions.iterator();
-
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
-                        () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-                    );
-                }
+                break;
             }
         }
     }
 
-    @Override
-    public void postApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
-        if (mixinClassName.endsWith("EnchantmentHelperDummyMixin")) {
-            final MethodNode[] methods = targetClass.methods.toArray(new MethodNode[0]);
-            final int methodCount = methods.length;
-            final String enchantmentHelper = "net.minecraft.class_1890";
-            final String calculateRequiredExperienceLevel = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
-            final String getPossibleEntries = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8229", "(ILnet/minecraft/class_1799;Z)Ljava/util/List;");
-            final String generateEnchantments = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8230", "(Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;");
-            final String getMinLevel = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", LimitlessTransformer.ENCHANTMENT_CLASS_NAME, "method_8187", "()I");
+    private static void transformAnvilScreenHandler(final ClassNode targetClass, final String creativeModeFieldName) {
+        final String getNextCost = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_1706", "method_20398", "(I)I");
+        final String updateResult = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_4861", "method_24928", "()V");
+        final List<MethodNode> methods = targetClass.methods;
+        final int methodCount = methods.size();
 
-            for (int i = methodCount - 1; i >= 0; i--) {
-                final MethodNode method = methods[i];
+        for (int i = methodCount - 1; i >= 0; i--) {
+            final MethodNode method = methods.get(i);
 
-                if (getPossibleEntries.equals(method.name)) {
-                    final InsnList instructions = method.instructions;
-                    final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
+            if (getNextCost.equals(method.name)) {
+                method.instructions.clear();
+                method.visitVarInsn(Opcodes.ILOAD, 0);
+                method.visitInsn(Opcodes.IRETURN);
+            } else if (updateResult.equals(method.name)) {
+                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
-                    // replace the getMaxLevel invocation with a getMinLevel invocation
-                    // add a variable containing the last suitable level
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(LimitlessTransformer.GET_MAX_LEVEL_METHOD_NAME),
-                        (final AbstractInsnNode instruction) -> {
-//                            ((MethodInsnNode) instruction).name = getMinLevel;
-//
-//                            iterator.next();
-//                            iterator.add(new LdcInsnNode(Integer.MIN_VALUE));
-//                            iterator.add(new VarInsnNode(ISTORE, 9));
-                            Shortcode.removeBetweenInclusive(iterator, AbstractInsnNode.LINE, AbstractInsnNode.IINC_INSN);
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
+                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.LINE)
+                );
 
-                            iterator.next();
-                            iterator.remove();
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeModeFieldName),
+                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
+                );
+            }
+        }
+    }
 
-                            final DelegatingInsnList insertion = new DelegatingInsnList();
-                            insertion.addVarInsn(ILOAD, 0);
-                            insertion.addVarInsn(ALOAD, 7);
-                            insertion.addVarInsn(ALOAD, 3);
-                            insertion.addMethodInsn(
-                                INVOKESTATIC,
-                                targetClass.name,
-                                "limitless_getHighestSuitableLevel",
-                                "(IL" + LimitlessTransformer.REMAPPED_ENCHANTMENT_CLASS_NAME + ";Ljava/util/List;)V",
-                                false
-                            );
+    private static void transformEnchantmentHelper(final ClassNode targetClass) {
+        final MethodNode[] methods = targetClass.methods.toArray(new MethodNode[0]);
+        final int methodCount = methods.length;
+        final String enchantmentHelper = "net.minecraft.class_1890";
+        final String calculateRequiredExperienceLevel = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
+        final String getPossibleEntries = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8229", "(ILnet/minecraft/class_1799;Z)Ljava/util/List;");
+        final String generateEnchantments = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8230", "(Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;");
 
-                            instructions.insert(iterator.previous(), insertion);
-                        }
-                    );
-/*
+        for (int i = methodCount - 1; i >= 0; i--) {
+            final MethodNode method = methods[i];
 
-                    // replace the getMinLevel invocation with a getMaxLevel invocation
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMinLevel),
-                        (final AbstractInsnNode instruction) -> {
-                            ((MethodInsnNode) instruction).name = LimitlessTransformer.GET_MAX_LEVEL_METHOD_NAME;
-                        }
-                    );
+            if (getPossibleEntries.equals(method.name)) {
+                final InsnList instructions = method.instructions;
+                final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
-                    // remove substraction of 1 after the getMaxValue call
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_1,
-                        () -> {
-                            iterator.remove();
-                            iterator.next();
-                            iterator.remove();
-                            ((JumpInsnNode) iterator.next()).setOpcode(IF_ICMPGT);
-                        }
-                    );
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(LimitlessTransformer.GET_MAX_LEVEL_METHOD_NAME),
+                    (final AbstractInsnNode instruction) -> {
+                        Shortcode.removeBetweenInclusive(iterator, AbstractInsnNode.LINE, AbstractInsnNode.IINC_INSN);
 
-                    // store icmplt for when L19 is encountered to replace the jump's label
-                    final JumpInsnNode icmplt = Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == IF_ICMPLT,
-                        JumpInsnNode.class::cast
-                    );
+                        iterator.next();
+                        iterator.remove();
 
-                    // invert if_icmpgt to if_icmple
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == IF_ICMPGT,
-                        (final AbstractInsnNode instruction) -> {
-                            final JumpInsnNode jumpInstruction = (JumpInsnNode) instruction;
+                        final DelegatingInsnList insertion = new DelegatingInsnList();
+                        insertion.addVarInsn(ILOAD, 0);
+                        insertion.addVarInsn(ALOAD, 7);
+                        insertion.addVarInsn(ALOAD, 3);
+                        insertion.addMethodInsn(
+                            INVOKESTATIC,
+                            targetClass.name,
+                            "limitless_getHighestSuitableLevel",
+                            "(IL" + LimitlessTransformer.REMAPPED_INTERNAL_ENCHANTMENT_CLASS_NAME + ";Ljava/util/List;)V",
+                            false
+                        );
 
-                            jumpInstruction.setOpcode(IF_ICMPLE);
+                        instructions.insert(iterator.previous(), insertion);
+                    }
+                );
+            } else if (generateEnchantments.equals(method.name)) {
+                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
-                            final LabelNode label = jumpInstruction.label;
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
+                    () -> {
+                        iterator.remove();
 
-                            instructions.insert(label, new VarInsnNode(ISTORE, 9));
-                            instructions.insert(label, new InsnNode(ICONST_1));
-                        }
-                    );
+                        iterator.add(new VarInsnNode(ILOAD, 2));
+                        iterator.add(new InsnNode(ICONST_2));
+                        iterator.add(new InsnNode(IDIV));
+                        iterator.add(new IntInsnNode(BIPUSH, 20));
+                        iterator.add(new InsnNode(IADD));
+                    }
+                );
+            }
+        }
+    }
 
-                    // go to L19
-                    // redirect if_icmplt to L19 (add to list) instead of L18 (next iteration)
-                    final LabelNode L19 = Shortcode.findForward(iterator,
-                        LabelNode.class::isInstance,
-                        (final AbstractInsnNode instruction) -> {
-                            icmplt.label = (LabelNode) instruction;
+    private static void transformEnchantmentScreenHandler(final ClassNode targetClass) {
+        final List<MethodNode> methods = targetClass.methods;
+        final int methodCount = methods.size();
 
-                            return (LabelNode) instruction;
-                        }
-                    );
+        for (int i = methodCount - 1; i >= 0; --i) {
+            if ("method_17411".equals(methods.get(i).name)) {
+                final MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+                final String mappedWorldDescriptor = Shortcode.toDescriptor(resolver.mapClassName("intermediary", "net.minecraft.class_1937"));
+                final String mappedBlockPosDescriptor = Shortcode.toDescriptor(resolver.mapClassName("intermediary", "net.minecraft.class_2338"));
+                final InsnList instructions = methods.get(i).instructions;
+                final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD,
-                        (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).var = 9
-                    );
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
+                    (final AbstractInsnNode instruction) -> {
+                        ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
+                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/tag/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", mappedWorldDescriptor, mappedBlockPosDescriptor), true));
+                        iterator.previous();
+                        iterator.add(new VarInsnNode(ALOAD, 2));
+                        iterator.add(new VarInsnNode(ALOAD, 3));
+                    }
+                );
 
-                    Shortcode.findForward(iterator,
-                        JumpInsnNode.class::isInstance,
-                        (final AbstractInsnNode instruction) -> {
-                            instructions.insert(L19, new JumpInsnNode(IF_ICMPEQ, ((JumpInsnNode) instruction).label));
-                            instructions.insert(L19, new LdcInsnNode(Integer.MIN_VALUE));
-                            instructions.insert(L19, new VarInsnNode(ILOAD, 9));
-                        }
-                    );
+                iterator.next();
+                iterator.next();
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getOpcode() == IINC,
-                        (final AbstractInsnNode instruction) -> ((IincInsnNode) instruction).incr = 1
-                    );
-*/
-                } else if (calculateRequiredExperienceLevel.equals(method.name)) {
-                    final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                int gotoCount = 0;
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FRAME,
-                        () -> {
-                            iterator.remove();
+                while (gotoCount != 3) {
+                    final AbstractInsnNode next = iterator.next();
 
-                            Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME);
-                        }
-                    );
-                } else if (generateEnchantments.equals(method.name)) {
-                    final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                    if (next.getOpcode() == GOTO) {
+                        ++gotoCount;
+                    }
 
-                    Shortcode.findForward(iterator,
-                        (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
-                        () -> {
-                            iterator.remove();
-
-                            iterator.add(new VarInsnNode(ILOAD, 2));
-                            iterator.add(new InsnNode(ICONST_2));
-                            iterator.add(new InsnNode(IDIV));
-                            iterator.add(new IntInsnNode(BIPUSH, 20));
-                            iterator.add(new InsnNode(IADD));
-                        }
-                    );
+                    iterator.remove();
                 }
+
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD && ((VarInsnNode) instruction).var == 4,
+                    (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).setOpcode(FLOAD)
+                );
+
+                Shortcode.findForward(iterator,
+                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
+                    (final AbstractInsnNode instruction) -> {
+                        final MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
+
+                        methodInstruction.owner = "user11681/limitless/tag/EnchantingBlocks";
+                        methodInstruction.name = "calculateRequiredExperienceLevel";
+                        methodInstruction.desc = methodInstruction.desc.replaceFirst("II", "IF");
+                        methodInstruction.itf = true;
+                    }
+                );
+
+                break;
             }
         }
     }

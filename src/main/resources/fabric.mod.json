@@ -20,6 +20,9 @@
         "main": [
             "user11681.limitless.Limitless"
         ],
+        "client": [
+            "user11681.limitless.Limitless"
+        ],
         "gfh:prePrePreLaunch": [
             "user11681.limitless.asm.LimitlessTransformer"
         ],

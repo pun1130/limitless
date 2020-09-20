@@ -8,12 +8,14 @@
         "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin",
         "enchantment.EnchantmentMixin",
+        "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.dummy.AnvilScreenHandlerDummyMixin",
         "i18n.LanguageMixin"
     ],
     "client": [
         "enchantment.dummy.AnvilScreenDummyMixin",
+        "enchantment.EnchantingTableBlockMixin",
         "i18n.I18nMixin",
         "i18n.TranslationStorageMixin",
         "rei.DefaultPluginMixin"

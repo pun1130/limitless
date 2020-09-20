@@ -1,4 +1,4 @@
-package user11681.limitless.config;
+package user11681.limitless.config.provider;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import java.lang.reflect.Field;
@@ -13,20 +13,22 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.asm.access.EnchantmentAccess;
+import user11681.limitless.config.EnchantmentConfiguration;
 
-public class MapTypeProvider implements GuiProvider {
+public class EnchantmentListProvider implements GuiProvider {
+    public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
+
     @Override
     public List<AbstractConfigListEntry> get(final String i13n, final Field field, final Object config, final Object defaults, final GuiRegistryAccess guiRegistry) {
         try {
-            final ReferenceArrayList<ConfigEnchantmentEntry> levels = (ReferenceArrayList<ConfigEnchantmentEntry>) field.get(config);
+            final ReferenceArrayList<EnchantmentConfiguration> levels = (ReferenceArrayList<EnchantmentConfiguration>) field.get(config);
             final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
-            final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
             final Registry<Enchantment> registry = Registry.ENCHANTMENT;
             int nextIndex;
 
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
-            for (final ConfigEnchantmentEntry entry : levels) {
+            for (final EnchantmentConfiguration entry : levels) {
                 final Enchantment enchantment = registry.get(entry.identifier);
 
                 if (enchantment != null) {
