@@ -1,5 +1,4 @@
 import org.gradle.kotlin.dsl.execution.ProgramText.Companion.from
-import java.util.*
 
 val minecraftVersion: String by project
 val yarn: String by project
@@ -9,9 +8,10 @@ val junit: String by project
 plugins {
     id("com.jfrog.bintray") version ("1.8.5")
     id("fabric-loom") version("0.5-SNAPSHOT")
-    id("java-library")
-    id("maven")
-    id("maven-publish")
+    `java-library`
+    java
+    maven
+    `maven-publish`
 }
 
 apply("project.gradle")
