@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.execution.ProgramText.Companion.from
+import java.util.*
 
 val minecraftVersion: String by project
 val yarn: String by project
@@ -15,8 +16,10 @@ plugins {
 
 apply("project.gradle")
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 group = "user11681"
 version = "0.5.0"
@@ -24,6 +27,7 @@ version = "0.5.0"
 repositories {
     mavenLocal()
 
+    maven("https://maven.fabricmc.net/")
     maven("https://jitpack.io")
     maven("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master")
     maven("https://dl.bintray.com/ladysnake/libs")
@@ -52,23 +56,14 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
 
-tasks.processResources {
+tasks.getByName<ProcessResources>("processResources") {
     inputs.property("version", version)
-
-    from(sourceSets.main.resources.srcDirs) {
-        include("fabric.mod.json")
-        expand("version": version)
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude("fabric.mod.json")
-    }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
@@ -76,20 +71,21 @@ tasks.withType(JavaCompile) {
 // if it is present.
 // If you remove this task, sources will not be generated.
 val sourcesJar by tasks.registering(Jar::class) {
-    classifier = "sources"
-    from(sourceSets.main.allSource)
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
 }
 
 task("jar") {
     from("LICENSE")
 }
 
-tasks.bintray {
+/*
+bintray {
     user = System.getenv("BINTRAY_USER")
     key = System.getenv("BINTRAY_API_KEY")
-    publications = ["bintray"]
+    setPublications("bintray")
 
-    pkg {
+    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
         repo = "maven"
         name = "limitless"
         licenses = ["LGPL-3.0"]
@@ -97,12 +93,12 @@ tasks.bintray {
 
         version {
             name = version
-            released = new Date()
+            released = Date()
         }
-    }
+    })
 }
 
-tasks.publishing {
+publishing {
     publications {
         bintray(MavenPublication) {
             groupId group
@@ -110,11 +106,11 @@ tasks.publishing {
             version(version)
 
             artifact(remapJar) {
-                builtBy remapJar
+                builtBy = remapJar
             }
 
             artifact(sourcesJar) {
-                builtBy remapSourcesJar
+                builtBy = remapSourcesJar
             }
         }
     }
@@ -123,3 +119,4 @@ tasks.publishing {
         mavenLocal()
     }
 }
+*/
