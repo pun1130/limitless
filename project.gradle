@@ -30,16 +30,16 @@ dependencies {
     implementation(include("${project.unsafe}"))
 }
 
-fun modInclude(dependency: String) {
+def modInclude(final String dependency) {
     dependencies {
         modApi(include(dependency))
     }
 }
 
-fun bloated(dependency: String) {
+def bloated(final String dependency) {
     dependencies {
-        modApi include(dependency) {
-            transitive false
+        modApi(include(dependency)) {
+            transitive(false)
         }
     }
 }

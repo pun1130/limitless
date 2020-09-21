@@ -10,7 +10,9 @@ public class EnchantingBlockEntry implements Comparable<EnchantingBlockEntry> {
     public float power;
 
     @SuppressWarnings({"unused", "RedundantSuppression"})
-    private EnchantingBlockEntry() {}
+    private EnchantingBlockEntry() {
+        this.power = 2;
+    }
 
     public EnchantingBlockEntry(final String identifier, final float power) {
         this.identifier = identifier;
