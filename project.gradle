@@ -1,33 +1,24 @@
 version = "0.5.0"
 
 dependencies {
-    modApi("${project.api}")
-
-    modApi(include("${project.autoConfig}"))
-
-    modApi(include("${project.clothConfig}"))
-
-    modApi(include("${project.commonFormatting}"))
+    bloated("${project.autoConfig}")
+    bloated("${project.clothConfig}")
+    modApi("${project.modMenu}") {
+        transitive(false)
+    }
 
     modApi("${project.fabricASM}")
 
-    modApi(include("${project.GFH}"))
+    modInclude("${project.apiBase}")
+    modInclude("${project.apiTagExtensions}")
+    modInclude("${project.apiResourceLoader}")
 
-    bloated("${project.modMenu}")
+    modInclude("${project.phormat}")
+    modInclude("${project.commonFormatting}")
+    modInclude("${project.GFH}")
 
-    modApi(include("${project.phormat}"))
-
-//    modApi "${project.REI}"
-
-//    implementation include("${project.shortcode}") {
-//        transitive false
-//    }
-
-    modApi("${project.smartEntrypoints}")
-
-    implementation("${project.toml4j}")
-
-    implementation(include("${project.unsafe}"))
+    api("${project.reflect}")
+    api("${project.unsafe}")
 }
 
 def modInclude(final String dependency) {
@@ -39,7 +30,7 @@ def modInclude(final String dependency) {
 def bloated(final String dependency) {
     dependencies {
         modApi(include(dependency)) {
-            transitive(false)
+            exclude(module: "fabric-api")
         }
     }
 }

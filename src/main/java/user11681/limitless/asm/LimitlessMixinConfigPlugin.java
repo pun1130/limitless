@@ -49,9 +49,9 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
     public void postApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
         switch (mixinClassName) {
             case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenDummyMixin":
-                transformAnvilScreen(targetClass, LimitlessTransformer.MAPPING_RESOLVER.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
+                transformAnvilScreen(targetClass, LimitlessTransformer.mappingResolver.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
             case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenHandlerDummyMixin":
-                transformAnvilScreenHandler(targetClass, LimitlessTransformer.MAPPING_RESOLVER.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
+                transformAnvilScreenHandler(targetClass, LimitlessTransformer.mappingResolver.mapFieldName("intermediary", "net.minecraft.class_1656", "field_7477", "Z")); break;
             case "user11681.limitless.asm.mixin.enchantment.EnchantmentHelperMixin":
                 transformEnchantmentHelper(targetClass); break;
             case "user11681.limitless.asm.mixin.enchantment.EnchantmentScreenHandlerMixin":
@@ -60,7 +60,7 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
     }
 
     private static void transformAnvilScreen(final ClassNode targetClass, final String creativeModeFieldName) {
-        final String drawForeground = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_465", "method_2388", "(Lnet/minecraft/class_4587;II)V");
+        final String drawForeground = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", "net.minecraft.class_465", "method_2388", "(Lnet/minecraft/class_4587;II)V");
         final List<MethodNode> methods = targetClass.methods;
         final int methodCount = methods.size();
 
@@ -79,8 +79,8 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
     }
 
     private static void transformAnvilScreenHandler(final ClassNode targetClass, final String creativeModeFieldName) {
-        final String getNextCost = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_1706", "method_20398", "(I)I");
-        final String updateResult = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", "net.minecraft.class_4861", "method_24928", "()V");
+        final String getNextCost = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", "net.minecraft.class_1706", "method_20398", "(I)I");
+        final String updateResult = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", "net.minecraft.class_4861", "method_24928", "()V");
         final List<MethodNode> methods = targetClass.methods;
         final int methodCount = methods.size();
 
@@ -111,9 +111,9 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
         final MethodNode[] methods = targetClass.methods.toArray(new MethodNode[0]);
         final int methodCount = methods.length;
         final String enchantmentHelper = "net.minecraft.class_1890";
-        final String calculateRequiredExperienceLevel = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
-        final String getPossibleEntries = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8229", "(ILnet/minecraft/class_1799;Z)Ljava/util/List;");
-        final String generateEnchantments = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", enchantmentHelper, "method_8230", "(Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;");
+        final String calculateRequiredExperienceLevel = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", enchantmentHelper, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
+        final String getPossibleEntries = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", enchantmentHelper, "method_8229", "(ILnet/minecraft/class_1799;Z)Ljava/util/List;");
+        final String generateEnchantments = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", enchantmentHelper, "method_8230", "(Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;");
 
         for (int i = methodCount - 1; i >= 0; i--) {
             final MethodNode method = methods[i];

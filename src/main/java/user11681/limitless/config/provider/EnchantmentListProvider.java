@@ -9,12 +9,14 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.registry.Registry;
 import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.EnchantmentConfiguration;
 
+@Environment(EnvType.CLIENT)
 public class EnchantmentListProvider implements GuiProvider {
     public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
 
@@ -23,13 +25,11 @@ public class EnchantmentListProvider implements GuiProvider {
         try {
             final ReferenceArrayList<EnchantmentConfiguration> levels = (ReferenceArrayList<EnchantmentConfiguration>) field.get(config);
             final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
-            final Registry<Enchantment> registry = Registry.ENCHANTMENT;
-            int nextIndex;
 
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
             for (final EnchantmentConfiguration entry : levels) {
-                final Enchantment enchantment = registry.get(entry.identifier);
+                final Enchantment enchantment = entry.getEnchantment();
 
                 if (enchantment != null) {
                     final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(enchantment.getTranslationKey()));

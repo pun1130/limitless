@@ -12,28 +12,29 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import user11681.limitless.config.LimitlessConfiguration;
 import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.DelegatingInsnList;
 
 public class LimitlessTransformer {
-    public static final MappingResolver MAPPING_RESOLVER = FabricLoader.getInstance().getMappingResolver();
+    public static final MappingResolver mappingResolver = FabricLoader.getInstance().getMappingResolver();
 
     public static final String ENCHANTMENT_CLASS_NAME = "net.minecraft.class_1887";
     public static final String COMPOUND_TAG_CLASS_NAME = "net.minecraft.class_2487";
-    public static final String REMAPPED_INTERNAL_ENCHANTMENT_CLASS_NAME = MAPPING_RESOLVER.mapClassName("intermediary", ENCHANTMENT_CLASS_NAME).replace('.', '/');
-    public static final String REMAPPED_INTERNAL_COMPOUND_TAG_CLASS_NAME = MAPPING_RESOLVER.mapClassName("intermediary", COMPOUND_TAG_CLASS_NAME).replace('.', '/');
-    public static final String REMAPPED_INTERNAL_ENCHANTMENT_HELPER_CLASS_NAME = MAPPING_RESOLVER.mapClassName("intermediary", "class_1890");
-    public static final String CALCULATE_REQUIRED_EXPERIENCE_LEVEL_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", REMAPPED_INTERNAL_ENCHANTMENT_HELPER_CLASS_NAME, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
-    public static final String GET_MAX_LEVEL_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", ENCHANTMENT_CLASS_NAME, "method_8183", "()I");
-    public static final String GET_MAX_POWER_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", ENCHANTMENT_CLASS_NAME, "method_20742", "(I)I");
-    public static final String GET_SHORT_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10568", "(Ljava/lang/String;)S");
+    public static final String REMAPPED_INTERNAL_ENCHANTMENT_CLASS_NAME = mappingResolver.mapClassName("intermediary", ENCHANTMENT_CLASS_NAME).replace('.', '/');
+    public static final String REMAPPED_INTERNAL_COMPOUND_TAG_CLASS_NAME = mappingResolver.mapClassName("intermediary", COMPOUND_TAG_CLASS_NAME).replace('.', '/');
+    public static final String REMAPPED_INTERNAL_ENCHANTMENT_HELPER_CLASS_NAME = mappingResolver.mapClassName("intermediary", "class_1890");
+    public static final String CALCULATE_REQUIRED_EXPERIENCE_LEVEL_METHOD_NAME = mappingResolver.mapMethodName("intermediary", REMAPPED_INTERNAL_ENCHANTMENT_HELPER_CLASS_NAME, "method_8227", "(Ljava/util/Random;IILnet/minecraft/class_1799;)I");
+    public static final String GET_MAX_LEVEL_METHOD_NAME = mappingResolver.mapMethodName("intermediary", ENCHANTMENT_CLASS_NAME, "method_8183", "()I");
+    public static final String GET_MAX_POWER_METHOD_NAME = mappingResolver.mapMethodName("intermediary", ENCHANTMENT_CLASS_NAME, "method_20742", "(I)I");
+    public static final String GET_SHORT_METHOD_NAME = mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10568", "(Ljava/lang/String;)S");
     public static final String GET_INT_METHOD_DESCRIPTOR = "(Ljava/lang/String;)I";
-    public static final String GET_INT_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10550", GET_INT_METHOD_DESCRIPTOR);
-    public static final String GET_BYTE_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10571", "(Ljava/lang/String;)B");
-    public static final String PUT_BYTE_METHOD_NAME = MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10567", "(Ljava/lang/String;B)V");
-    public static final String PUT_SHORT_METHOD_NAME = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10575", "(Ljava/lang/String;S)V");
+    public static final String GET_INT_METHOD_NAME = mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10550", GET_INT_METHOD_DESCRIPTOR);
+    public static final String GET_BYTE_METHOD_NAME = mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10571", "(Ljava/lang/String;)B");
+    public static final String PUT_BYTE_METHOD_NAME = mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10567", "(Ljava/lang/String;B)V");
+    public static final String PUT_SHORT_METHOD_NAME = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10575", "(Ljava/lang/String;S)V");
     public static final String PUT_INT_METHOD_DESCRIPTOR = "(Ljava/lang/String;I)V";
-    public static final String PUT_INT_METHOD_NAME = LimitlessTransformer.MAPPING_RESOLVER.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10569", PUT_INT_METHOD_DESCRIPTOR);
+    public static final String PUT_INT_METHOD_NAME = LimitlessTransformer.mappingResolver.mapMethodName("intermediary", COMPOUND_TAG_CLASS_NAME, "method_10569", PUT_INT_METHOD_DESCRIPTOR);
 
     public static final ObjectOpenHashSet<String> ENCHANTMENTS = new ObjectOpenHashSet<String>(32, 1) {{
         this.add(REMAPPED_INTERNAL_ENCHANTMENT_CLASS_NAME);
@@ -60,8 +61,8 @@ public class LimitlessTransformer {
                     newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);
                     newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_useGlobalMaxLevel", "Z");
                     newGetMaxLevel.visitJumpInsn(Opcodes.IFEQ, getCustom);
-                    newGetMaxLevel.visitFieldInsn(Opcodes.GETSTATIC, "user11681/limitless/config/LimitlessConfiguration", "instance", "Luser11681/limitless/config/LimitlessConfiguration;");
-                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, "user11681/limitless/config/LimitlessConfiguration", "globalMaxLevel", "I");
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETSTATIC, LimitlessConfiguration.INTERNAL_NAME, "instance", LimitlessConfiguration.DESCRIPTOR);
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, LimitlessConfiguration.INTERNAL_NAME, "globalMaxLevel", "I");
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);
                     newGetMaxLevel.visitLabel(getCustom);
                     newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);

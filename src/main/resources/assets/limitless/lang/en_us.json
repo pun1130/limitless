@@ -1,5 +1,5 @@
 {
-    "config.limitless.enchantments": "per-enchantmeent configuration",
+    "config.limitless.enchantments": "per-enchantment configuration",
     "config.limitless.maxLevel": "maximum level",
     "config.limitless.useGlobalMaxLevel": "use global maximum level",
     "text.autoconfig.limitless.title": "limitless",

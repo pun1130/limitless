@@ -1,87 +1,60 @@
 plugins {
-    id "fabric-loom" version "0.5-SNAPSHOT"
-    id "maven-publish"
-    id "maven"
+    id("java-library")
+    id("maven")
+    id("maven-publish")
+    id("fabric-loom") version("0.5-SNAPSHOT")
     id("com.jfrog.bintray") version("1.8.5")
 }
 
-apply from: "project.gradle"
+apply(from: "project.gradle")
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = "user11681"
+project.group = "user11681"
 
 repositories {
     mavenLocal()
 
-    maven {
-        url "https://jitpack.io"
-    }
-
-    maven {
-        url "https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master"
-    }
-
-    maven {
-        url "https://dl.bintray.com/ladysnake/libs"
-    }
-
-    maven {
-        url "https://maven.jamieswhiteshirt.com/libs-release"
-    }
-
-    maven {
-        url "https://maven.blamejared.com"
-    }
-
-    maven {
-        url "https://mod-buildcraft.com/maven"
-    }
-
-    maven {
-        url "https://dl.bintray.com/zundrel/wrenchable"
-    }
-
-    maven {
-        url "https://maven.dblsaiko.net/"
-    }
-
-    maven {
-        url "https://dl.bintray.com/earthcomputer/mods"
-    }
-
-    maven {
-        url "https://server.bbkr.space/artifactory/libs-release"
-    }
+    maven {url = "https://dl.bintray.com/user11681/maven"}
+    maven {url = "https://dl.bintray.com/ladysnake/libs"}
+    maven {url = "https://dl.bintray.com/zundrel/wrenchable"}
+    maven {url = "https://dl.bintray.com/earthcomputer/mods"}
+    maven {url = "https://maven.blamejared.com"}
+    maven {url = "https://maven.dblsaiko.net/"}
+    maven {url = "https://maven.jamieswhiteshirt.com/libs-release"}
+    maven {url = "https://mod-buildcraft.com/maven"}
+    maven {url = "https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master"}
+    maven {url = "https://server.bbkr.space/artifactory/libs-release"}
+    maven {url = "https://jitpack.io"}
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraftVersion}"
-    mappings "net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarn}:v2"
-    modImplementation "net.fabricmc:fabric-loader:+"
+    minecraft("com.mojang:minecraft:${project.minecraftVersion}")
+    mappings("net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarn}:v2")
+    modImplementation("net.fabricmc:fabric-loader:+")
 
-    compileOnly "${project.jsr}"
+    compileOnly("${project.jsr}")
 
-    testImplementation "${project.junit}"
+    testImplementation("${project.junit}")
 
 //    modImplementation "com.jamieswhiteshirt:developer-mode:1.0.15"
 }
 
 configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property("version", project.version)
 
     from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
+        include("fabric.mod.json")
+        expand("version": project.version)
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+        exclude("fabric.mod.json")
     }
 }
 
@@ -91,27 +64,31 @@ tasks.withType(JavaCompile) {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+
+    from(sourceSets.main.allSource)
 }
 
 jar {
-    from "LICENSE"
+    from("LICENSE")
 }
 
 bintray {
     user = System.getenv("BINTRAY_USER")
     key = System.getenv("BINTRAY_API_KEY")
     setPublications("bintray")
+    publish = true
 
     pkg {
         repo = "maven"
-        name = "limitless"
+        name = project.name
         licenses = ["LGPL-3.0"]
-        vcsUrl = "https://github.com/user11681/limitless.git"
+        vcsUrl = "https://github.com/user11681/" + project.name + ".git"
 
         version {
-            name = version
+            name = project.version
             released = new Date()
+            githubRepo = "user11681/" + project.name
+            issueTrackerUrl = "https://github.com/user11681/" + project.name + "/issues"
         }
     }
 }
@@ -119,9 +96,9 @@ bintray {
 publishing {
     publications {
         bintray(MavenPublication) {
-            groupId(group)
-            artifactId(name)
-            version(version)
+            groupId(project.group)
+            artifactId(project.name)
+            version(project.version)
 
             artifact(remapJar) {
                 builtBy remapJar

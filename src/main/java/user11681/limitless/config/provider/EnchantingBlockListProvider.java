@@ -1,4 +1,4 @@
-package user11681.limitless.config;
+package user11681.limitless.config.provider;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
@@ -8,10 +8,15 @@ import java.util.Optional;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiProvider;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.TranslatableText;
+import user11681.limitless.config.EnchantingBlockListListEntry;
+import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.provider.EnchantmentListProvider;
 import user11681.limitless.tag.EnchantingBlockEntry;
 
+@Environment(EnvType.CLIENT)
 public class EnchantingBlockListProvider implements GuiProvider {
     @Override
     public List<AbstractConfigListEntry> get(final String i13n, final Field field, final Object config, final Object defaults, final GuiRegistryAccess registry) {

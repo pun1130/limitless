@@ -28,11 +28,11 @@ public interface EnchantingBlocks {
 
         float level = random.nextInt(8) + 1 + enchantingPower / 4 + random.nextInt((int) enchantingPower / 2 + 1);
 
-        if (slotIndex == 0) {
-            return (int) Math.max(level / 3, 1);
-        } else {
-            return (int) (slotIndex == 1 ? level * 2 / 3 + 1 : Math.max(level, enchantingPower));
-        }
+        return slotIndex == 0
+            ? (int) Math.max(level / 3, 1)
+            : (int) (slotIndex == 1
+                ? level * 2 / 3 + 1
+                : Math.max(level, enchantingPower));
     }
 
     static float countEnchantingPower(final EnchantingBlockEntry... enchantingBlocks) {

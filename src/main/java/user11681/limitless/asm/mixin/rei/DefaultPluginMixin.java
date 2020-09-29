@@ -12,8 +12,7 @@ import user11681.limitless.asm.access.EnchantmentAccess;
 abstract class DefaultPluginMixin {
     @Redirect(method = "registerEntries",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"),
-              remap = false)
+                       target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     public int fixEnchantmentEntries(final Enchantment enchantment) {
         return ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel();
     }

@@ -21,22 +21,22 @@ import user11681.limitless.tag.EnchantingBlockEntry;
 @Background("textures/block/andesite.png")
 public class LimitlessConfiguration implements ConfigData {
     @Excluded
-    public static final String INTERNAL_NAME = "user11681/limitless/config/LimitlessConfiguration";
+    public transient static final String INTERNAL_NAME = "user11681/limitless/config/LimitlessConfiguration";
 
     @Excluded
-    public static final String DESCRIPTOR = "Luser11681/limitless/config/LimitlessConfiguration;";
+    public transient static final String DESCRIPTOR = "Luser11681/limitless/config/LimitlessConfiguration;";
 
     @Excluded
-    public static LimitlessConfiguration instance;
+    public transient static LimitlessConfiguration instance;
 
     @Excluded
-    public final Reference2ReferenceOpenHashMap<Block, EnchantingBlockEntry> enchantingBlockToEntry;
+    public transient final Reference2ReferenceOpenHashMap<Block, EnchantingBlockEntry> enchantingBlockToEntry;
 
     public int globalMaxLevel = Integer.MAX_VALUE;
 
-    public int maxEnchantingBlocks = 40;
+    public int maxEnchantingBlocks = 48;
 
-    public int maxEnchantingPower = 80;
+    public int maxEnchantingPower = 96;
 
     @CollapsibleObject
     public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 3);
@@ -61,7 +61,7 @@ public class LimitlessConfiguration implements ConfigData {
             .getIds()
             .stream()
             .sorted()
-            .map((final Identifier identifier) -> new EnchantmentConfiguration(identifier, false))
+            .map((final Identifier identifier) -> new EnchantmentConfiguration(identifier.toString(), false))
             .collect(Collectors.toCollection(ReferenceArrayList::new));
 
         enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();

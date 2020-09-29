@@ -15,6 +15,9 @@ public interface EnchantmentAccess {
      */
     int limitless_getOriginalMaxLevel();
 
+    /**
+     * @param useGlobalMaxLevel whether this enchantment's maximum level should be the configured global maximum level or not.
+     */
     void limitless_setUseGlobalMaxLevel(boolean useGlobalMaxLevel);
 
     boolean limitless_useGlobalMaxLevel();
