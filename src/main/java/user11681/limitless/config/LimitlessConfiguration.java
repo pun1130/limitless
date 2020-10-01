@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.Limitless;
+import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.annotation.EnchantmentList;
 import user11681.limitless.enchantment.EnchantingBlockEntry;
 
@@ -68,17 +69,23 @@ public class LimitlessConfiguration implements ConfigData {
             .collect(Collectors.toCollection(ObjectLinkedOpenHashSet::new));
 
         if (oldMaxLevels != null) {
+            EnchantmentAccess enchantment;
+
             for (final EnchantmentConfiguration configuration : oldMaxLevels) {
                 if (this.maxLevels.contains(configuration)) {
                     this.maxLevels.remove(configuration);
                     this.maxLevels.add(configuration);
+
+                    enchantment = (EnchantmentAccess) configuration.getEnchantment();
+                    enchantment.limitless_setMaxLevel(configuration.maxLevel);
+                    enchantment.limitless_setUseGlobalMaxLevel(configuration.useGlobalMaxLevel);
                 }
             }
         }
     }
 
     {
-        this.enchantingBlocks = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 1);
+        this.enchantingBlocks = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 0, 1, 1);
         this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
 
         for (final EnchantingBlockEntry entry : enchantingBlocks) {
