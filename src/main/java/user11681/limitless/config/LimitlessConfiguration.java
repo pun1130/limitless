@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.Limitless;
 import user11681.limitless.config.annotation.EnchantmentList;
-import user11681.limitless.tag.EnchantingBlockEntry;
+import user11681.limitless.enchantment.EnchantingBlockEntry;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Config(name = Limitless.ID)
@@ -34,12 +34,14 @@ public class LimitlessConfiguration implements ConfigData {
 
     public int globalMaxLevel = Integer.MAX_VALUE;
 
-    public int maxEnchantingBlocks = 48;
+    public int maxEnchantingBlocks = 80;
 
-    public int maxEnchantingPower = 96;
+    public int maxEnchantingPower = 160;
+
+    public boolean allowTreasure = true;
 
     @CollapsibleObject
-    public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 3);
+    public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 5);
 
     @CollapsibleObject
     public RadiusConfiguration enchantingBlockRadiusY = new RadiusConfiguration(0, 1);

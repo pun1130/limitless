@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "limitless",
-    "version": "0.4.4",
+    "version": "${version}",
     "name": "limitless",
     "description": "a mod for exceeding Minecraft's limits",
     "authors": [

@@ -13,8 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.TranslatableText;
 import user11681.limitless.config.EnchantingBlockListListEntry;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.provider.EnchantmentListProvider;
-import user11681.limitless.tag.EnchantingBlockEntry;
+import user11681.limitless.enchantment.EnchantingBlockEntry;
 
 @Environment(EnvType.CLIENT)
 public class EnchantingBlockListProvider implements GuiProvider {

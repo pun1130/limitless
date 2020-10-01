@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import user11681.limitless.config.EnchantmentParticleConfiguration;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.RadiusConfiguration;
-import user11681.limitless.tag.EnchantingBlocks;
+import user11681.limitless.enchantment.EnchantingBlocks;
 
 @Mixin(value = EnchantingTableBlock.class,
        priority = 100)
@@ -29,8 +29,8 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
      */
     @Overwrite
     @Environment(EnvType.CLIENT)
-    public void randomDisplayTick(BlockState state, World world, BlockPos blockPos, Random random) {
-        super.randomDisplayTick(state, world, blockPos, random);
+    public void randomDisplayTick(BlockState enchantingTableState, World world, BlockPos enchantingTablePos, Random random) {
+        super.randomDisplayTick(enchantingTableState, world, enchantingTablePos, random);
 
         final LimitlessConfiguration configuration = LimitlessConfiguration.instance;
         final EnchantmentParticleConfiguration particleConfiguration = configuration.enchantmentParticles;
@@ -48,28 +48,47 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
             }
 
             final int maxVerticalRadius = verticalRadiusRange.max;
-            int maxHorizontalRadius = horizontalRadiusRange.max;
+            final int maxHorizontalRadius = horizontalRadiusRange.max;
             int verticalRadius;
             int horizontalRadius;
             int end;
             int displacement;
-            int j;
+            BlockState blockState;
 
-            for (int k = -1; k <= 1; k += 2) {
+            for (int direction = -1; direction <= 1; direction += 2) {
                 for (verticalRadius = verticalRadiusRange.min; verticalRadius <= maxVerticalRadius; verticalRadius++) {
                     for (horizontalRadius = horizontalRadiusRange.min; horizontalRadius <= maxHorizontalRadius; horizontalRadius++) {
-                        end = k * horizontalRadius;
+                        end = direction * horizontalRadius;
 
-                        for (j = -horizontalRadius; j <= horizontalRadius; j++) {
-                            displacement = k * j;
+                        if (random.nextInt(16) == 0) {
+                            for (int distance = -horizontalRadius; distance <= horizontalRadius; distance++) {
+                                displacement = direction * distance;
+                                blockState = world.getBlockState(enchantingTablePos.add(displacement, verticalRadius, end));
 
-                            if (world.getBlockState(blockPos.add(displacement, verticalRadius, end)).isIn(EnchantingBlocks.tag)) {
-                                world.addParticle(ParticleTypes.ENCHANT, blockPos.getX() + 0.5, blockPos.getY() + 2, blockPos.getZ() + 0.5, j + random.nextFloat() - 0.5, verticalRadius - random.nextFloat() - 1.0F, end + random.nextFloat() - 0.5D);
-                            }
+                                if (blockState.isIn(EnchantingBlocks.tag)) {
+                                    world.addParticle(ParticleTypes.ENCHANT,
+                                        enchantingTablePos.getX() + 0.5,
+                                        enchantingTablePos.getY() + 2,
+                                        enchantingTablePos.getZ() + 0.5,
+                                        displacement + random.nextFloat() - 0.5,
+                                        verticalRadius - random.nextFloat() - 1,
+                                        end + random.nextFloat() - 0.5
+                                    );
+                                }
 
-                            if (j != -horizontalRadius && j != horizontalRadius) {
-                                if (world.getBlockState(blockPos.add(end, verticalRadius, displacement)).isIn(EnchantingBlocks.tag)) {
-                                    world.addParticle(ParticleTypes.ENCHANT, blockPos.getX() + 0.5, blockPos.getY() + 2, blockPos.getZ() + 0.5, end + random.nextFloat() - 0.5, verticalRadius - random.nextFloat() - 1, j + random.nextFloat() - 0.5);
+                                if (distance != -horizontalRadius && distance != horizontalRadius) {
+                                    blockState = world.getBlockState(enchantingTablePos.add(end, verticalRadius, displacement));
+
+                                    if (blockState.isIn(EnchantingBlocks.tag)) {
+                                        world.addParticle(ParticleTypes.ENCHANT,
+                                            enchantingTablePos.getX() + 0.5,
+                                            enchantingTablePos.getY() + 2,
+                                            enchantingTablePos.getZ() + 0.5,
+                                            end + random.nextFloat() - 0.5,
+                                            verticalRadius - random.nextFloat() - 1,
+                                            displacement + random.nextFloat() - 0.5
+                                        );
+                                    }
                                 }
                             }
                         }

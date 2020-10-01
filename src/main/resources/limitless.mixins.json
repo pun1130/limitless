@@ -10,12 +10,13 @@
         "enchantment.EnchantmentMixin",
         "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin",
+        "enchantment.TradeOffersMixin",
         "enchantment.dummy.AnvilScreenHandlerDummyMixin",
         "i18n.LanguageMixin"
     ],
     "client": [
-        "enchantment.dummy.AnvilScreenDummyMixin",
         "enchantment.EnchantingTableBlockMixin",
+        "enchantment.dummy.AnvilScreenDummyMixin",
         "i18n.I18nMixin",
         "i18n.TranslationStorageMixin",
         "rei.DefaultPluginMixin"

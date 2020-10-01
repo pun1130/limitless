@@ -180,7 +180,7 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                     (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
                     (final AbstractInsnNode instruction) -> {
                         ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
-                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/tag/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", mappedWorldDescriptor, mappedBlockPosDescriptor), true));
+                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", mappedWorldDescriptor, mappedBlockPosDescriptor), true));
                         iterator.previous();
                         iterator.add(new VarInsnNode(ALOAD, 2));
                         iterator.add(new VarInsnNode(ALOAD, 3));
@@ -212,7 +212,7 @@ public class LimitlessMixinConfigPlugin implements IMixinConfigPlugin, Opcodes {
                     (final AbstractInsnNode instruction) -> {
                         final MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
 
-                        methodInstruction.owner = "user11681/limitless/tag/EnchantingBlocks";
+                        methodInstruction.owner = "user11681/limitless/enchantment/EnchantingBlocks";
                         methodInstruction.name = "calculateRequiredExperienceLevel";
                         methodInstruction.desc = methodInstruction.desc.replaceFirst("II", "IF");
                         methodInstruction.itf = true;

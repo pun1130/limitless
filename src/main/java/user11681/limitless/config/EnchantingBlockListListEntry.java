@@ -18,7 +18,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import user11681.limitless.config.EnchantingBlockListListEntry.EnchantingBlockListCell;
-import user11681.limitless.tag.EnchantingBlockEntry;
+import user11681.limitless.enchantment.EnchantingBlockEntry;
 
 @SuppressWarnings("UnstableApiUsage")
 public class EnchantingBlockListListEntry extends AbstractListListEntry<EnchantingBlockEntry, EnchantingBlockListCell, EnchantingBlockListListEntry> {

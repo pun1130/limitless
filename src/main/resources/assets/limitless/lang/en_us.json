@@ -3,6 +3,7 @@
     "config.limitless.maxLevel": "maximum level",
     "config.limitless.useGlobalMaxLevel": "use global maximum level",
     "text.autoconfig.limitless.title": "limitless",
+    "text.autoconfig.limitless.option.allowTreasure": "allow treasure",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ": "horizontal enchanting block radius",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.min": "minimum",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.max": "maximum",

@@ -1,4 +1,4 @@
-package user11681.limitless.tag;
+package user11681.limitless.enchantment;
 
 import java.util.Objects;
 import net.minecraft.block.Block;

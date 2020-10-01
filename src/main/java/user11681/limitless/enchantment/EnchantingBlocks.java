@@ -1,4 +1,4 @@
-package user11681.limitless.tag;
+package user11681.limitless.enchantment;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import java.util.Collection;
@@ -67,41 +67,52 @@ public interface EnchantingBlocks {
 
     static ReferenceArrayList<EnchantingBlockEntry> searchEnchantingBlocks(final World world, final BlockPos enchantingTablePos) {
         final ReferenceArrayList<EnchantingBlockEntry> enchantingBlocks = ReferenceArrayList.wrap(new EnchantingBlockEntry[20], 0);
+
+        forEnchantingBlockInRange(world, enchantingTablePos, (final BlockState enchantingBlockState, final BlockPos pos, final int dX, final int dY, final int dZ) ->
+            enchantingBlocks.add(LimitlessConfiguration.instance.enchantingBlockToEntry.get(enchantingBlockState.getBlock()))
+        );
+
+        return enchantingBlocks;
+    }
+
+    static void forEnchantingBlockInRange(final World world, final BlockPos center, final EnchantingBlockConsumer action) {
         final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
         final RadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
-        final int maxVerticalRadius = verticalRadiusRange.max;
-        int maxHorizontalRadius = horizontalRadiusRange.max;
+
+        forEnchantingBlockInRange(world, center, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max, action);
+    }
+
+    static void forEnchantingBlockInRange(final World world, final BlockPos center, final int minHorizontalRadius, final int maxHorizontalRadius, final int minVerticalRadius, final int maxVerticalRadius, final EnchantingBlockConsumer action) {
         int verticalRadius;
         int horizontalRadius;
         int end;
         int displacement;
+        BlockPos blockPos;
         BlockState blockState;
 
         for (int k = -1; k <= 1; k += 2) {
-            for (verticalRadius = verticalRadiusRange.min; verticalRadius <= maxVerticalRadius; verticalRadius++) {
-                for (horizontalRadius = horizontalRadiusRange.min; horizontalRadius <= maxHorizontalRadius; horizontalRadius++) {
+            for (verticalRadius = minVerticalRadius; verticalRadius <= maxVerticalRadius; verticalRadius++) {
+                for (horizontalRadius = minHorizontalRadius; horizontalRadius <= maxHorizontalRadius; horizontalRadius++) {
                     end = k * horizontalRadius;
 
                     for (int distance = -horizontalRadius; distance <= horizontalRadius; distance++) {
                         displacement = k * distance;
-                        blockState = world.getBlockState(enchantingTablePos.add(displacement, verticalRadius, end));
+                        blockState = world.getBlockState(blockPos = center.add(displacement, verticalRadius, end));
 
                         if (blockState.isIn(tag)) {
-                            enchantingBlocks.add(LimitlessConfiguration.instance.enchantingBlockToEntry.get(blockState.getBlock()));
+                            action.accept(blockState, blockPos, displacement, verticalRadius, end);
                         }
 
                         if (distance != -horizontalRadius && distance != horizontalRadius) {
-                            blockState = world.getBlockState(enchantingTablePos.add(end, verticalRadius, displacement));
+                            blockState = world.getBlockState(blockPos = center.add(end, verticalRadius, displacement));
 
                             if (blockState.isIn(tag)) {
-                                enchantingBlocks.add(LimitlessConfiguration.instance.enchantingBlockToEntry.get(blockState.getBlock()));
+                                action.accept(blockState, blockPos, end, verticalRadius, displacement);
                             }
                         }
                     }
                 }
             }
         }
-
-        return enchantingBlocks;
     }
 }
