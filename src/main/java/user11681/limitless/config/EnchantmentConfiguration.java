@@ -29,4 +29,14 @@ public class EnchantmentConfiguration {
     public Enchantment getEnchantment() {
         return this.enchantment == null ? this.enchantment = Registry.ENCHANTMENT.get(new Identifier(this.identifier)) : this.enchantment;
     }
+
+    @Override
+    public int hashCode() {
+        return this.identifier.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object that) {
+        return that instanceof EnchantmentConfiguration && that.hashCode() == this.hashCode();
+    }
 }

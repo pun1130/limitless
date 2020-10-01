@@ -1,5 +1,6 @@
 package user11681.limitless.config.provider;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -23,7 +24,7 @@ public class EnchantmentListProvider implements GuiProvider {
     @Override
     public List<AbstractConfigListEntry> get(final String i13n, final Field field, final Object config, final Object defaults, final GuiRegistryAccess guiRegistry) {
         try {
-            final ReferenceArrayList<EnchantmentConfiguration> levels = (ReferenceArrayList<EnchantmentConfiguration>) field.get(config);
+            final ObjectLinkedOpenHashSet<EnchantmentConfiguration> levels = (ObjectLinkedOpenHashSet<EnchantmentConfiguration>) field.get(config);
             final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
 
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));

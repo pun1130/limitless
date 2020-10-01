@@ -1,8 +1,8 @@
 package user11681.limitless.config;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import java.util.stream.Collectors;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
@@ -54,22 +54,35 @@ public class LimitlessConfiguration implements ConfigData {
     public ObjectOpenHashSet<EnchantingBlockEntry> enchantingBlocks;
 
     @EnchantmentList
-    public ReferenceArrayList<EnchantmentConfiguration> maxLevels;
+    public ObjectLinkedOpenHashSet<EnchantmentConfiguration> maxLevels;
 
-    {
-        enchantingBlocks = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 1);
+    @Override
+    public void validatePostLoad() {
+        final ObjectLinkedOpenHashSet<EnchantmentConfiguration> oldMaxLevels = this.maxLevels;
 
-        maxLevels = Registry.ENCHANTMENT
+        this.maxLevels = Registry.ENCHANTMENT
             .getIds()
             .stream()
             .sorted()
             .map((final Identifier identifier) -> new EnchantmentConfiguration(identifier.toString(), false))
-            .collect(Collectors.toCollection(ReferenceArrayList::new));
+            .collect(Collectors.toCollection(ObjectLinkedOpenHashSet::new));
 
-        enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
+        if (oldMaxLevels != null) {
+            for (final EnchantmentConfiguration configuration : oldMaxLevels) {
+                if (this.maxLevels.contains(configuration)) {
+                    this.maxLevels.remove(configuration);
+                    this.maxLevels.add(configuration);
+                }
+            }
+        }
+    }
+
+    {
+        this.enchantingBlocks = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 1);
+        this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
 
         for (final EnchantingBlockEntry entry : enchantingBlocks) {
-            enchantingBlockToEntry.put(entry.getBlock(), entry);
+            this.enchantingBlockToEntry.put(entry.getBlock(), entry);
         }
     }
 }
