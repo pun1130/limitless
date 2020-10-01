@@ -10,7 +10,6 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config.Gui.Background;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.CollapsibleObject;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
 import net.minecraft.block.Block;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.Limitless;
 import user11681.limitless.asm.access.EnchantmentAccess;
@@ -65,7 +64,7 @@ public class LimitlessConfiguration implements ConfigData {
             .getIds()
             .stream()
             .sorted()
-            .map((final Identifier identifier) -> new EnchantmentConfiguration(identifier.toString(), false))
+            .map(EnchantmentConfiguration::new)
             .collect(Collectors.toCollection(ObjectLinkedOpenHashSet::new));
 
         if (oldMaxLevels != null) {

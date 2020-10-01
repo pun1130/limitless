@@ -19,11 +19,11 @@ public class EnchantmentConfiguration {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public EnchantmentConfiguration(final String identifier, final boolean useGlobalMaxLevel) {
-        this.identifier = identifier;
-        this.enchantment = Registry.ENCHANTMENT.get(new Identifier(identifier));
+    public EnchantmentConfiguration(final Identifier identifier) {
+        this.identifier = identifier.toString();
+        this.enchantment = Registry.ENCHANTMENT.get(identifier);
         this.maxLevel = this.enchantment.getMaxLevel();
-        this.useGlobalMaxLevel = useGlobalMaxLevel;
+        this.useGlobalMaxLevel = false;
     }
 
     public Enchantment getEnchantment() {
