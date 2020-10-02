@@ -81,6 +81,8 @@ public abstract class Mapper {
 
     static {
         putClass("Enchantment", 1887);
+        putClass("World", 1937);
+        putClass("BlockPos", 2338);
         putClass("CompoundTag", 2487);
 
         if (!development) {

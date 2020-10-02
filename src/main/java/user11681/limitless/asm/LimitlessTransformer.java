@@ -7,8 +7,6 @@ import java.util.Set;
 import net.devtech.grossfabrichacks.entrypoints.PrePrePreLaunch;
 import net.devtech.grossfabrichacks.transformer.TransformerApi;
 import net.devtech.grossfabrichacks.transformer.asm.AsmClassTransformer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.MappingResolver;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -40,7 +38,9 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
     private static final String putByte = method("putByte");
     private static final String putShort = method("putShort");
     private static final String putInt = method("putInt");
-    private static final String getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
+
+    private static final String limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
+    private static final String limitless_maxLevel = "limitless_maxLevel";
 
     private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(32, 1);
 
@@ -123,7 +123,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
 
                 while (instruction != null) {
                     if (instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel)) {
-                        ((MethodInsnNode) instruction).name = getOriginalMaxLevel;
+                        ((MethodInsnNode) instruction).name = limitless_getOriginalMaxLevel;
                     }
 
                     instruction = instruction.getNext();
@@ -163,7 +163,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
                             INVOKESTATIC,
                             targetClass.name,
                             "limitless_getHighestSuitableLevel",
-                            "(IL" + Enchantment + ";Ljava/util/List;)V",
+                            Shortcode.composeMethodDescriptor("V", "I", Enchantment, "java/util/List"),
                             false
                         );
 
@@ -195,9 +195,6 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
 
         for (int i = methodCount - 1; i >= 0; --i) {
             if ("method_17411".equals(methods.get(i).name)) {
-                final MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
-                final String mappedWorldDescriptor = Shortcode.toDescriptor(resolver.mapClassName("intermediary", "net.minecraft.class_1937"));
-                final String mappedBlockPosDescriptor = Shortcode.toDescriptor(resolver.mapClassName("intermediary", "net.minecraft.class_2338"));
                 final InsnList instructions = methods.get(i).instructions;
                 final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
@@ -205,7 +202,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
                     (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
                     (final AbstractInsnNode instruction) -> {
                         ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
-                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", mappedWorldDescriptor, mappedBlockPosDescriptor), true));
+                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", klass("World"), klass("BlockPos")), true));
                         iterator.previous();
                         iterator.add(new VarInsnNode(ALOAD, 2));
                         iterator.add(new VarInsnNode(ALOAD, 3));
@@ -276,10 +273,10 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);
                     newGetMaxLevel.visitLabel(getCustom);
                     newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);
-                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_maxLevel", "I");
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, limitless_maxLevel, "I");
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);
 
-                    method.name = getOriginalMaxLevel;
+                    method.name = limitless_getOriginalMaxLevel;
 
                     DelegatingInsnList setField;
                     Label setOne;
@@ -297,15 +294,15 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
 
                                     setField.addVarInsn(Opcodes.ALOAD, 0); // this
                                     setField.addVarInsn(Opcodes.ALOAD, 0); // this this
-                                    setField.addMethodInsn(Opcodes.INVOKEVIRTUAL, klass.name, getOriginalMaxLevel, "()I", false); // this I
+                                    setField.addMethodInsn(Opcodes.INVOKEVIRTUAL, klass.name, limitless_getOriginalMaxLevel, "()I", false); // this I
                                     setField.addInsn(Opcodes.ICONST_1); // this I I
                                     setField.addJumpInsn(Opcodes.IF_ICMPLE, setOne); // this
                                     setField.addLdcInsn(Integer.MAX_VALUE); // this I
-                                    setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, "limitless_maxLevel", "I");
+                                    setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, limitless_maxLevel, "I");
                                     setField.addInsn(Opcodes.RETURN);
                                     setField.addLabel(setOne);
                                     setField.addInsn(Opcodes.ICONST_1); // this I
-                                    setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, "limitless_maxLevel", "I");
+                                    setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, limitless_maxLevel, "I");
 
                                     instructions.insertBefore(instruction, Shortcode.copyInstructions(setField));
                                 }
