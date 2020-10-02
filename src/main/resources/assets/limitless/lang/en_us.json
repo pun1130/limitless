@@ -7,7 +7,7 @@
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ": "horizontal enchanting block radius",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.min": "minimum",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.max": "maximum",
-    "text.autoconfig.limitless.option.enchantingBlockRadiusY": "veritcal enchanting block radius",
+    "text.autoconfig.limitless.option.enchantingBlockRadiusY": "vertical enchanting block radius",
     "text.autoconfig.limitless.option.enchantingBlockRadiusY.min": "minimum",
     "text.autoconfig.limitless.option.enchantingBlockRadiusY.max": "maximum",
     "text.autoconfig.limitless.option.maxEnchantingBlocks": "maximum enchanting blocks",
