@@ -18,8 +18,7 @@
         "enchantment.EnchantingTableBlockMixin",
         "enchantment.dummy.AnvilScreenDummyMixin",
         "i18n.I18nMixin",
-        "i18n.TranslationStorageMixin",
-        "rei.DefaultPluginMixin"
+        "i18n.TranslationStorageMixin"
     ],
     "injectors": {
         "defaultRequire": 1
