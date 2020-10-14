@@ -24,8 +24,5 @@ public class Limitless implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitializeClient() {
         AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantmentListProvider(), (final Field field) -> field.getName().equals("maxLevels"));
-
-        // disabled for until Cloth Config should update in order to allow more complex entries
-//        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantingBlockListProvider(), (final Field field) -> field.getName().equals("enchantingBlocks"));
     }
 }

@@ -3,10 +3,7 @@ package user11681.limitless.asm;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
-import net.devtech.grossfabrichacks.entrypoints.PrePrePreLaunch;
 import net.devtech.grossfabrichacks.transformer.TransformerApi;
-import net.devtech.grossfabrichacks.transformer.asm.AsmClassTransformer;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -18,55 +15,66 @@ import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import user11681.fabricasmtools.TransformerPlugin;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.DelegatingInsnList;
 
-public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, AsmClassTransformer, Opcodes, IMixinConfigPlugin {
+public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     private static final String getIntDescriptor = "(Ljava/lang/String;)I";
     private static final String putIntDescriptor = "(Ljava/lang/String;I)V";
 
-    private static final String Enchantment = internal("Enchantment");
-    private static final String CompoundTag = internal("CompoundTag");
-    private static final String getMaxLevel = method("getMaxLevel");
-    private static final String getMaxPower = method("getMaxPower");
-    private static final String getShort = method("getShort");
-    private static final String getInt = method("getInt");
-    private static final String getByte = method("getByte");
-    private static final String putByte = method("putByte");
-    private static final String putShort = method("putShort");
-    private static final String putInt = method("putInt");
+    private static final String Enchantment = internal(1887);
+    private static final String CompoundTag = internal(2487);
+    private static final String getMaxLevel = method(8183);
+    private static final String getMaxPower = method(20742);
+    private static final String getShort = method(10568);
+    private static final String getInt = method(10550);
+    private static final String getByte = method(10571);
+    private static final String putByte = method(10567);
+    private static final String putShort = method(10575);
+    private static final String putInt = method(10569);
 
     private static final String limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
     private static final String limitless_maxLevel = "limitless_maxLevel";
 
-    private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(32, 1);
+    private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(new String[]{Enchantment}, 0, 1, 1);
 
     @Override
-    public void onPrePrePreLaunch() {
-        TransformerApi.registerPostMixinAsmClassTransformer(this);
+    public void onLoad(final String mixinPackage) {
+        super.onLoad(mixinPackage);
+
+        this.putClass("World", 1937);
+        this.putClass("BlockPos", 2338);
+        this.putField("creativeMode", 7477);
+        this.putMethod("drawForeground", 2388);
+        this.putMethod("create", 7246);
+        this.putMethod("calculateRequiredExperienceLevel", 8227);
+        this.putMethod("getPossibleEntries", 8229);
+        this.putMethod("generateEnchantments", 8230);
+        this.putMethod("getNextCost", 20398);
+        this.putMethod("updateResult", 24928);
     }
 
     @Override
     public void postApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
         switch (mixinClassName) {
             case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenDummyMixin":
-                transformAnvilScreen(targetClass); break;
+                this.transformAnvilScreen(targetClass); break;
             case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenHandlerDummyMixin":
-                transformAnvilScreenHandler(targetClass); break;
+                this.transformAnvilScreenHandler(targetClass); break;
             case "user11681.limitless.asm.mixin.enchantment.dummy.EnchantBookFactoryDummyMixin":
-                transformEnchantBookFactory(targetClass); break;
+                this.transformEnchantBookFactory(targetClass); break;
             case "user11681.limitless.asm.mixin.enchantment.EnchantmentHelperMixin":
-                transformEnchantmentHelper(targetClass); break;
+                this.transformEnchantmentHelper(targetClass); break;
             case "user11681.limitless.asm.mixin.enchantment.EnchantmentScreenHandlerMixin":
-                transformEnchantmentScreenHandler(targetClass); break;
+                this.transformEnchantmentScreenHandler(targetClass); break;
         }
     }
 
-    private static void transformAnvilScreen(final ClassNode targetClass) {
-        final String drawForeground = method("drawForeground");
+    private void transformAnvilScreen(final ClassNode targetClass) {
+        final String drawForeground = this.method("drawForeground");
         final List<MethodNode> methods = targetClass.methods;
         final int methodCount = methods.size();
 
@@ -75,7 +83,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
                 final ListIterator<AbstractInsnNode> iterator = methods.get(i).instructions.iterator();
 
                 Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(field("creativeMode")),
+                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(this.field("creativeMode")),
                     () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
                 );
 
@@ -84,9 +92,9 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    private static void transformAnvilScreenHandler(final ClassNode targetClass) {
-        final String getNextCost = method("getNextCost");
-        final String updateResult = method("updateResult");
+    private void transformAnvilScreenHandler(final ClassNode targetClass) {
+        final String getNextCost = this.method("getNextCost");
+        final String updateResult = this.method("updateResult");
         final List<MethodNode> methods = targetClass.methods;
         final int methodCount = methods.size();
 
@@ -114,8 +122,8 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    private static void transformEnchantBookFactory(final ClassNode targetClass) {
-        final String create = method("create");
+    private void transformEnchantBookFactory(final ClassNode targetClass) {
+        final String create = this.method("create");
 
         for (final MethodNode method : targetClass.methods) {
             if (method.name.equals(create)) {
@@ -134,11 +142,11 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    private static void transformEnchantmentHelper(final ClassNode targetClass) {
+    private void transformEnchantmentHelper(final ClassNode targetClass) {
         final MethodNode[] methods = targetClass.methods.toArray(new MethodNode[0]);
         final int methodCount = methods.length;
-        final String getPossibleEntries = method("getPossibleEntries");
-        final String generateEnchantments = method("generateEnchantments");
+        final String getPossibleEntries = this.method("getPossibleEntries");
+        final String generateEnchantments = this.method("generateEnchantments");
 
         for (int i = methodCount - 1; i >= 0; i--) {
             final MethodNode method = methods[i];
@@ -189,7 +197,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    private static void transformEnchantmentScreenHandler(final ClassNode targetClass) {
+    private void transformEnchantmentScreenHandler(final ClassNode targetClass) {
         final List<MethodNode> methods = targetClass.methods;
         final int methodCount = methods.size();
 
@@ -202,7 +210,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
                     (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
                     (final AbstractInsnNode instruction) -> {
                         ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
-                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", klass("World"), klass("BlockPos")), true));
+                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", this.klass("World"), this.klass("BlockPos")), true));
                         iterator.previous();
                         iterator.add(new VarInsnNode(ALOAD, 2));
                         iterator.add(new VarInsnNode(ALOAD, 3));
@@ -246,8 +254,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    @Override
-    public void transform(final String name, final ClassNode klass) {
+    public static void transform(final ClassNode klass) {
         final List<MethodNode> methods = klass.methods;
         final int methodCount = methods.size();
         AbstractInsnNode instruction;
@@ -255,8 +262,8 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         MethodNode method;
         int i;
 
-        if (enchantmentClassNames.contains(klass.superName) || Enchantment.equals(name)) {
-            if (!Enchantment.equals(name)) {
+        if (enchantmentClassNames.contains(klass.superName) || Enchantment.equals(klass.name)) {
+            if (!Enchantment.equals(klass.name)) {
                 enchantmentClassNames.add(klass.superName);
             }
 
@@ -371,31 +378,7 @@ public class LimitlessTransformer extends Mapper implements PrePrePreLaunch, Asm
         }
     }
 
-    @Override
-    public void onLoad(final String mixinPackage) {}
-
-    @Override
-    public String getRefMapperConfig() {
-        return null;
-    }
-
-    @Override
-    public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
-        return true;
-    }
-
-    @Override
-    public void acceptTargets(final Set<String> myTargets, final Set<String> otherTargets) {}
-
-    @Override
-    public List<String> getMixins() {
-        return null;
-    }
-
-    @Override
-    public void preApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {}
-
     static {
-        enchantmentClassNames.add(Enchantment);
+        TransformerApi.registerPostMixinAsmClassTransformer(LimitlessTransformer::transform);
     }
 }

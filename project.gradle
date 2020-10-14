@@ -16,9 +16,7 @@ dependencies {
     modInclude("${project.phormat}")
     modInclude("${project.commonFormatting}")
     modInclude("${project.GFH}")
-
-    api("${project.reflect}")
-    api("${project.unsafe}")
+    modInclude("${project.fabricASMTools}")
 }
 
 def modInclude(final String dependency) {
