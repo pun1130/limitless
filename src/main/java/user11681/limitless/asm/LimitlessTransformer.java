@@ -29,9 +29,9 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     private static final String CompoundTag = internal(2487);
     private static final String getMaxLevel = method(8183);
     private static final String getMaxPower = method(20742);
+    private static final String getByte = method(10571);
     private static final String getShort = method(10568);
     private static final String getInt = method(10550);
-    private static final String getByte = method(10571);
     private static final String putByte = method(10567);
     private static final String putShort = method(10575);
     private static final String putInt = method(10569);
