@@ -8,8 +8,8 @@ plugins {
 
 apply(from: "project.gradle")
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = 8
+targetCompatibility = 8
 
 project.group = "user11681"
 

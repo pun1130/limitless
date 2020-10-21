@@ -1,4 +1,4 @@
-version = "0.6.6"
+version = "0.6.7"
 
 dependencies {
     bloated("${project.autoConfig}")
@@ -17,6 +17,8 @@ dependencies {
     modInclude("${project.commonFormatting}")
     modInclude("${project.GFH}")
     modInclude("${project.fabricASMTools}")
+
+    modApi("${project.api}")
 }
 
 def modInclude(final String dependency) {
