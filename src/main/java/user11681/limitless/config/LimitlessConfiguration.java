@@ -42,7 +42,7 @@ public class LimitlessConfiguration implements ConfigData {
 
     public boolean allowReenchanting = true;
 
-    public boolean disableAnvilIncrease = true;
+    public boolean anvilIncrementalCost = false;
 
     @CollapsibleObject
     public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 5);

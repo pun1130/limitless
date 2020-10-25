@@ -267,7 +267,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
             }
         }
 
-        for (i = 0; i < methodCount; i++) {
+        for (i = 0; i != methodCount; i++) {
             instruction = methods.get(i).instructions.getFirst();
 
             while (instruction != null) {

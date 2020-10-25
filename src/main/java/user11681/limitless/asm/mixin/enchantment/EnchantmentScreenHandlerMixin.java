@@ -2,7 +2,6 @@ package user11681.limitless.asm.mixin.enchantment;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.util.math.BlockPos;
@@ -24,18 +23,11 @@ abstract class EnchantmentScreenHandlerMixin {
         EnchantmentUtil.mergeEnchantment(stack, enchantment, level);
     }
 
-    @Redirect(method = "method_17410",
-              at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/item/EnchantedBookItem;addEnchantment(Lnet/minecraft/item/ItemStack;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
-    public void mergeEnchantments(final ItemStack stack, final EnchantmentLevelEntry enchantment) {
-        EnchantmentUtil.mergeEnchantment(stack, enchantment);
-    }
-
     private static int limitless_scanEnchantingBlocks(final World world, final BlockPos blockPos) {
         final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
         final RadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
         final int maxVerticalRadius = verticalRadiusRange.max;
-        int maxHorizontalRadius = horizontalRadiusRange.max;
+        final int maxHorizontalRadius = horizontalRadiusRange.max;
         int bookshelfCount = 0;
 
         for (int k = -1; k <= 1; k += 2) {

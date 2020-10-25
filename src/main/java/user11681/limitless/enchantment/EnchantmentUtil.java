@@ -23,22 +23,26 @@ public interface EnchantmentUtil {
             return;
         }
 
-        final Iterable<CompoundTag> enchantments = Classes.cast(itemStack.getEnchantments());
+        boolean conflict = false;
 
-        for (final CompoundTag enchantmentTag : enchantments) {
-            if (Registry.ENCHANTMENT.get(new Identifier(enchantmentTag.getString("id"))) == enchantment) {
-                final int tagLevel = enchantmentTag.getInt("lvl");
+        for (final CompoundTag enchantmentTag : Classes.<Iterable<CompoundTag>>cast(itemStack.getEnchantments())) {
+            if (new Identifier(enchantmentTag.getString("id")).equals(Registry.ENCHANTMENT.getId(enchantment))) {
+                final int tagLevel = enchantmentTag.getInt("lvl");;
 
                 if (tagLevel == level) {
-                    enchantmentTag.putInt("lvl", tagLevel + 1);
+                    enchantmentTag.putInt("lvl", Math.min(tagLevel + 1, enchantment.getMaxLevel()));
                 } else {
                     enchantmentTag.putInt("lvl", Math.max(tagLevel, level));
                 }
 
                 return;
+            } else if (!conflict && !enchantment.canCombine(Registry.ENCHANTMENT.get(new Identifier(enchantmentTag.getString("id"))))) {
+                conflict = true;
             }
         }
 
-        itemStack.addEnchantment(enchantment, level);
+        if (!conflict) {
+            itemStack.addEnchantment(enchantment, level);
+        }
     }
 }

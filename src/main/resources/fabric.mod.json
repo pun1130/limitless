@@ -29,6 +29,5 @@
         "modmenu": [
             "user11681.limitless.integration.LimitlessModMenuIntegration"
         ]
-    },
-    "depends": {}
+    }
 }

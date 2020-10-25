@@ -4,6 +4,8 @@
     "config.limitless.useGlobalMaxLevel": "use global maximum level",
     "text.autoconfig.limitless.title": "limitless",
     "text.autoconfig.limitless.option.allowTreasure": "allow treasure",
+    "text.autoconfig.limitless.option.allowReenchanting": "allow reenchanting",
+    "text.autoconfig.limitless.option.anvilIncrementalCost": "allow anvil incremental cost",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ": "horizontal enchanting block radius",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.min": "minimum",
     "text.autoconfig.limitless.option.enchantingBlockRadiusXZ.max": "maximum",

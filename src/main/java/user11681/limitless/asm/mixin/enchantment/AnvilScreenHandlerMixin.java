@@ -11,7 +11,7 @@ import user11681.limitless.config.LimitlessConfiguration;
 abstract class AnvilScreenHandlerMixin {
     @Inject(method = "getNextCost", at = @At("HEAD"), cancellable = true)
     private static void getNextCost(final int cost, final CallbackInfoReturnable<Integer> cir) {
-        if (LimitlessConfiguration.instance.disableAnvilIncrease) {
+        if (!LimitlessConfiguration.instance.anvilIncrementalCost) {
             cir.setReturnValue(0);
         }
     }
