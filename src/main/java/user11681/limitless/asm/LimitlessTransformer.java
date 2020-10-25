@@ -15,8 +15,7 @@ import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import user11681.fabricasmtools.TransformerPlugin;
+import user11681.fabricasmtools.plugin.TransformerPlugin;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.DelegatingInsnList;
@@ -53,205 +52,144 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         this.putMethod("calculateRequiredExperienceLevel", 8227);
         this.putMethod("getPossibleEntries", 8229);
         this.putMethod("generateEnchantments", 8230);
-        this.putMethod("getNextCost", 20398);
         this.putMethod("updateResult", 24928);
+
+        this.registerPostMixinMethodTransformer(klass(471), this.method("drawForeground"), null, this::transformAnvilScreen);
+        this.registerPostMixinMethodTransformer(klass(1706), this.method("updateResult"), null, this::transformAnvilScreenHandler);
+        this.registerPostMixinMethodTransformer(klass(1648), this.method("create"), null, LimitlessTransformer::transformEnchantBookFactory);
+        this.registerPostMixinMethodTransformer(klass(1890), this.method("getPossibleEntries"), null, LimitlessTransformer::transformEnchantmentHelperGetPossibleEntries);
+        this.registerPostMixinMethodTransformer(klass(1890), this.method("generateEnchantments"), null, LimitlessTransformer::transformEnchantmentHelperGenerateEnchantments);
+        this.registerPostMixinMethodTransformer(klass(1718), "method_17411", null, this::transformEnchantmentScreenHandler);
     }
 
-    @Override
-    public void postApply(final String targetClassName, final ClassNode targetClass, final String mixinClassName, final IMixinInfo mixinInfo) {
-        switch (mixinClassName) {
-            case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenDummyMixin":
-                this.transformAnvilScreen(targetClass); break;
-            case "user11681.limitless.asm.mixin.enchantment.dummy.AnvilScreenHandlerDummyMixin":
-                this.transformAnvilScreenHandler(targetClass); break;
-            case "user11681.limitless.asm.mixin.enchantment.dummy.EnchantBookFactoryDummyMixin":
-                this.transformEnchantBookFactory(targetClass); break;
-            case "user11681.limitless.asm.mixin.enchantment.EnchantmentHelperMixin":
-                this.transformEnchantmentHelper(targetClass); break;
-            case "user11681.limitless.asm.mixin.enchantment.EnchantmentScreenHandlerMixin":
-                this.transformEnchantmentScreenHandler(targetClass); break;
-        }
+    private void transformAnvilScreen(final MethodNode method) {
+        final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(this.field("creativeMode")),
+            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
+        );
     }
 
-    private void transformAnvilScreen(final ClassNode targetClass) {
-        final String drawForeground = this.method("drawForeground");
-        final List<MethodNode> methods = targetClass.methods;
-        final int methodCount = methods.size();
+    private void transformAnvilScreenHandler(final MethodNode method) {
+        final String creativeMode = this.field("creativeMode");
+        final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
-        for (int i = methodCount - 1; i >= 0; --i) {
-            if (drawForeground.equals(methods.get(i).name)) {
-                final ListIterator<AbstractInsnNode> iterator = methods.get(i).instructions.iterator();
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
+            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.LINE)
+        );
 
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(this.field("creativeMode")),
-                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-                );
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
+            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
+        );
+    }
 
-                break;
+    private static void transformEnchantBookFactory(final MethodNode method) {
+        AbstractInsnNode instruction = method.instructions.getFirst();
+
+        while (instruction != null) {
+            if (instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel)) {
+                ((MethodInsnNode) instruction).name = limitless_getOriginalMaxLevel;
             }
+
+            instruction = instruction.getNext();
         }
     }
 
-    private void transformAnvilScreenHandler(final ClassNode targetClass) {
-        final String getNextCost = this.method("getNextCost");
-        final String updateResult = this.method("updateResult");
-        final List<MethodNode> methods = targetClass.methods;
-        final int methodCount = methods.size();
+    private static void transformEnchantmentHelperGetPossibleEntries(final ClassNode klass, final MethodNode method) {
+        final InsnList instructions = method.instructions;
+        final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
-        for (int i = methodCount - 1; i >= 0; i--) {
-            final MethodNode method = methods.get(i);
-
-            if (getNextCost.equals(method.name)) {
-                method.instructions.clear();
-                method.visitVarInsn(Opcodes.ILOAD, 0);
-                method.visitInsn(Opcodes.IRETURN);
-            } else if (updateResult.equals(method.name)) {
-                final String creativeMode = field("creativeMode");
-                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
-                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.LINE)
-                );
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
-                    () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-                );
-            }
-        }
-    }
-
-    private void transformEnchantBookFactory(final ClassNode targetClass) {
-        final String create = this.method("create");
-
-        for (final MethodNode method : targetClass.methods) {
-            if (method.name.equals(create)) {
-                AbstractInsnNode instruction = method.instructions.getFirst();
-
-                while (instruction != null) {
-                    if (instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel)) {
-                        ((MethodInsnNode) instruction).name = limitless_getOriginalMaxLevel;
-                    }
-
-                    instruction = instruction.getNext();
-                }
-
-                return;
-            }
-        }
-    }
-
-    private void transformEnchantmentHelper(final ClassNode targetClass) {
-        final MethodNode[] methods = targetClass.methods.toArray(new MethodNode[0]);
-        final int methodCount = methods.length;
-        final String getPossibleEntries = this.method("getPossibleEntries");
-        final String generateEnchantments = this.method("generateEnchantments");
-
-        for (int i = methodCount - 1; i >= 0; i--) {
-            final MethodNode method = methods[i];
-
-            if (getPossibleEntries.equals(method.name)) {
-                final InsnList instructions = method.instructions;
-                final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel),
-                    (final AbstractInsnNode instruction) -> {
-                        Shortcode.removeBetweenInclusive(iterator, AbstractInsnNode.LINE, AbstractInsnNode.IINC_INSN);
-
-                        iterator.next();
-                        iterator.remove();
-
-                        final DelegatingInsnList insertion = new DelegatingInsnList();
-                        insertion.addVarInsn(ILOAD, 0);
-                        insertion.addVarInsn(ALOAD, 7);
-                        insertion.addVarInsn(ALOAD, 3);
-                        insertion.addMethodInsn(
-                            INVOKESTATIC,
-                            targetClass.name,
-                            "limitless_getHighestSuitableLevel",
-                            Shortcode.composeMethodDescriptor("V", "I", Enchantment, "java/util/List"),
-                            false
-                        );
-
-                        instructions.insert(iterator.previous(), insertion);
-                    }
-                );
-            } else if (generateEnchantments.equals(method.name)) {
-                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
-                    () -> {
-                        iterator.remove();
-
-                        iterator.add(new VarInsnNode(ILOAD, 2));
-                        iterator.add(new InsnNode(ICONST_2));
-                        iterator.add(new InsnNode(IDIV));
-                        iterator.add(new IntInsnNode(BIPUSH, 20));
-                        iterator.add(new InsnNode(IADD));
-                    }
-                );
-            }
-        }
-    }
-
-    private void transformEnchantmentScreenHandler(final ClassNode targetClass) {
-        final List<MethodNode> methods = targetClass.methods;
-        final int methodCount = methods.size();
-
-        for (int i = methodCount - 1; i >= 0; --i) {
-            if ("method_17411".equals(methods.get(i).name)) {
-                final InsnList instructions = methods.get(i).instructions;
-                final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
-                    (final AbstractInsnNode instruction) -> {
-                        ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
-                        iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", this.klass("World"), this.klass("BlockPos")), true));
-                        iterator.previous();
-                        iterator.add(new VarInsnNode(ALOAD, 2));
-                        iterator.add(new VarInsnNode(ALOAD, 3));
-                    }
-                );
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel),
+            (final AbstractInsnNode instruction) -> {
+                Shortcode.removeBetweenInclusive(iterator, AbstractInsnNode.LINE, AbstractInsnNode.IINC_INSN);
 
                 iterator.next();
-                iterator.next();
+                iterator.remove();
 
-                int gotoCount = 0;
-
-                while (gotoCount != 3) {
-                    final AbstractInsnNode next = iterator.next();
-
-                    if (next.getOpcode() == GOTO) {
-                        ++gotoCount;
-                    }
-
-                    iterator.remove();
-                }
-
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD && ((VarInsnNode) instruction).var == 4,
-                    (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).setOpcode(FLOAD)
+                final DelegatingInsnList insertion = new DelegatingInsnList();
+                insertion.addVarInsn(ILOAD, 0);
+                insertion.addVarInsn(ALOAD, 7);
+                insertion.addVarInsn(ALOAD, 3);
+                insertion.addMethodInsn(
+                    INVOKESTATIC,
+                    klass.name,
+                    "limitless_getHighestSuitableLevel",
+                    Shortcode.composeMethodDescriptor("V", "I", Enchantment, "java/util/List"),
+                    false
                 );
 
-                Shortcode.findForward(iterator,
-                    (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
-                    (final AbstractInsnNode instruction) -> {
-                        final MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
-
-                        methodInstruction.owner = "user11681/limitless/enchantment/EnchantingBlocks";
-                        methodInstruction.name = "calculateRequiredExperienceLevel";
-                        methodInstruction.desc = methodInstruction.desc.replaceFirst("II", "IF");
-                        methodInstruction.itf = true;
-                    }
-                );
-
-                break;
+                instructions.insert(iterator.previous(), insertion);
             }
+        );
+    }
+
+    private static void transformEnchantmentHelperGenerateEnchantments(final MethodNode method) {
+        final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
+            () -> {
+                iterator.remove();
+
+                iterator.add(new VarInsnNode(ILOAD, 2));
+                iterator.add(new InsnNode(ICONST_2));
+                iterator.add(new InsnNode(IDIV));
+                iterator.add(new IntInsnNode(BIPUSH, 20));
+                iterator.add(new InsnNode(IADD));
+            }
+        );
+    }
+
+    private void transformEnchantmentScreenHandler(final MethodNode method) {
+        final InsnList instructions = method.instructions;
+        final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
+
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
+            (final AbstractInsnNode instruction) -> {
+                ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
+                iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", this.klass("World"), this.klass("BlockPos")), true));
+                iterator.previous();
+                iterator.add(new VarInsnNode(ALOAD, 2));
+                iterator.add(new VarInsnNode(ALOAD, 3));
+            }
+        );
+
+        iterator.next();
+        iterator.next();
+
+        int gotoCount = 0;
+
+        while (gotoCount != 3) {
+            final AbstractInsnNode next = iterator.next();
+
+            if (next.getOpcode() == GOTO) {
+                ++gotoCount;
+            }
+
+            iterator.remove();
         }
+
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD && ((VarInsnNode) instruction).var == 4,
+            (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).setOpcode(FLOAD)
+        );
+
+        Shortcode.findForward(iterator,
+            (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
+            (final AbstractInsnNode instruction) -> {
+                final MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
+
+                methodInstruction.owner = "user11681/limitless/enchantment/EnchantingBlocks";
+                methodInstruction.name = "calculateRequiredExperienceLevel";
+                methodInstruction.desc = methodInstruction.desc.replaceFirst("II", "IF");
+                methodInstruction.itf = true;
+            }
+        );
     }
 
     public static void transform(final ClassNode klass) {

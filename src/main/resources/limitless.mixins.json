@@ -4,13 +4,14 @@
     "compatibilityLevel": "JAVA_8",
     "plugin": "user11681.limitless.asm.LimitlessTransformer",
     "mixins": [
+        "enchantment.AnvilScreenHandlerMixin",
         "enchantment.EnchantCommandMixin",
         "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin",
         "enchantment.EnchantmentMixin",
         "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin",
-        "enchantment.dummy.AnvilScreenHandlerDummyMixin",
+        "enchantment.ItemStackMixin",
         "enchantment.dummy.EnchantBookFactoryDummyMixin",
         "i18n.LanguageMixin"
     ],

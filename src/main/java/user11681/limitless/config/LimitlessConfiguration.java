@@ -40,6 +40,10 @@ public class LimitlessConfiguration implements ConfigData {
 
     public boolean allowTreasure = true;
 
+    public boolean allowReenchanting = true;
+
+    public boolean disableAnvilIncrease = true;
+
     @CollapsibleObject
     public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 5);
 
