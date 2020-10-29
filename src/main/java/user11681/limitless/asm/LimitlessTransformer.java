@@ -197,7 +197,6 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         final int methodCount = methods.size();
         AbstractInsnNode instruction;
         MethodInsnNode methodInstruction;
-        MethodNode method;
         int i;
 
         if (enchantmentClassNames.contains(klass.superName) || Enchantment.equals(klass.name)) {
@@ -205,8 +204,10 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                 enchantmentClassNames.add(klass.superName);
             }
 
-            for (i = 0; i != methodCount; i++) {
-                if (getMaxLevel.equals((method = methods.get(i)).name) && method.desc.equals("()I")) {
+            for (i = 0; i < methodCount; i++) {
+                final MethodNode method = methods.get(i);
+
+                if (method.name.equals(getMaxLevel) && method.desc.equals("()I")) {
                     final MethodNode newGetMaxLevel = (MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, getMaxLevel, "()I", null, null);
                     final Label getCustom = new Label();
 
@@ -223,19 +224,15 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
 
                     method.name = limitless_getOriginalMaxLevel;
 
-                    DelegatingInsnList setField;
-                    Label setOne;
-                    InsnList instructions;
-
                     for (int j = 0; j != methodCount; j++) {
                         if ("<init>".equals(methods.get(j).name)) {
-                            instructions = methods.get(j).instructions;
+                            InsnList instructions = methods.get(j).instructions;
                             instruction = instructions.getFirst();
 
                             while (instruction != null) {
                                 if (instruction.getOpcode() == Opcodes.RETURN) {
-                                    setField = new DelegatingInsnList();
-                                    setOne = new Label();
+                                    DelegatingInsnList setField = new DelegatingInsnList();
+                                    Label setOne = new Label();
 
                                     setField.addVarInsn(Opcodes.ALOAD, 0); // this
                                     setField.addVarInsn(Opcodes.ALOAD, 0); // this this
@@ -249,15 +246,15 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                                     setField.addInsn(Opcodes.ICONST_1); // this I
                                     setField.addFieldInsn(Opcodes.PUTFIELD, klass.name, limitless_maxLevel, "I");
 
-                                    instructions.insertBefore(instruction, Shortcode.copyInstructions(setField));
+                                    instructions.insertBefore(instruction, setField);
                                 }
 
                                 instruction = instruction.getNext();
                             }
                         }
                     }
-                } else if (getMaxPower.equals(methods.get(i).name)) {
-                    methods.get(i).name = "limitless_getOriginalMaxPower";
+                } else if (method.name.equals(getMaxPower) && method.desc.equals("(I)I")) {
+                    method.name = "limitless_getOriginalMaxPower";
 
                     final MethodNode newGetMaxPower = (MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, getMaxPower, "(I)I", null, null);
 
@@ -267,8 +264,8 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
             }
         }
 
-        for (i = 0; i != methodCount; i++) {
-            instruction = methods.get(i).instructions.getFirst();
+        for (final MethodNode method : methods) {
+            instruction = method.instructions.getFirst();
 
             while (instruction != null) {
                 if (instruction.getType() == AbstractInsnNode.METHOD_INSN) {
@@ -278,18 +275,18 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                         methodInstruction = (MethodInsnNode) instruction;
 
                         if (putShort.equals(methodInstruction.name) && methodInstruction.getPrevious().getOpcode() == Opcodes.I2S) {
-                            methods.get(i).instructions.remove(methodInstruction.getPrevious());
+                            method.instructions.remove(methodInstruction.getPrevious());
                             methodInstruction.name = putInt;
                             methodInstruction.desc = putIntDescriptor;
 
                             if (methodInstruction.getPrevious().getOpcode() == Opcodes.I2B) {
-                                methods.get(i).instructions.remove(methodInstruction.getPrevious());
+                                method.instructions.remove(methodInstruction.getPrevious());
                             }
                         } else if (getShort.equals(methodInstruction.name)) {
                             methodInstruction.name = getInt;
                             methodInstruction.desc = getIntDescriptor;
                         } else if (putByte.equals(methodInstruction.name) && methodInstruction.getPrevious().getOpcode() == Opcodes.I2B) {
-                            methods.get(i).instructions.remove(methodInstruction.getPrevious());
+                            method.instructions.remove(methodInstruction.getPrevious());
                             methodInstruction.name = putInt;
                             methodInstruction.desc = putIntDescriptor;
                         } else if (getByte.equals(methodInstruction.name)) {
