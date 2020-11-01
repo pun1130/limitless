@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.RadiusConfiguration;
+import user11681.limitless.config.VerticalRadiusConfiguration;
 
 public interface EnchantingBlocks {
     Tag<Block> tag = TagRegistry.block(new Identifier("c", "enchanting_blocks"));
@@ -77,7 +78,7 @@ public interface EnchantingBlocks {
 
     static void forEnchantingBlockInRange(final World world, final BlockPos center, final EnchantingBlockConsumer action) {
         final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
-        final RadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
+        final VerticalRadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
 
         forEnchantingBlockInRange(world, center, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max, action);
     }

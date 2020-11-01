@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import user11681.limitless.config.EnchantmentParticleConfiguration;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.RadiusConfiguration;
+import user11681.limitless.config.VerticalRadiusConfiguration;
 import user11681.limitless.enchantment.EnchantingBlocks;
 
 @Mixin(value = EnchantingTableBlock.class,
@@ -37,7 +38,7 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
 
         if (particleConfiguration.enabled) {
             final RadiusConfiguration horizontalRadiusRange;
-            final RadiusConfiguration verticalRadiusRange;
+            final VerticalRadiusConfiguration verticalRadiusRange;
 
             if (particleConfiguration.inherit) {
                 horizontalRadiusRange = configuration.enchantingBlockRadiusXZ;

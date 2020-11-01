@@ -2,7 +2,7 @@ package user11681.limitless;
 
 import java.lang.reflect.Field;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,7 @@ public class Limitless implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new).getConfig();
+        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, GsonConfigSerializer::new).getConfig();
     }
 
     @Environment(EnvType.CLIENT)

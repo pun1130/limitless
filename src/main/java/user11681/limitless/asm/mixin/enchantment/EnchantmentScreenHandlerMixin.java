@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.RadiusConfiguration;
+import user11681.limitless.config.VerticalRadiusConfiguration;
 import user11681.limitless.enchantment.EnchantmentUtil;
 
 @SuppressWarnings({"unused", "RedundantSuppression", "UnresolvedMixinReference"})
@@ -25,7 +26,7 @@ abstract class EnchantmentScreenHandlerMixin {
 
     private static int limitless_scanEnchantingBlocks(final World world, final BlockPos blockPos) {
         final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
-        final RadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
+        final VerticalRadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
         final int maxVerticalRadius = verticalRadiusRange.max;
         final int maxHorizontalRadius = horizontalRadiusRange.max;
         int bookshelfCount = 0;

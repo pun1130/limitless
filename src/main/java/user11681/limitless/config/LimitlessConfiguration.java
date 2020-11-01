@@ -34,9 +34,9 @@ public class LimitlessConfiguration implements ConfigData {
 
     public int globalMaxLevel = Integer.MAX_VALUE;
 
-    public int maxEnchantingBlocks = 80;
+    public int maxEnchantingBlocks = 1 << 9;
 
-    public int maxEnchantingPower = 160;
+    public int maxEnchantingPower = 1 << 10;
 
     public boolean allowTreasure = true;
 
@@ -45,17 +45,17 @@ public class LimitlessConfiguration implements ConfigData {
     public boolean anvilIncrementalCost = false;
 
     @CollapsibleObject
-    public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 5);
+    public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 8);
 
     @CollapsibleObject
-    public RadiusConfiguration enchantingBlockRadiusY = new RadiusConfiguration(0, 1);
+    public VerticalRadiusConfiguration enchantingBlockRadiusY = new VerticalRadiusConfiguration(-5, 5);
 
     @CollapsibleObject
     public EnchantmentParticleConfiguration enchantmentParticles = new EnchantmentParticleConfiguration();
 
     // waiting for Cloth Config to update to allow more complex entries
     @Excluded
-    public ObjectOpenHashSet<EnchantingBlockEntry> enchantingBlocks;
+    public transient ObjectOpenHashSet<EnchantingBlockEntry> enchantingBlocks;
 
     @EnchantmentList
     public ObjectLinkedOpenHashSet<EnchantmentConfiguration> maxLevels;

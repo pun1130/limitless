@@ -7,8 +7,8 @@ public class EnchantmentParticleConfiguration {
     public boolean inherit = true;
 
     @CollapsibleObject
-    public RadiusConfiguration radiusXZ = new RadiusConfiguration(2, 3);
+    public RadiusConfiguration radiusXZ = new RadiusConfiguration(2, 8);
 
     @CollapsibleObject
-    public RadiusConfiguration radiusY = new RadiusConfiguration(0, 1);
+    public VerticalRadiusConfiguration radiusY = new VerticalRadiusConfiguration(-5, 5);
 }
