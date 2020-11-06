@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.minecraftVersion}")
-    mappings("net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarn}:v2")
+    mappings("net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarnBuild}:v2")
     modImplementation("net.fabricmc:fabric-loader:+")
 
     testImplementation("${project.junit}")
