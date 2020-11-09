@@ -13,6 +13,13 @@ targetCompatibility = 8
 
 project.group = "user11681"
 
+void nospam() {
+    dependencies {
+        modApi("${project.narratorOff}")
+        modApi("${project.noauth}")
+    }
+}
+
 repositories {
     mavenLocal()
 

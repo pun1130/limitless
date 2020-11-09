@@ -17,7 +17,7 @@ abstract class PlayerEntityMixin {
     public void normalizeCost(final PlayerEntity player, final int levels) {
         final EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
 
-        if (normalization.enabled) {
+        if (normalization.enabled && player.experienceLevel > normalization.offset) {
             ExperienceUtil.addExperienceLevelsRelatively(player, normalization.offset, levels - player.experienceLevel);
         }
     }

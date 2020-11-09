@@ -41,7 +41,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
 
         this.backgroundEntryID = cost % 3;
 
-        if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > cost) {
+        if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > 30) {
             final int relative = ExperienceUtil.relativeCost(player, normalization.offset, cost);
 
             if (normalization.display == CostDisplay.REPLACE) {
