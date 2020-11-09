@@ -2,7 +2,9 @@ package user11681.limitless.asm.mixin.enchantment;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -10,8 +12,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.RadiusConfiguration;
-import user11681.limitless.config.VerticalRadiusConfiguration;
+import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
+import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 import user11681.limitless.enchantment.EnchantmentUtil;
 
 @SuppressWarnings({"unused", "RedundantSuppression", "UnresolvedMixinReference"})
@@ -24,9 +26,18 @@ abstract class EnchantmentScreenHandlerMixin {
         EnchantmentUtil.mergeEnchantment(stack, enchantment, level);
     }
 
+    @Redirect(method = "generateEnchantments",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
+    public Item fixEnchantedBook(final ItemStack stack) {
+        final Item item = stack.getItem();
+
+        return item == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
+    }
+
     private static int limitless_scanEnchantingBlocks(final World world, final BlockPos blockPos) {
-        final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
-        final VerticalRadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
+        final HorizontalRadius horizontalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.xz;
+        final VerticalRadius verticalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.y;
         final int maxVerticalRadius = verticalRadiusRange.max;
         final int maxHorizontalRadius = horizontalRadiusRange.max;
         int bookshelfCount = 0;

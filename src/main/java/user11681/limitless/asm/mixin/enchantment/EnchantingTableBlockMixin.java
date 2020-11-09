@@ -11,10 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import user11681.limitless.config.EnchantmentParticleConfiguration;
+import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.RadiusConfiguration;
-import user11681.limitless.config.VerticalRadiusConfiguration;
+import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
+import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 import user11681.limitless.enchantment.EnchantingBlocks;
 
 @Mixin(value = EnchantingTableBlock.class,
@@ -34,18 +34,18 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
         super.randomDisplayTick(enchantingTableState, world, enchantingTablePos, random);
 
         final LimitlessConfiguration configuration = LimitlessConfiguration.instance;
-        final EnchantmentParticleConfiguration particleConfiguration = configuration.enchantmentParticles;
+        final EnchantmentParticleConfiguration particleConfiguration = configuration.enchantment.particles;
 
         if (particleConfiguration.enabled) {
-            final RadiusConfiguration horizontalRadiusRange;
-            final VerticalRadiusConfiguration verticalRadiusRange;
+            final HorizontalRadius horizontalRadiusRange;
+            final VerticalRadius verticalRadiusRange;
 
             if (particleConfiguration.inherit) {
-                horizontalRadiusRange = configuration.enchantingBlockRadiusXZ;
-                verticalRadiusRange = configuration.enchantingBlockRadiusY;
+                horizontalRadiusRange = configuration.enchantment.enchantingBlocks.radius.xz;
+                verticalRadiusRange = configuration.enchantment.enchantingBlocks.radius.y;
             } else {
-                horizontalRadiusRange = particleConfiguration.radiusXZ;
-                verticalRadiusRange = particleConfiguration.radiusY;
+                horizontalRadiusRange = particleConfiguration.radius.xz;
+                verticalRadiusRange = particleConfiguration.radius.y;
             }
 
             final int maxVerticalRadius = verticalRadiusRange.max;

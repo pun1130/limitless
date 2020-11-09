@@ -1,4 +1,4 @@
-package user11681.limitless.config.annotation;
+package user11681.limitless.config.enchantment.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

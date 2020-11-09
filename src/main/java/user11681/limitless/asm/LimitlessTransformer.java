@@ -8,7 +8,6 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -17,6 +16,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import user11681.fabricasmtools.plugin.TransformerPlugin;
 import user11681.limitless.config.LimitlessConfiguration;
+import user11681.limitless.config.enchantment.EnchantmentConfiguration;
 import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.DelegatingInsnList;
 
@@ -47,43 +47,15 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         this.putClass("World", 1937);
         this.putClass("BlockPos", 2338);
         this.putField("creativeMode", 7477);
-        this.putMethod("drawForeground", 2388);
         this.putMethod("create", 7246);
         this.putMethod("calculateRequiredExperienceLevel", 8227);
         this.putMethod("getPossibleEntries", 8229);
         this.putMethod("generateEnchantments", 8230);
-        this.putMethod("updateResult", 24928);
 
-        this.registerPostMixinMethodTransformer(klass(471), this.method("drawForeground"), null, this::transformAnvilScreen);
-        this.registerPostMixinMethodTransformer(klass(1706), this.method("updateResult"), null, this::transformAnvilScreenHandler);
-        this.registerPostMixinMethodTransformer(klass(1648), this.method("create"), null, LimitlessTransformer::transformEnchantBookFactory);
+        this.registerPostMixinMethodTransformer(klass(3853, 1648), this.method("create"), null, LimitlessTransformer::transformEnchantBookFactory);
         this.registerPostMixinMethodTransformer(klass(1890), this.method("getPossibleEntries"), null, LimitlessTransformer::transformEnchantmentHelperGetPossibleEntries);
         this.registerPostMixinMethodTransformer(klass(1890), this.method("generateEnchantments"), null, LimitlessTransformer::transformEnchantmentHelperGenerateEnchantments);
         this.registerPostMixinMethodTransformer(klass(1718), "method_17411", null, this::transformEnchantmentScreenHandler);
-    }
-
-    private void transformAnvilScreen(final MethodNode method) {
-        final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-        Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(this.field("creativeMode")),
-            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-        );
-    }
-
-    private void transformAnvilScreenHandler(final MethodNode method) {
-        final String creativeMode = this.field("creativeMode");
-        final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-        Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
-            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.LINE)
-        );
-
-        Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.FIELD_INSN && ((FieldInsnNode) instruction).name.equals(creativeMode),
-            () -> Shortcode.removeBetween(iterator, AbstractInsnNode.LINE, AbstractInsnNode.FRAME)
-        );
     }
 
     private static void transformEnchantBookFactory(final MethodNode method) {
@@ -215,7 +187,8 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                     newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, klass.name, "limitless_useGlobalMaxLevel", "Z");
                     newGetMaxLevel.visitJumpInsn(Opcodes.IFEQ, getCustom);
                     newGetMaxLevel.visitFieldInsn(Opcodes.GETSTATIC, LimitlessConfiguration.INTERNAL_NAME, "instance", LimitlessConfiguration.DESCRIPTOR);
-                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, LimitlessConfiguration.INTERNAL_NAME, "globalMaxLevel", "I");
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, LimitlessConfiguration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR);
+                    newGetMaxLevel.visitFieldInsn(Opcodes.GETFIELD, EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I");
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);
                     newGetMaxLevel.visitLabel(getCustom);
                     newGetMaxLevel.visitVarInsn(Opcodes.ALOAD, 0);

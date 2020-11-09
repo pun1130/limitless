@@ -1,11 +1,11 @@
-package user11681.limitless.config;
+package user11681.limitless.config.enchantment.entry;
 
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class EnchantmentConfiguration {
+public class EnchantmentEntry {
     public final String identifier;
 
     public int maxLevel;
@@ -14,12 +14,12 @@ public class EnchantmentConfiguration {
     @Excluded
     private transient Enchantment enchantment;
 
-    public EnchantmentConfiguration() {
+    public EnchantmentEntry() {
         this.identifier = null;
     }
 
     @SuppressWarnings("ConstantConditions")
-    public EnchantmentConfiguration(final Identifier identifier) {
+    public EnchantmentEntry(final Identifier identifier) {
         this.identifier = identifier.toString();
         this.enchantment = Registry.ENCHANTMENT.get(identifier);
         this.maxLevel = this.enchantment.getMaxLevel();
@@ -37,6 +37,6 @@ public class EnchantmentConfiguration {
 
     @Override
     public boolean equals(final Object that) {
-        return that instanceof EnchantmentConfiguration && that.hashCode() == this.hashCode();
+        return that instanceof EnchantmentEntry && that.hashCode() == this.hashCode();
     }
 }

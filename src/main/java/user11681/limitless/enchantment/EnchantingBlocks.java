@@ -12,8 +12,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.RadiusConfiguration;
-import user11681.limitless.config.VerticalRadiusConfiguration;
+import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
+import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 
 public interface EnchantingBlocks {
     Tag<Block> tag = TagRegistry.block(new Identifier("c", "enchanting_blocks"));
@@ -23,8 +23,10 @@ public interface EnchantingBlocks {
             return 0;
         }
 
-        if (enchantingPower > LimitlessConfiguration.instance.maxEnchantingPower) {
-            enchantingPower = LimitlessConfiguration.instance.maxEnchantingPower;
+        final int maxEnchantingPower = LimitlessConfiguration.instance.enchantment.enchantingBlocks.maxPower;
+
+        if (enchantingPower > maxEnchantingPower) {
+            enchantingPower = maxEnchantingPower;
         }
 
         float level = random.nextInt(8) + 1 + enchantingPower / 4 + random.nextInt((int) enchantingPower / 2 + 1);
@@ -70,15 +72,15 @@ public interface EnchantingBlocks {
         final ReferenceArrayList<EnchantingBlockEntry> enchantingBlocks = ReferenceArrayList.wrap(new EnchantingBlockEntry[20], 0);
 
         forEnchantingBlockInRange(world, enchantingTablePos, (final BlockState enchantingBlockState, final BlockPos pos, final int dX, final int dY, final int dZ) ->
-            enchantingBlocks.add(LimitlessConfiguration.instance.enchantingBlockToEntry.get(enchantingBlockState.getBlock()))
+            enchantingBlocks.add(LimitlessConfiguration.instance.enchantment.enchantingBlockToEntry.get(enchantingBlockState.getBlock()))
         );
 
         return enchantingBlocks;
     }
 
     static void forEnchantingBlockInRange(final World world, final BlockPos center, final EnchantingBlockConsumer action) {
-        final RadiusConfiguration horizontalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusXZ;
-        final VerticalRadiusConfiguration verticalRadiusRange = LimitlessConfiguration.instance.enchantingBlockRadiusY;
+        final HorizontalRadius horizontalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.xz;
+        final VerticalRadius verticalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.y;
 
         forEnchantingBlockInRange(world, center, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max, action);
     }

@@ -1,4 +1,4 @@
-package user11681.limitless.config.provider;
+package user11681.limitless.config.enchantment.provider;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
@@ -15,7 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.text.TranslatableText;
 import user11681.limitless.asm.access.EnchantmentAccess;
-import user11681.limitless.config.EnchantmentConfiguration;
+import user11681.limitless.config.enchantment.entry.EnchantmentEntry;
 
 @Environment(EnvType.CLIENT)
 public class EnchantmentListProvider implements GuiProvider {
@@ -24,12 +24,12 @@ public class EnchantmentListProvider implements GuiProvider {
     @Override
     public List<AbstractConfigListEntry> get(final String i13n, final Field field, final Object config, final Object defaults, final GuiRegistryAccess guiRegistry) {
         try {
-            final ObjectLinkedOpenHashSet<EnchantmentConfiguration> levels = (ObjectLinkedOpenHashSet<EnchantmentConfiguration>) field.get(config);
+            final ObjectLinkedOpenHashSet<EnchantmentEntry> levels = (ObjectLinkedOpenHashSet<EnchantmentEntry>) field.get(config);
             final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
 
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
-            for (final EnchantmentConfiguration entry : levels) {
+            for (final EnchantmentEntry entry : levels) {
                 final Enchantment enchantment = entry.getEnchantment();
 
                 if (enchantment != null) {

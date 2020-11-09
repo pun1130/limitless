@@ -9,7 +9,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.ModInitializer;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.provider.EnchantmentListProvider;
+import user11681.limitless.config.enchantment.provider.EnchantmentListProvider;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
 public class Limitless implements ModInitializer, ClientModInitializer {

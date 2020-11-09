@@ -1,20 +1,15 @@
 package user11681.limitless.config;
 
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import java.util.stream.Collectors;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config.Gui.Background;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.CollapsibleObject;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Category;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
-import net.minecraft.block.Block;
-import net.minecraft.util.registry.Registry;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.TransitiveObject;
 import user11681.limitless.Limitless;
-import user11681.limitless.asm.access.EnchantmentAccess;
-import user11681.limitless.config.annotation.EnchantmentList;
-import user11681.limitless.enchantment.EnchantingBlockEntry;
+import user11681.limitless.config.anvil.AnvilConfiguration;
+import user11681.limitless.config.command.CommandConfiguration;
+import user11681.limitless.config.enchantment.EnchantmentConfiguration;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Config(name = Limitless.ID)
@@ -24,75 +19,34 @@ public class LimitlessConfiguration implements ConfigData {
     public transient static final String INTERNAL_NAME = "user11681/limitless/config/LimitlessConfiguration";
 
     @Excluded
-    public transient static final String DESCRIPTOR = "Luser11681/limitless/config/LimitlessConfiguration;";
+    public transient static final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
+
+    @Excluded
+    public static transient final String ENCHANTMENT = "default";
+
+    @Excluded
+    public static transient final String ANVIL = "anvil";
+
+    @Excluded
+    public static transient final String COMMAND = "command";
 
     @Excluded
     public transient static LimitlessConfiguration instance;
 
-    @Excluded
-    public transient final Reference2ReferenceOpenHashMap<Block, EnchantingBlockEntry> enchantingBlockToEntry;
+    @Category(ENCHANTMENT)
+    @TransitiveObject
+    public EnchantmentConfiguration enchantment = new EnchantmentConfiguration();
 
-    public int globalMaxLevel = Integer.MAX_VALUE;
+    @Category(ANVIL)
+    @TransitiveObject
+    public AnvilConfiguration anvil = new AnvilConfiguration();
 
-    public int maxEnchantingBlocks = 1 << 9;
-
-    public int maxEnchantingPower = 1 << 10;
-
-    public boolean allowTreasure = true;
-
-    public boolean allowReenchanting = true;
-
-    public boolean anvilIncrementalCost = false;
-
-    @CollapsibleObject
-    public RadiusConfiguration enchantingBlockRadiusXZ = new RadiusConfiguration(2, 8);
-
-    @CollapsibleObject
-    public VerticalRadiusConfiguration enchantingBlockRadiusY = new VerticalRadiusConfiguration(-5, 5);
-
-    @CollapsibleObject
-    public EnchantmentParticleConfiguration enchantmentParticles = new EnchantmentParticleConfiguration();
-
-    // waiting for Cloth Config to update to allow more complex entries
-    @Excluded
-    public transient ObjectOpenHashSet<EnchantingBlockEntry> enchantingBlocks;
-
-    @EnchantmentList
-    public ObjectLinkedOpenHashSet<EnchantmentConfiguration> maxLevels;
+    @Category(COMMAND)
+    @TransitiveObject
+    public CommandConfiguration command = new CommandConfiguration();
 
     @Override
     public void validatePostLoad() {
-        final ObjectLinkedOpenHashSet<EnchantmentConfiguration> oldMaxLevels = this.maxLevels;
-
-        this.maxLevels = Registry.ENCHANTMENT
-            .getIds()
-            .stream()
-            .sorted()
-            .map(EnchantmentConfiguration::new)
-            .collect(Collectors.toCollection(ObjectLinkedOpenHashSet::new));
-
-        if (oldMaxLevels != null) {
-            EnchantmentAccess enchantment;
-
-            for (final EnchantmentConfiguration configuration : oldMaxLevels) {
-                if (this.maxLevels.contains(configuration)) {
-                    this.maxLevels.remove(configuration);
-                    this.maxLevels.add(configuration);
-
-                    enchantment = (EnchantmentAccess) configuration.getEnchantment();
-                    enchantment.limitless_setMaxLevel(configuration.maxLevel);
-                    enchantment.limitless_setUseGlobalMaxLevel(configuration.useGlobalMaxLevel);
-                }
-            }
-        }
-    }
-
-    {
-        this.enchantingBlocks = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 0, 1, 1);
-        this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
-
-        for (final EnchantingBlockEntry entry : enchantingBlocks) {
-            this.enchantingBlockToEntry.put(entry.getBlock(), entry);
-        }
+        this.enchantment.validatePostLoad();
     }
 }

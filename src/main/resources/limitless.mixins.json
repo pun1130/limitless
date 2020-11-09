@@ -4,20 +4,25 @@
     "compatibilityLevel": "JAVA_8",
     "plugin": "user11681.limitless.asm.LimitlessTransformer",
     "mixins": [
-        "enchantment.AnvilScreenHandlerMixin",
-        "enchantment.EnchantCommandMixin",
+        "access.EnchantmentScreenHandlerAccess",
+        "anvil.AnvilScreenHandlerMixin",
+        "command.EffectCommandMixin",
+        "command.EnchantCommandMixin",
+        "command.FillCommandMixin",
         "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin",
         "enchantment.EnchantmentMixin",
         "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.ItemStackMixin",
+        "enchantment.PlayerEntityMixin",
         "enchantment.dummy.EnchantBookFactoryDummyMixin",
         "i18n.LanguageMixin"
     ],
     "client": [
+        "anvil.AnvilScreenMixin",
         "enchantment.EnchantingTableBlockMixin",
-        "enchantment.dummy.AnvilScreenDummyMixin",
+        "enchantment.EnchantmentScreenMixin",
         "i18n.I18nMixin",
         "i18n.TranslationStorageMixin"
     ],
