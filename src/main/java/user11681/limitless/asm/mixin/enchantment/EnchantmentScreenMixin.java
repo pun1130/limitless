@@ -32,17 +32,22 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
     }
 
     @ModifyVariable(method = "drawBackground",
+                    at = @At(value = "INVOKE",
+                             target = "Lnet/minecraft/client/gui/screen/ingame/EnchantmentScreen;setZOffset(I)V"),
+                    index = 17)
+    public int captureBackgroundEntryID(final int ID) {
+        return this.backgroundEntryID = ID;
+    }
+
+    @ModifyVariable(method = "drawBackground",
                     at = @At(value = "STORE"),
                     ordinal = 0)
     public String showNormalizedCost(final String level) {
         final PlayerEntity player = this.playerInventory.player;
         final EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
-        final int cost = this.backgroundEntryID + 1;
-
-        this.backgroundEntryID = cost % 3;
 
         if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > 30) {
-            final int relative = ExperienceUtil.relativeCost(player, normalization.offset, cost);
+            final int relative = ExperienceUtil.relativeCost(player, normalization.offset, this.backgroundEntryID + 1);
 
             if (normalization.display == CostDisplay.REPLACE) {
                 return Integer.toString(relative);

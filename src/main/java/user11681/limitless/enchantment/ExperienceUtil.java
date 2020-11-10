@@ -12,14 +12,12 @@ public class ExperienceUtil {
             player.addExperienceLevels(levels);
         } else {
             if (levels > 0) {
-                levels += offset;
-
-                for (int i = offset; i != levels; i++) {
-                    player.addExperience((int) fromPreviousLevel(i));
+                for (levels = offset - levels; levels != offset; levels++) {
+                    player.addExperience((int) fromPreviousLevel(levels));
                 }
             } else {
-                for (levels -= offset; levels != -offset; levels++) {
-                    player.addExperience((int) -toNextLevel(levels));
+                for (levels = offset + levels; levels != offset; levels++) {
+                    player.addExperience((int) -fromPreviousLevel(-levels));
                 }
             }
         }
@@ -35,7 +33,7 @@ public class ExperienceUtil {
         if (level <= offset) {
             return level - levels;
         } else {
-            return level - ExperienceUtil.toLevel(ExperienceUtil.getCurrentExperience(player) - ExperienceUtil.difference(offset, levels + offset));
+            return level - ExperienceUtil.toLevel(ExperienceUtil.getCurrentExperience(player) - ExperienceUtil.difference(offset - levels, offset));
         }
     }
 

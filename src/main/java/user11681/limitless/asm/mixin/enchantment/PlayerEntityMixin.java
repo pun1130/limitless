@@ -19,6 +19,8 @@ abstract class PlayerEntityMixin {
 
         if (normalization.enabled && player.experienceLevel > normalization.offset) {
             ExperienceUtil.addExperienceLevelsRelatively(player, normalization.offset, levels - player.experienceLevel);
+        } else {
+            player.experienceLevel = levels;
         }
     }
 }
