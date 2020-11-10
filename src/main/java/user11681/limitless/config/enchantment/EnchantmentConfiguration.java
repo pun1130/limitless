@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.enchantment.annotation.EnchantmentList;
+import user11681.limitless.config.enchantment.entry.EnchantingConflicts;
 import user11681.limitless.config.enchantment.entry.EnchantmentEntry;
 import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import user11681.limitless.config.enchantment.entry.ReenchantingConfiguration;
@@ -31,6 +32,9 @@ public class EnchantmentConfiguration implements ConfigData {
     public boolean allowTreasure = true;
 
     public boolean revealEnchantments = false;
+
+    @CollapsibleObject
+    public EnchantingConflicts conflicts = new EnchantingConflicts();
 
     @CollapsibleObject
     public EnchantmentNormalizationEntry normalization = new EnchantmentNormalizationEntry();

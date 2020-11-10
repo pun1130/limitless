@@ -1,7 +1,8 @@
 package user11681.limitless.asm.mixin.anvil;
 
-import net.minecraft.entity.player.PlayerAbilities;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import user11681.limitless.config.LimitlessConfiguration;
-import user11681.limitless.config.anvil.entry.FilterConfiguration;
 import user11681.limitless.enchantment.ExperienceUtil;
 
 @Mixin(value = AnvilScreenHandler.class, priority = -1000)
@@ -24,17 +24,25 @@ abstract class AnvilScreenHandlerMixin {
     }
 
     @Redirect(method = "updateResult",
-              at = @At(value = "FIELD",
-                       target = "Lnet/minecraft/entity/player/PlayerAbilities;creativeMode:Z",
-                       ordinal = 0))
-    public boolean disableFilter(final PlayerAbilities abilities) {
-        final FilterConfiguration filter = LimitlessConfiguration.instance.anvil.filter;
-
-        if (abilities.creativeMode) {
-            return !filter.creative;
-        } else {
-            return !filter.survival;
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z"))
+    public boolean configureAcceptableItem(final Enchantment enchantment, final ItemStack stack) {
+        if (enchantment.isAcceptableItem(stack)) {
+            return true;
         }
+
+        return LimitlessConfiguration.instance.anvil.mergeIncompatible;
+    }
+
+    @Redirect(method = "updateResult",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/enchantment/Enchantment;canCombine(Lnet/minecraft/enchantment/Enchantment;)Z"))
+    public boolean configureConflict(final Enchantment enchantment, final Enchantment other) {
+        if (enchantment.canCombine(other)) {
+            return true;
+        }
+
+        return LimitlessConfiguration.instance.anvil.mergeConflicts;
     }
 
     @ModifyConstant(method = "updateResult",

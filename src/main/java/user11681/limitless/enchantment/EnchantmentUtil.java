@@ -16,11 +16,11 @@ public interface EnchantmentUtil {
     int ADD = 1;
     int CONFLICT = 2;
 
-    static void mergeEnchantment(final ItemStack itemStack, final EnchantmentLevelEntry enchantment) {
+    static void mergeEnchantment(final ItemStack itemStack, final EnchantmentLevelEntry enchantment, final boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
 
         if (book || itemStack.hasEnchantments()) {
-            if (tryMerge(itemStack, enchantment) == ADD) {
+            if (tryMerge(itemStack, enchantment, mergeConflicts) == ADD) {
                 if (book) {
                     EnchantedBookItem.addEnchantment(itemStack, enchantment);
                 } else {
@@ -32,11 +32,11 @@ public interface EnchantmentUtil {
         }
     }
 
-    static void mergeEnchantment(final ItemStack itemStack, final Enchantment enchantment, final int level) {
+    static void mergeEnchantment(final ItemStack itemStack, final Enchantment enchantment, final int level, final boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
 
         if (book || itemStack.hasEnchantments()) {
-            if (tryMerge(itemStack, enchantment, level) == ADD) {
+            if (tryMerge(itemStack, enchantment, level, mergeConflicts) == ADD) {
                 if (book) {
                     EnchantedBookItem.addEnchantment(itemStack, new EnchantmentLevelEntry(enchantment, level));
                 } else {
@@ -48,11 +48,11 @@ public interface EnchantmentUtil {
         }
     }
 
-    static int tryMerge(final ItemStack itemStack, final EnchantmentLevelEntry enchantment) {
-        return tryMerge(itemStack, enchantment.enchantment, enchantment.level);
+    static int tryMerge(final ItemStack itemStack, final EnchantmentLevelEntry enchantment, final boolean mergeConflicts) {
+        return tryMerge(itemStack, enchantment.enchantment, enchantment.level, mergeConflicts);
     }
 
-    static int tryMerge(final ItemStack itemStack, final Enchantment enchantment, final int level) {
+    static int tryMerge(final ItemStack itemStack, final Enchantment enchantment, final int level, final boolean mergeConflicts) {
         int status = ADD;
 
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
@@ -69,7 +69,7 @@ public interface EnchantmentUtil {
                 }
 
                 return SUCCESS;
-            } else if (status != CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT.get(new Identifier(enchantmentTag.getString("id"))))) {
+            } else if (!mergeConflicts && status != CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT.get(new Identifier(enchantmentTag.getString("id"))))) {
                 status = CONFLICT;
             }
         }

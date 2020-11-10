@@ -2,6 +2,7 @@ package user11681.limitless.config.enchantment.entry;
 
 public class ReenchantingConfiguration {
     public boolean enabled = true;
+    public boolean removeConflicts = true;
     public boolean allowEnchantedBooks = true;
     public boolean allowEquipment = true;
 
