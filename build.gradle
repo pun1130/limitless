@@ -1,0 +1,35 @@
+plugins {
+    id("loom").version("snapshot")
+}
+
+project.group = "user11681"
+project.version = "1.1.0"
+
+loom {
+    minecraftVersion = "1.16.4"
+}
+
+repositories {
+    maven {name = "jitpack"}
+}
+
+dependencies {
+    modInclude("api-base")
+    modInclude("api-resource-loader:0.3.1+")
+    modInclude("api-tag-extensions:1.0.3+")
+    modInclude("gfh")
+
+    bloatedInclude("auto-config")
+    bloatedInclude("cloth-config:4.+")
+
+    mod("phormat")
+    modInclude("commonformatting")
+    modInclude("fabricasmtools")
+
+    apiInclude("shortcode")
+
+    intransitive("mod-menu")
+
+    mod("api:0.28.1+1.16")
+    bloated("aquarius")
+}
