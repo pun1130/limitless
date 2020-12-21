@@ -85,7 +85,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                 iterator.next();
                 iterator.remove();
 
-                final ExtendedInsnList insertion = new ExtendedInsnList()
+                ExtendedInsnList insertion = new ExtendedInsnList()
                     .iload(0)
                     .aload(7)
                     .aload(3)
