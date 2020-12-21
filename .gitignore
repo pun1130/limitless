@@ -1,5 +1,10 @@
 .*
 
+/unsafe
+/reflect
+/shortcode
+/loom
+
 build
 out
 run
