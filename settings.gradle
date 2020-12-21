@@ -7,3 +7,9 @@ pluginManagement {
         maven {url = "https://maven.fabricmc.net"}
     }
 }
+
+includeBuild("unsafe")
+includeBuild("reflect")
+includeBuild("shortcode")
+
+includeBuild("loom")

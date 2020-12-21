@@ -1,5 +1,5 @@
 plugins {
-    id("loom").version("SNAPSHOT")
+    id("loom")
 }
 
 project.group = "user11681"
