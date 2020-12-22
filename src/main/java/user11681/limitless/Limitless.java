@@ -1,7 +1,6 @@
 package user11681.limitless;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import java.lang.reflect.Field;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -12,6 +11,8 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.enchantment.provider.EnchantmentListProvider;
+
+import java.lang.reflect.Field;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
 public class Limitless implements ModInitializer, ClientModInitializer {
@@ -24,8 +25,8 @@ public class Limitless implements ModInitializer, ClientModInitializer {
         LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new).getConfig();
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
+    @Environment(EnvType.CLIENT)
     public void onInitializeClient() {
         AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantmentListProvider(), (final Field field) -> field.getName().equals("maxLevels"));
     }

@@ -1,5 +1,6 @@
 package user11681.limitless.enchantment;
 
+import java.util.List;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
@@ -9,12 +10,36 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import user11681.reflect.Classes;
+import user11681.limitless.asm.access.EnchantmentAccess;
 
 public interface EnchantmentUtil {
+    String INTERNAL_NAME = "user11681/limitless/enchantment/EnchantmentUtil";
+
     int SUCCESS = 0;
     int ADD = 1;
     int CONFLICT = 2;
+
+    static void getHighestSuitableLevel(final int power, final Enchantment enchantment, final List<EnchantmentLevelEntry> entries) {
+        boolean found = false;
+        int lastCandidate = 0;
+
+        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+            if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
+                lastCandidate = i;
+                found = true;
+
+                if (((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel() == 1) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        if (found) {
+            entries.add(new EnchantmentLevelEntry(enchantment, lastCandidate));
+        }
+    }
 
     static void mergeEnchantment(final ItemStack itemStack, final EnchantmentLevelEntry enchantment, final boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
@@ -53,12 +78,18 @@ public interface EnchantmentUtil {
     }
 
     static int tryMerge(final ItemStack itemStack, final Enchantment enchantment, final int level, final boolean mergeConflicts) {
+        final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
+        final ListTag enchantments;
+
+        if (book) {
+            enchantments = EnchantedBookItem.getEnchantmentTag(itemStack);
+        } else {
+            enchantments = itemStack.getEnchantments();
+        }
+
         int status = ADD;
 
-        final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
-        final ListTag enchantments = book ? EnchantedBookItem.getEnchantmentTag(itemStack) : itemStack.getEnchantments();
-
-        for (final CompoundTag enchantmentTag : Classes.<Iterable<CompoundTag>>cast(enchantments)) {
+        for (final CompoundTag enchantmentTag : (Iterable<CompoundTag>) (Object) enchantments) {
             if (new Identifier(enchantmentTag.getString("id")).equals(Registry.ENCHANTMENT.getId(enchantment))) {
                 final int tagLevel = enchantmentTag.getInt("lvl");
 

@@ -10,35 +10,37 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import user11681.limitless.config.LimitlessConfiguration;
+import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
 import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 import user11681.limitless.enchantment.EnchantingBlocks;
 
-@Mixin(value = EnchantingTableBlock.class,
-       priority = 100)
+@Mixin(value = EnchantingTableBlock.class)
 abstract class EnchantingTableBlockMixin extends BlockWithEntity {
-    protected EnchantingTableBlockMixin(final Settings settings) {
+    protected EnchantingTableBlockMixin(Settings settings) {
         super(settings);
     }
 
-    /**
-     * @author user11681
-     * @reason replacing the loop to increase glyph particle range.
-     */
-    @Overwrite
+//    /**
+//     * @author user11681
+//     * @reason replacing the loop in order to increase glyph particle range.
+//     */
+//    @Overwrite
+    @Inject(at = @At("HEAD"), method = "randomDisplayTick", cancellable = true)
     @Environment(EnvType.CLIENT)
-    public void randomDisplayTick(BlockState enchantingTableState, World world, BlockPos enchantingTablePos, Random random) {
+    public void randomDisplayTick(BlockState enchantingTableState, World world, BlockPos enchantingTablePos, Random random, CallbackInfo info) {
         super.randomDisplayTick(enchantingTableState, world, enchantingTablePos, random);
 
-        final LimitlessConfiguration configuration = LimitlessConfiguration.instance;
-        final EnchantmentParticleConfiguration particleConfiguration = configuration.enchantment.particles;
+        LimitlessConfiguration configuration = LimitlessConfiguration.instance;
+        EnchantmentParticleConfiguration particleConfiguration = configuration.enchantment.particles;
 
         if (particleConfiguration.enabled) {
-            final HorizontalRadius horizontalRadiusRange;
-            final VerticalRadius verticalRadiusRange;
+            HorizontalRadius horizontalRadiusRange;
+            VerticalRadius verticalRadiusRange;
 
             if (particleConfiguration.inherit) {
                 horizontalRadiusRange = configuration.enchantment.enchantingBlocks.radius.xz;
@@ -48,23 +50,18 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
                 verticalRadiusRange = particleConfiguration.radius.y;
             }
 
-            final int maxVerticalRadius = verticalRadiusRange.max;
-            final int maxHorizontalRadius = horizontalRadiusRange.max;
-            int verticalRadius;
-            int horizontalRadius;
-            int end;
-            int displacement;
-            BlockState blockState;
+            int maxVerticalRadius = verticalRadiusRange.max;
+            int maxHorizontalRadius = horizontalRadiusRange.max;
 
             for (int direction = -1; direction <= 1; direction += 2) {
-                for (verticalRadius = verticalRadiusRange.min; verticalRadius <= maxVerticalRadius; verticalRadius++) {
-                    for (horizontalRadius = horizontalRadiusRange.min; horizontalRadius <= maxHorizontalRadius; horizontalRadius++) {
-                        end = direction * horizontalRadius;
+                for (int verticalRadius = verticalRadiusRange.min; verticalRadius <= maxVerticalRadius; verticalRadius++) {
+                    for (int horizontalRadius = horizontalRadiusRange.min; horizontalRadius <= maxHorizontalRadius; horizontalRadius++) {
+                        int end = direction * horizontalRadius;
 
                         if (random.nextInt(16) == 0) {
                             for (int distance = -horizontalRadius; distance <= horizontalRadius; distance++) {
-                                displacement = direction * distance;
-                                blockState = world.getBlockState(enchantingTablePos.add(displacement, verticalRadius, end));
+                                int displacement = direction * distance;
+                                BlockState blockState = world.getBlockState(enchantingTablePos.add(displacement, verticalRadius, end));
 
                                 if (blockState.isIn(EnchantingBlocks.tag)) {
                                     world.addParticle(ParticleTypes.ENCHANT,
@@ -97,5 +94,7 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
                 }
             }
         }
+
+        info.cancel();
     }
 }

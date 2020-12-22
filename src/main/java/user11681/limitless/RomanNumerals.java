@@ -7,58 +7,26 @@ import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import user11681.commonformatting.CommonFormatting;
 
-public class RomanNumerals {
-    private static final String[] BASE_NUMERALS = {"I", "V", "X", "L", "C", "D", "M"};
-
-    private static final Long2ReferenceOpenHashMap<String> CACHE = new Long2ReferenceOpenHashMap<>(new long[]{0}, new String[]{"nulla"});
-
-    protected static final ReferenceArrayList<String> ROMAN = new ReferenceArrayList<String>(BASE_NUMERALS, false) {{
-        this.size = this.a.length;
-
-        final int baseCount = BASE_NUMERALS.length;
-        int j;
-        int i;
-        StringBuilder builder;
-
-        for (int level = 0; level < 2; level++) {
-            for (i = 1; i < baseCount; i++) {
-                builder = new StringBuilder();
-
-                for (j = 0; j <= level; j++) {
-                    builder.append("§").append(CommonFormatting.OVERLINE_CODES[j]);
-                }
-
-                this.add(builder + BASE_NUMERALS[i] + "§r");
-            }
-        }
-    }};
-    protected static final IntList DECIMAL = new IntArrayList(new int[]{1, 5, 10, 50, 100, 500, 1000}, false) {{
-        this.size = this.a.length;
-
-        final int baseCount = BASE_NUMERALS.length;
-        int j;
-
-        for (int level = 1; level < 3; level++) {
-            for (j = 1; j < baseCount; j++) {
-                this.add(this.getInt(j) * IntMath.pow(1000, level));
-            }
-        }
-    }};
+public final class RomanNumerals {
+    private static final String[] baseNumerals = {"I", "V", "X", "L", "C", "D", "M"};
+    private static final Long2ReferenceOpenHashMap<String> cache = new Long2ReferenceOpenHashMap<>(new long[]{0}, new String[]{"nulla"});
+    private static final ReferenceArrayList<String> roman = ReferenceArrayList.wrap(baseNumerals);
+    private static final IntList decimal = IntArrayList.wrap(new int[]{1, 5, 10, 50, 100, 500, 1000});
 
     public static String fromDecimal(final long decimal) {
-        final String cachedValue = CACHE.get(decimal);
+        final String cachedValue = cache.get(decimal);
 
         if (cachedValue != null) {
             return cachedValue;
         }
 
-        long mutableDecimal = decimal;
         final StringBuilder roman = new StringBuilder();
-        final int index = DECIMAL.size() - 1;
-        final int largest = DECIMAL.getInt(index);
+        final int index = RomanNumerals.decimal.size() - 1;
+        final int largest = RomanNumerals.decimal.getInt(index);
+        long mutableDecimal = decimal;
 
         while (mutableDecimal >= largest) {
-            roman.append(ROMAN.get(index));
+            roman.append(RomanNumerals.roman.get(index));
             mutableDecimal -= largest;
         }
 
@@ -93,12 +61,34 @@ public class RomanNumerals {
             div /= 10;
         }
 
-        CACHE.put(decimal, roman.toString());
+        cache.put(decimal, roman.toString());
 
         return roman.toString();
     }
 
     private static String getRoman(final int decimal) {
-        return ROMAN.get(DECIMAL.indexOf(decimal));
+        return roman.get(RomanNumerals.decimal.indexOf(decimal));
+    }
+
+    static {
+        final int baseCount = baseNumerals.length;
+
+        for (int level = 0; level < 2; level++) {
+            for (int i = 1; i < baseCount; i++) {
+                final StringBuilder builder = new StringBuilder();
+
+                for (int j = 0; j <= level; j++) {
+                    builder.append("§").append(CommonFormatting.OVERLINE_CODES[j]);
+                }
+
+                roman.add(builder.append(baseNumerals[i]).append("§r").toString());
+            }
+        }
+
+        for (int level = 1; level < 3; level++) {
+            for (int j = 1; j < baseCount; j++) {
+                decimal.add(decimal.getInt(j) * IntMath.pow(1000, level));
+            }
+        }
     }
 }

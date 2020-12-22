@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import user11681.limitless.Limitless;
-import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.LimitlessConfiguration;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
@@ -96,29 +95,6 @@ abstract class EnchantmentHelperMixin {
             }
         } else {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);
-        }
-    }
-
-    private static void limitless_getHighestSuitableLevel(final int power, final Enchantment enchantment, final List<EnchantmentLevelEntry> entries) {
-        final int maxLevel = enchantment.getMaxLevel();
-        boolean found = false;
-        int lastCandidate = 0;
-
-        for (int i = enchantment.getMinLevel(); i <= maxLevel; i++) {
-            if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
-                lastCandidate = i;
-                found = true;
-
-                if (((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel() == 1) {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-
-        if (found) {
-            entries.add(new EnchantmentLevelEntry(enchantment, lastCandidate));
         }
     }
 }

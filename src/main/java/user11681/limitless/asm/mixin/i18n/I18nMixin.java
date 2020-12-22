@@ -11,8 +11,8 @@ import user11681.limitless.RomanNumerals;
 
 @Environment(EnvType.CLIENT)
 @Mixin(I18n.class)
-public abstract class I18nMixin {
-    @Inject(method = "translate(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;", at = @At("HEAD"), cancellable = true)
+abstract class I18nMixin {
+    @Inject(method = "translate", at = @At("HEAD"), cancellable = true)
     private static void translate(final String key, final Object[] args, final CallbackInfoReturnable<String> info) {
         if (key.matches("enchantment\\.level\\.\\d+")) {
             info.setReturnValue(RomanNumerals.fromDecimal(Integer.parseInt(key.replaceAll("\\D", ""))));

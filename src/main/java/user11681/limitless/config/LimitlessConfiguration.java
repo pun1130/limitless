@@ -8,7 +8,6 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.TransitiveObject;
 import user11681.limitless.Limitless;
 import user11681.limitless.config.anvil.AnvilConfiguration;
-import user11681.limitless.config.command.CommandConfiguration;
 import user11681.limitless.config.enchantment.EnchantmentConfiguration;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
@@ -40,10 +39,6 @@ public class LimitlessConfiguration implements ConfigData {
     @Category(ANVIL)
     @TransitiveObject
     public AnvilConfiguration anvil = new AnvilConfiguration();
-
-    @Category(COMMAND)
-    @TransitiveObject
-    public CommandConfiguration command = new CommandConfiguration();
 
     @Override
     public void validatePostLoad() {

@@ -1,119 +1,36 @@
 plugins {
-    id("java-library")
-    id("maven")
-    id("maven-publish")
-    id("fabric-loom") version("0.5-SNAPSHOT")
-    id("com.jfrog.bintray") version("1.8.5")
+    id("loom")
 }
 
-apply(from: "project.gradle")
-
-sourceCompatibility = 8
-targetCompatibility = 8
-
 project.group = "user11681"
+project.version = "1.1.0"
 
-void nospam() {
-    dependencies {
-        modApi("${project.narratorOff}")
-        modApi("${project.noauth}")
-    }
+loom {
+    minecraftVersion = "1.16.4"
 }
 
 repositories {
-    mavenLocal()
-
-    maven {url = "https://dl.bintray.com/user11681/maven"}
-    maven {url = "https://dl.bintray.com/ladysnake/libs"}
-    maven {url = "https://dl.bintray.com/zundrel/wrenchable"}
-    maven {url = "https://dl.bintray.com/earthcomputer/mods"}
-    maven {url = "https://maven.blamejared.com"}
-    maven {url = "https://maven.dblsaiko.net/"}
-    maven {url = "https://maven.jamieswhiteshirt.com/libs-release"}
-    maven {url = "https://mod-buildcraft.com/maven"}
-    maven {url = "https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master"}
-    maven {url = "https://server.bbkr.space/artifactory/libs-release"}
-    maven {url = "https://jitpack.io"}
+    maven {name = "jitpack"}
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${project.minecraftVersion}")
-    mappings("net.fabricmc:yarn:${project.minecraftVersion}+build.${project.yarnBuild}:v2")
-    modImplementation("net.fabricmc:fabric-loader:+")
+    modInclude("api-base")
+    modInclude("api-resource-loader:0.3.1+")
+    modInclude("api-tag-extensions:1.0.3+")
+    modInclude("gross-fabric-hacks")
 
-    testImplementation("${project.junit}")
-}
+    bloatedInclude("auto-config")
+    bloatedInclude("cloth-config:4.+")
 
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
-}
+    mod("phormat")
+    modInclude("common-formatting")
+    modInclude("huntingham-hills")
 
-processResources {
-    inputs.property("version", project.version)
+    apiInclude("shortcode")
 
-    from(sourceSets.main.resources.srcDirs) {
-        include("fabric.mod.json")
-        expand("version": project.version)
-    }
+    intransitive("mod-menu:1.14.6+")
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude("fabric.mod.json")
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-
-    from(sourceSets.main.allSource)
-}
-
-jar {
-    from("LICENSE")
-}
-
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_API_KEY")
-    setPublications("bintray")
-    publish = true
-
-    pkg {
-        repo = "maven"
-        name = project.name
-        licenses = ["LGPL-3.0"]
-        vcsUrl = "https://github.com/user11681/" + project.name + ".git"
-
-        version {
-            name = project.version
-            released = new Date()
-            githubRepo = "user11681/" + project.name
-            issueTrackerUrl = "https://github.com/user11681/" + project.name + "/issues"
-        }
-    }
-}
-
-publishing {
-    publications {
-        bintray(MavenPublication) {
-            groupId(project.group)
-            artifactId(project.name)
-            version(project.version)
-
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
+    mod("api:0.28.3+1.16")
+    mod("aquarius")
+    mod("charm")
 }
