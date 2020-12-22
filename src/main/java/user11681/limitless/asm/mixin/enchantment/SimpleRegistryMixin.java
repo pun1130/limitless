@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import user11681.limitless.asm.access.EnchantmentAccess;
 
 @Mixin(SimpleRegistry.class)
-public abstract class SimpleRegistryMixin<T> {
+abstract class SimpleRegistryMixin<T> {
     @Inject(method = "set(ILnet/minecraft/util/registry/RegistryKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;Z)Ljava/lang/Object;",
             at = @At("RETURN"))
     public <V> void initializeEnchantment(int rawId, RegistryKey<T> key, V entry, Lifecycle lifecycle, boolean checkDuplicateKeys, CallbackInfoReturnable<V> cir) {

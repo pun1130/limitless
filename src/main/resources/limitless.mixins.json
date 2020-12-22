@@ -2,12 +2,9 @@
     "required": true,
     "package": "user11681.limitless.asm.mixin",
     "compatibilityLevel": "JAVA_8",
-    "plugin": "user11681.limitless.asm.LimitlessTransformer",
+    "plugin": "user11681.limitless.asm.LimitlessMixinPlugin",
     "mixins": [
         "anvil.AnvilScreenHandlerMixin",
-        "command.EffectCommandMixin",
-        "command.EnchantCommandMixin",
-        "command.FillCommandMixin",
         "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin",
         "enchantment.EnchantmentMixin",

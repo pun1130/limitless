@@ -1,9 +1,8 @@
 package user11681.limitless.asm;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.List;
 import java.util.ListIterator;
-
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.devtech.grossfabrichacks.transformer.TransformerApi;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -22,7 +21,7 @@ import user11681.limitless.enchantment.EnchantmentUtil;
 import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.ExtendedInsnList;
 
-public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
+public class LimitlessMixinPlugin extends TransformerPlugin implements Opcodes {
     private static final String getIntDescriptor = "(Ljava/lang/String;)I";
     private static final String putIntDescriptor = "(Ljava/lang/String;I)V";
 
@@ -38,7 +37,6 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     private static final String putInt = method(10569);
 
     private static final String limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
-    private static final String limitless_initialize = "limitless_initialize";
     private static final String limitless_maxLevel = "limitless_maxLevel";
 
     private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(new String[]{Enchantment});
@@ -55,9 +53,9 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         this.putMethod("getPossibleEntries", 8229);
         this.putMethod("generateEnchantments", 8230);
 
-        this.registerPostMixinMethodTransformer(klass(3853, 1648), this.method("create"), null, LimitlessTransformer::transformEnchantBookFactory);
-        this.registerPostMixinMethodTransformer(klass(1890), this.method("getPossibleEntries"), null, LimitlessTransformer::transformEnchantmentHelperGetPossibleEntries);
-        this.registerPostMixinMethodTransformer(klass(1890), this.method("generateEnchantments"), null, LimitlessTransformer::transformEnchantmentHelperGenerateEnchantments);
+        this.registerPostMixinMethodTransformer(klass(3853, 1648), this.method("create"), null, LimitlessMixinPlugin::transformEnchantBookFactory);
+        this.registerPostMixinMethodTransformer(klass(1890), this.method("getPossibleEntries"), null, LimitlessMixinPlugin::transformEnchantmentHelperGetPossibleEntries);
+        this.registerPostMixinMethodTransformer(klass(1890), this.method("generateEnchantments"), null, LimitlessMixinPlugin::transformEnchantmentHelperGenerateEnchantments);
         this.registerPostMixinMethodTransformer(klass(1718), "method_17411", null, this::transformEnchantmentScreenHandler);
     }
 
@@ -167,8 +165,8 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     }
 
     public static void transform(ClassNode klass) {
-        final List<MethodNode> methods = klass.methods;
-        final int methodCount = methods.size();
+        List<MethodNode> methods = klass.methods;
+        int methodCount = methods.size();
         AbstractInsnNode instruction;
         MethodInsnNode methodInstruction;
         int i;
@@ -260,6 +258,6 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     }
 
     static {
-        TransformerApi.registerPostMixinAsmClassTransformer(LimitlessTransformer::transform);
+        TransformerApi.registerPostMixinAsmClassTransformer(LimitlessMixinPlugin::transform);
     }
 }

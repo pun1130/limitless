@@ -32,5 +32,5 @@ dependencies {
 
     mod("api:0.28.3+1.16")
     mod("aquarius")
-    mod("moenchantments")
+    mod("charm")
 }
