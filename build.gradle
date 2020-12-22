@@ -17,19 +17,20 @@ dependencies {
     modInclude("api-base")
     modInclude("api-resource-loader:0.3.1+")
     modInclude("api-tag-extensions:1.0.3+")
-    modInclude("gfh")
+    modInclude("gross-fabric-hacks")
 
     bloatedInclude("auto-config")
     bloatedInclude("cloth-config:4.+")
 
     mod("phormat")
-    modInclude("commonformatting")
-    modInclude("fabricasmtools")
+    modInclude("common-formatting")
+    modInclude("huntingham-hills")
 
     apiInclude("shortcode")
 
     intransitive("mod-menu")
 
-    mod("api:0.28.1+1.16")
-    bloated("aquarius")
+    mod("api:0.28.3+1.16")
+    mod("aquarius")
+    mod("moenchantments")
 }

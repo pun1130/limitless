@@ -1,12 +1,12 @@
 [submodule "loom"]
 	path = loom
 	url = git@github.com:user11681/loom
-[submodule "shortcode"]
-	path = shortcode
-	url = git@github.com:user11681/shortcode
 [submodule "reflect"]
 	path = reflect
 	url = git@github.com:user11681/reflect
+[submodule "shortcode"]
+	path = shortcode
+	url = git@github.com:user11681/shortcode
 [submodule "unsafe"]
 	path = unsafe
 	url = git@github.com:user11681/unsafe

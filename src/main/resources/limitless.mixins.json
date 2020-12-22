@@ -15,6 +15,7 @@
         "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.ItemStackMixin",
         "enchantment.PlayerEntityMixin",
+        "enchantment.SimpleRegistryMixin",
         "enchantment.dummy.EnchantBookFactoryDummyMixin",
         "i18n.LanguageMixin"
     ],

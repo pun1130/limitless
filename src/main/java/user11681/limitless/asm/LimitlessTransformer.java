@@ -41,10 +41,10 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     private static final String limitless_initialize = "limitless_initialize";
     private static final String limitless_maxLevel = "limitless_maxLevel";
 
-    private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(new String[]{Enchantment}, 0, 1, 1);
+    private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(new String[]{Enchantment});
 
     @Override
-    public void onLoad(final String mixinPackage) {
+    public void onLoad(String mixinPackage) {
         super.onLoad(mixinPackage);
 
         this.putClass("World", 1937);
@@ -61,7 +61,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         this.registerPostMixinMethodTransformer(klass(1718), "method_17411", null, this::transformEnchantmentScreenHandler);
     }
 
-    private static void transformEnchantBookFactory(final MethodNode method) {
+    private static void transformEnchantBookFactory(MethodNode method) {
         AbstractInsnNode instruction = method.instructions.getFirst();
 
         while (instruction != null) {
@@ -73,7 +73,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         }
     }
 
-    private static void transformEnchantmentHelperGetPossibleEntries(final MethodNode method) {
+    private static void transformEnchantmentHelperGetPossibleEntries(MethodNode method) {
         final InsnList instructions = method.instructions;
         final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
@@ -92,7 +92,8 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                     .invokestatic(
                         EnchantmentUtil.INTERNAL_NAME,
                         "getHighestSuitableLevel",
-                        Shortcode.composeMethodDescriptor("V", "I", Enchantment, "java/util/List")
+                        Shortcode.composeMethodDescriptor("V", "I", Enchantment, "java/util/List"),
+                        true
                     );
 
                 instructions.insert(iterator.previous(), insertion);
@@ -100,7 +101,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         );
     }
 
-    private static void transformEnchantmentHelperGenerateEnchantments(final MethodNode method) {
+    private static void transformEnchantmentHelperGenerateEnchantments(MethodNode method) {
         final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
         Shortcode.findForward(iterator,
@@ -117,7 +118,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         );
     }
 
-    private void transformEnchantmentScreenHandler(final MethodNode method) {
+    private void transformEnchantmentScreenHandler(MethodNode method) {
         final InsnList instructions = method.instructions;
         final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
@@ -165,7 +166,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         );
     }
 
-    public static void transform(final ClassNode klass) {
+    public static void transform(ClassNode klass) {
         final List<MethodNode> methods = klass.methods;
         final int methodCount = methods.size();
         AbstractInsnNode instruction;
@@ -197,27 +198,6 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                     newGetMaxLevel.visitInsn(Opcodes.IRETURN);
 
                     method.name = limitless_getOriginalMaxLevel;
-
-                    for (int j = 0; j != methodCount; j++) {
-                        if ("<init>".equals(methods.get(j).name)) {
-                            InsnList instructions = methods.get(j).instructions;
-                            instruction = instructions.getFirst();
-
-                            while (instruction != null) {
-                                if (instruction.getOpcode() == Opcodes.RETURN) {
-                                    AbstractInsnNode lastInstruction = new InsnNode(Opcodes.RETURN);
-                                    ExtendedInsnList setField = new ExtendedInsnList()
-                                        .aload(0)
-                                        .invokespecial(Enchantment, limitless_initialize, "()V")
-                                        .append(lastInstruction);
-
-                                    instructions.insertBefore(instruction, setField);
-                                }
-
-                                instruction = instruction.getNext();
-                            }
-                        }
-                    }
                 } else if (method.name.equals(getMaxPower) && method.desc.equals("(I)I")) {
                     method.name = "limitless_getOriginalMaxPower";
 
@@ -234,6 +214,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
 
             while (instruction != null) {
                 if (instruction.getType() == AbstractInsnNode.METHOD_INSN) {
+                    // concern
 //                    switch (instruction.getOpcode()) {
 //                        case Opcodes.INVOKEVIRTUAL:
                     if (CompoundTag.equals(((MethodInsnNode) instruction).owner)) {

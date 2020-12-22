@@ -11,12 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.enchantment.annotation.EnchantmentList;
+import user11681.limitless.config.enchantment.entry.EnchantingBlockConfiguration;
 import user11681.limitless.config.enchantment.entry.EnchantingConflicts;
 import user11681.limitless.config.enchantment.entry.EnchantmentEntry;
 import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import user11681.limitless.config.enchantment.entry.ReenchantingConfiguration;
 import user11681.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry;
-import user11681.limitless.config.enchantment.entry.EnchantingBlockConfiguration;
 import user11681.limitless.enchantment.EnchantingBlockEntry;
 
 public class EnchantmentConfiguration implements ConfigData {
@@ -55,7 +55,7 @@ public class EnchantmentConfiguration implements ConfigData {
     public transient final Reference2ReferenceOpenHashMap<Block, EnchantingBlockEntry> enchantingBlockToEntry;
 
     public EnchantmentConfiguration() {
-        this.enchantingBlocks.allowed = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)}, 0, 1, 1);
+        this.enchantingBlocks.allowed = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)});
         this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
 
         for (final EnchantingBlockEntry entry : enchantingBlocks.allowed) {
