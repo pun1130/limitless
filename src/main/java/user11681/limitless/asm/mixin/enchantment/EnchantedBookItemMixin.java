@@ -18,14 +18,14 @@ abstract class EnchantedBookItemMixin extends Item {
     @Redirect(method = "appendStacks",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
-    public int fixStacks(final Enchantment enchantment) {
+    public int fixStacks(Enchantment enchantment) {
         return ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel();
     }
 
     @SuppressWarnings("DefaultAnnotationParam")
     @ModifyConstant(method = "isEnchantable",
                     constant = @Constant(intValue = 0))
-    public int makeReenchantable(final int previous) {
+    public int makeReenchantable(int previous) {
         return LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? 1 : previous;
     }
 
@@ -35,7 +35,7 @@ abstract class EnchantedBookItemMixin extends Item {
         return LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK.getEnchantability() : 0;
     }
 
-    public EnchantedBookItemMixin(final Settings settings) {
+    public EnchantedBookItemMixin(Settings settings) {
         super(settings);
     }
 }

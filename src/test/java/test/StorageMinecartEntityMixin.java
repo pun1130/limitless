@@ -11,7 +11,7 @@ abstract class StorageMinecartEntityMixin {
     @Redirect(method = "createMenu",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/entity/player/PlayerEntity;isSpectator()Z"))
-    public boolean forceLoot(final PlayerEntity entity) {
+    public boolean forceLoot(PlayerEntity entity) {
         return false;
     }
 }

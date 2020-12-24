@@ -3,11 +3,11 @@ package user11681.limitless.enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class ExperienceUtil {
-    public static void addExperienceLevelsNormalized(final PlayerEntity player, int levels) {
+    public static void addExperienceLevelsNormalized(PlayerEntity player, int levels) {
         addExperienceLevelsRelatively(player, 0, levels);
     }
 
-    public static void addExperienceLevelsRelatively(final PlayerEntity player, final int offset, int levels) {
+    public static void addExperienceLevelsRelatively(PlayerEntity player, int offset, int levels) {
         if (player.experienceLevel <= offset) {
             player.addExperienceLevels(levels);
         } else {
@@ -23,11 +23,11 @@ public class ExperienceUtil {
         }
     }
 
-    public static int normalizedCost(final PlayerEntity player, final int levels) {
+    public static int normalizedCost(PlayerEntity player, int levels) {
         return relativeCost(player, 0, levels);
     }
 
-    public static int relativeCost(final PlayerEntity player, final int offset, final int levels) {
+    public static int relativeCost(PlayerEntity player, int offset, int levels) {
         final int level = player.experienceLevel;
 
         if (level <= offset) {
@@ -37,7 +37,7 @@ public class ExperienceUtil {
         }
     }
 
-    public static long getCurrentExperience(final PlayerEntity player) {
+    public static long getCurrentExperience(PlayerEntity player) {
         return normalizedExperience(player.experienceLevel) + (long) (toNextLevel(player.experienceLevel) * (double) player.experienceProgress);
     }
 
@@ -57,7 +57,7 @@ public class ExperienceUtil {
         return difference(0, to - from);
     }
 
-    public static long normalizedExperience(final int level, final double progress) {
+    public static long normalizedExperience(int level, double progress) {
         return normalizedExperience(level) + (long) (progress * normalizedExperience(level + 1));
     }
 
@@ -65,11 +65,11 @@ public class ExperienceUtil {
         return difference(0, level);
     }
 
-    public static long fromPreviousLevel(final int level) {
+    public static long fromPreviousLevel(int level) {
         return difference(level - 1, level);
     }
 
-    public static long toNextLevel(final int level) {
+    public static long toNextLevel(int level) {
         return difference(level, level + 1);
     }
 
@@ -121,7 +121,7 @@ public class ExperienceUtil {
         return total + 9 * (levels * (from + to - 1) / 2) - 158 * levels;
     }
 
-    public static int toLevel(final long experience) {
+    public static int toLevel(long experience) {
         if (experience == 0) {
             return 0;
         }

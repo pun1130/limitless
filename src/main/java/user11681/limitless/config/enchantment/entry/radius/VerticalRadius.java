@@ -11,7 +11,7 @@ public class VerticalRadius {
 
     public VerticalRadius() {}
 
-    public VerticalRadius(final int min, final int max) {
+    public VerticalRadius(int min, int max) {
         this.min = min;
         this.max = max;
     }

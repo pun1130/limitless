@@ -13,15 +13,12 @@
         "enchantment.ItemStackMixin",
         "enchantment.PlayerEntityMixin",
         "enchantment.SimpleRegistryMixin",
-        "enchantment.dummy.EnchantBookFactoryDummyMixin",
-        "i18n.LanguageMixin"
+        "enchantment.dummy.EnchantBookFactoryDummyMixin"
     ],
     "client": [
         "anvil.AnvilScreenMixin",
         "enchantment.EnchantingTableBlockMixin",
-        "enchantment.EnchantmentScreenMixin",
-        "i18n.I18nMixin",
-        "i18n.TranslationStorageMixin"
+        "enchantment.EnchantmentScreenMixin"
     ],
     "injectors": {
         "defaultRequire": 1

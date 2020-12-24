@@ -14,7 +14,7 @@ abstract class PlayerEntityMixin {
               at = @At(value = "FIELD",
                        target = "Lnet/minecraft/entity/player/PlayerEntity;experienceLevel:I",
                        ordinal = 1))
-    public void normalizeCost(final PlayerEntity player, final int levels) {
+    public void normalizeCost(PlayerEntity player, int levels) {
         final EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
 
         if (normalization.enabled && player.experienceLevel > normalization.offset) {

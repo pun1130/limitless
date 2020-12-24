@@ -1,7 +1,6 @@
 package user11681.limitless.asm.mixin.enchantment;
 
 import java.util.List;
-
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import user11681.limitless.asm.access.EnchantmentScreenHandlerAccess;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.common.CostDisplay;
 import user11681.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry;
@@ -28,7 +26,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
     @Unique
     private int renderEntryID;
 
-    public EnchantmentScreenMixin(final EnchantmentScreenHandler handler, final PlayerInventory inventory, final Text title) {
+    public EnchantmentScreenMixin(EnchantmentScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 
@@ -36,19 +34,19 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                     at = @At(value = "INVOKE",
                              target = "Lnet/minecraft/client/gui/screen/ingame/EnchantmentScreen;setZOffset(I)V"),
                     index = 17)
-    public int captureBackgroundEntryID(final int ID) {
+    public int captureBackgroundEntryID(int ID) {
         return this.backgroundEntryID = ID;
     }
 
     @ModifyVariable(method = "drawBackground",
                     at = @At(value = "STORE"),
                     ordinal = 0)
-    public String showNormalizedCost(final String level) {
-        final PlayerEntity player = this.playerInventory.player;
-        final EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
+    public String showNormalizedCost(String level) {
+        PlayerEntity player = this.playerInventory.player;
+        EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
 
         if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > 30) {
-            final int relative = ExperienceUtil.relativeCost(player, normalization.offset, this.backgroundEntryID + 1);
+            int relative = ExperienceUtil.relativeCost(player, normalization.offset, this.backgroundEntryID + 1);
 
             if (normalization.display == CostDisplay.REPLACE) {
                 return Integer.toString(relative);
@@ -65,7 +63,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                              target = "Lnet/minecraft/screen/EnchantmentScreenHandler;enchantmentPower:[I",
                              ordinal = 0),
                     ordinal = 3)
-    public int captureEntryID(final int iteration) {
+    public int captureEntryID(int iteration) {
         return this.renderEntryID = iteration;
     }
 
@@ -73,11 +71,11 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
               at = @At(value = "INVOKE",
                        target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
                        ordinal = 0))
-    public <E> boolean revealEnchantments(final List enchantments, final E enchantmentText) {
+    public boolean revealEnchantments(List<Object> enchantments, Object enchantmentText) {
         if (LimitlessConfiguration.instance.enchantment.revealEnchantments) {
             int index = 0;
 
-            for (final EnchantmentLevelEntry enchantment : ((EnchantmentScreenHandlerAccess) this.handler).invokeGenerateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {
+            for (EnchantmentLevelEntry enchantment : this.handler.generateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {
                 enchantments.add(index++, enchantment.enchantment.getName(enchantment.level));
             }
         } else {

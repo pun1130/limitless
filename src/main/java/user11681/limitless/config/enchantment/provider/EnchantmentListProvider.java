@@ -22,14 +22,14 @@ public class EnchantmentListProvider implements GuiProvider {
     public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
 
     @Override
-    public List<AbstractConfigListEntry> get(final String i13n, final Field field, final Object config, final Object defaults, final GuiRegistryAccess guiRegistry) {
+    public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess guiRegistry) {
         try {
             final ObjectLinkedOpenHashSet<EnchantmentEntry> levels = (ObjectLinkedOpenHashSet<EnchantmentEntry>) field.get(config);
             final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
 
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
-            for (final EnchantmentEntry entry : levels) {
+            for (EnchantmentEntry entry : levels) {
                 final Enchantment enchantment = entry.getEnchantment();
 
                 if (enchantment != null) {
@@ -37,7 +37,7 @@ public class EnchantmentListProvider implements GuiProvider {
 
                     builder.add(0, new IntFieldBuilder(resetKey, new TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
                         .setDefaultValue(((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel())
-                        .setSaveConsumer((final Integer level) -> {
+                        .setSaveConsumer((Integer level) -> {
                             ((EnchantmentAccess) enchantment).limitless_setMaxLevel(level);
                             entry.maxLevel = level;
                         }).build()
@@ -45,7 +45,7 @@ public class EnchantmentListProvider implements GuiProvider {
 
                     builder.add(1, new BooleanToggleBuilder(resetKey, new TranslatableText("config.limitless.useGlobalMaxLevel"), entry.useGlobalMaxLevel)
                         .setDefaultValue(false)
-                        .setSaveConsumer((final Boolean useGlobalMaxLevel) -> {
+                        .setSaveConsumer((Boolean useGlobalMaxLevel) -> {
                             ((EnchantmentAccess) enchantment).limitless_setUseGlobalMaxLevel(useGlobalMaxLevel);
                             entry.useGlobalMaxLevel = useGlobalMaxLevel;
                         }).build()
@@ -58,7 +58,7 @@ public class EnchantmentListProvider implements GuiProvider {
             entries.add(listBuilder.build());
 
             return entries;
-        } catch (final Throwable throwable) {
+        } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }
     }

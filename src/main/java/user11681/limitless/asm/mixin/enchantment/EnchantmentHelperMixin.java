@@ -27,21 +27,21 @@ import user11681.limitless.config.LimitlessConfiguration;
 abstract class EnchantmentHelperMixin {
     @ModifyConstant(method = "calculateRequiredExperienceLevel",
                     constant = @Constant(intValue = 15))
-    private static int modifyMaxBookshelves(final int previousMaxBookshelves) {
+    private static int modifyMaxBookshelves(int previousMaxBookshelves) {
         return LimitlessConfiguration.instance.enchantment.enchantingBlocks.maxBlocks;
     }
 
     @Redirect(method = "getPossibleEntries",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;isTreasure()Z"))
-    private static boolean allowTreasure(final Enchantment enchantment) {
+    private static boolean allowTreasure(Enchantment enchantment) {
         return LimitlessConfiguration.instance.enchantment.allowTreasure ? enchantment.isCursed() : enchantment.isTreasure();
     }
 
     @Redirect(method = "getPossibleEntries",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    private static Item replaceEnchantedBook(final ItemStack stack) {
+    private static Item replaceEnchantedBook(ItemStack stack) {
         final Item item = stack.getItem();
 
         return item == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
@@ -51,7 +51,7 @@ abstract class EnchantmentHelperMixin {
                     at = @At(value = "INVOKE_ASSIGN",
                              target = "Lnet/minecraft/enchantment/EnchantmentHelper;getPossibleEntries(ILnet/minecraft/item/ItemStack;Z)Ljava/util/List;"),
                     ordinal = 1)
-    private static List<EnchantmentLevelEntry> removeConflictsWithItem(final List<EnchantmentLevelEntry> possibleEnchantments, final Random random, final ItemStack itemStack) {
+    private static List<EnchantmentLevelEntry> removeConflictsWithItem(List<EnchantmentLevelEntry> possibleEnchantments, Random random, ItemStack itemStack) {
         if (Limitless.forConflictRemoval.remove(itemStack)) {
             final ListIterator<EnchantmentLevelEntry> iterator = possibleEnchantments.listIterator();
 
@@ -60,7 +60,7 @@ abstract class EnchantmentHelperMixin {
                 final Enchantment enchantment = iterator.next().enchantment;
                 boolean foundConflict = false;
 
-                for (final Tag enchantmentTag : itemStack.getEnchantments()) {
+                for (Tag enchantmentTag : itemStack.getEnchantments()) {
                     final Enchantment other = Registry.ENCHANTMENT.get(new Identifier(((CompoundTag) enchantmentTag).getString("id")));
 
                     if (enchantment == other) {
@@ -84,7 +84,7 @@ abstract class EnchantmentHelperMixin {
     @Redirect(method = "generateEnchantments",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/EnchantmentHelper;removeConflicts(Ljava/util/List;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
-    private static void keepConflicts(final List<EnchantmentLevelEntry> possibleEntries, final EnchantmentLevelEntry pickedEntry) {
+    private static void keepConflicts(List<EnchantmentLevelEntry> possibleEntries, EnchantmentLevelEntry pickedEntry) {
         if (LimitlessConfiguration.instance.enchantment.conflicts.generate) {
             final ListIterator<EnchantmentLevelEntry> iterator = possibleEntries.listIterator();
 

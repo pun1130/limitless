@@ -11,7 +11,7 @@ abstract class ItemStackMixin {
     @Redirect(method = "isEnchantable",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/item/ItemStack;hasEnchantments()Z"))
-    public boolean makeReenchantable(final ItemStack stack) {
+    public boolean makeReenchantable(ItemStack stack) {
         return !LimitlessConfiguration.instance.enchantment.reenchanting.allowEquipment() && stack.hasEnchantments();
     }
 }

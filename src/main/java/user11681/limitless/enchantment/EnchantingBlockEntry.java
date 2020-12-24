@@ -14,7 +14,7 @@ public class EnchantingBlockEntry implements Comparable<EnchantingBlockEntry> {
         this.power = 2;
     }
 
-    public EnchantingBlockEntry(final String identifier, final float power) {
+    public EnchantingBlockEntry(String identifier, float power) {
         this.identifier = identifier;
         this.power = power;
     }
@@ -24,7 +24,7 @@ public class EnchantingBlockEntry implements Comparable<EnchantingBlockEntry> {
     }
 
     @Override
-    public boolean equals(final Object that) {
+    public boolean equals(Object that) {
         if (!(that instanceof EnchantingBlockEntry)) {
             return false;
         }
@@ -35,7 +35,7 @@ public class EnchantingBlockEntry implements Comparable<EnchantingBlockEntry> {
     }
 
     @Override
-    public int compareTo(final EnchantingBlockEntry that) {
+    public int compareTo(EnchantingBlockEntry that) {
         return this.identifier.compareTo(that.identifier);
     }
 }

@@ -11,7 +11,7 @@ abstract class LootableContainerBlockEntityMixin {
     @Redirect(method = "checkUnlocked",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/entity/player/PlayerEntity;isSpectator()Z"))
-    public boolean forceUnlocked(final PlayerEntity entity) {
+    public boolean forceUnlocked(PlayerEntity entity) {
         return false;
     }
 }

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 abstract class LootContextMixin {
     @Redirect(method = "getLuck",
               at = @At(value = "FIELD"))
-    public float removeLuck(final LootContext context) {
+    public float removeLuck(LootContext context) {
         return 0;
     }
 }

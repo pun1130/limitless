@@ -14,7 +14,7 @@ abstract class EnchantRandomlyLootFunctionMixin {
     @Redirect(method = "method_26266",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/util/math/MathHelper;nextInt(Ljava/util/Random;II)I"))
-    private static int generateSaneLevel(final Random random, final int min, final int max, final ItemStack stack, final Enchantment enchantment) {
+    private static int generateSaneLevel(Random random, int min, int max, ItemStack stack, Enchantment enchantment) {
         return max == min
             ? min
             : min + random.nextInt(Math.min(max, ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel()) - min);

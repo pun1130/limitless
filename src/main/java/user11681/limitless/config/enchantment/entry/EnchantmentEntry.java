@@ -19,7 +19,7 @@ public class EnchantmentEntry {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public EnchantmentEntry(final Identifier identifier) {
+    public EnchantmentEntry(Identifier identifier) {
         this.identifier = identifier.toString();
         this.enchantment = Registry.ENCHANTMENT.get(identifier);
         this.maxLevel = this.enchantment.getMaxLevel();
@@ -36,7 +36,7 @@ public class EnchantmentEntry {
     }
 
     @Override
-    public boolean equals(final Object that) {
+    public boolean equals(Object that) {
         return that instanceof EnchantmentEntry && that.hashCode() == this.hashCode();
     }
 }

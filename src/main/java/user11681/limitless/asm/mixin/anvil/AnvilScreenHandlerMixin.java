@@ -17,7 +17,7 @@ import user11681.limitless.enchantment.ExperienceUtil;
 @Mixin(value = AnvilScreenHandler.class, priority = -1000)
 abstract class AnvilScreenHandlerMixin {
     @Inject(method = "getNextCost", at = @At("HEAD"), cancellable = true)
-    private static void getNextCost(final int cost, final CallbackInfoReturnable<Integer> cir) {
+    private static void getNextCost(int cost, CallbackInfoReturnable<Integer> cir) {
         if (LimitlessConfiguration.instance.anvil.fixedCost) {
             cir.setReturnValue(0);
         }
@@ -26,7 +26,7 @@ abstract class AnvilScreenHandlerMixin {
     @Redirect(method = "updateResult",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z"))
-    public boolean configureAcceptableItem(final Enchantment enchantment, final ItemStack stack) {
+    public boolean configureAcceptableItem(Enchantment enchantment, ItemStack stack) {
         if (enchantment.isAcceptableItem(stack)) {
             return true;
         }
@@ -37,7 +37,7 @@ abstract class AnvilScreenHandlerMixin {
     @Redirect(method = "updateResult",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;canCombine(Lnet/minecraft/enchantment/Enchantment;)Z"))
-    public boolean configureConflict(final Enchantment enchantment, final Enchantment other) {
+    public boolean configureConflict(Enchantment enchantment, Enchantment other) {
         if (enchantment.canCombine(other)) {
             return true;
         }
@@ -47,14 +47,14 @@ abstract class AnvilScreenHandlerMixin {
 
     @ModifyConstant(method = "updateResult",
                     constant = @Constant(intValue = 40))
-    public int modifyLimit(final int originalLimit) {
+    public int modifyLimit(int originalLimit) {
         return LimitlessConfiguration.instance.anvil.levelLimit;
     }
 
     @Redirect(method = "onTakeOutput",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/entity/player/PlayerEntity;addExperienceLevels(I)V"))
-    public void normalizeCost(final PlayerEntity player, final int levels) {
+    public void normalizeCost(PlayerEntity player, int levels) {
         if (LimitlessConfiguration.instance.anvil.normalization.enabled) {
             ExperienceUtil.addExperienceLevelsNormalized(player, levels);
         } else {

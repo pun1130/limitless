@@ -18,7 +18,7 @@ import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 public interface EnchantingBlocks {
     Tag<Block> tag = TagRegistry.block(new Identifier("c", "enchanting_blocks"));
 
-    static int calculateRequiredExperienceLevel(final Random random, final int slotIndex, float enchantingPower, final ItemStack stack) {
+    static int calculateRequiredExperienceLevel(Random random, int slotIndex, float enchantingPower, ItemStack stack) {
         if (stack.getItem().getEnchantability() <= 0) {
             return 0;
         }
@@ -38,54 +38,54 @@ public interface EnchantingBlocks {
                 : Math.max(level, enchantingPower));
     }
 
-    static float countEnchantingPower(final EnchantingBlockEntry... enchantingBlocks) {
+    static float countEnchantingPower(EnchantingBlockEntry... enchantingBlocks) {
         float power = 0;
 
-        for (final EnchantingBlockEntry enchantingBlock : enchantingBlocks) {
+        for (EnchantingBlockEntry enchantingBlock : enchantingBlocks) {
             power += enchantingBlock.power;
         }
 
         return power;
     }
 
-    static float countEnchantingPower(final World world, final BlockPos enchantingTablePos) {
+    static float countEnchantingPower(World world, BlockPos enchantingTablePos) {
         float power = 0;
 
-        for (final EnchantingBlockEntry enchantingBlock : searchEnchantingBlocks(world, enchantingTablePos)) {
+        for (EnchantingBlockEntry enchantingBlock : searchEnchantingBlocks(world, enchantingTablePos)) {
             power += enchantingBlock.power;
         }
 
         return power;
     }
 
-    static float countEnchantingPower(final Collection<EnchantingBlockEntry> enchantingBlocks) {
+    static float countEnchantingPower(Collection<EnchantingBlockEntry> enchantingBlocks) {
         float power = 0;
 
-        for (final EnchantingBlockEntry enchantingBlock : enchantingBlocks) {
+        for (EnchantingBlockEntry enchantingBlock : enchantingBlocks) {
             power += enchantingBlock.power;
         }
 
         return power;
     }
 
-    static ReferenceArrayList<EnchantingBlockEntry> searchEnchantingBlocks(final World world, final BlockPos enchantingTablePos) {
+    static ReferenceArrayList<EnchantingBlockEntry> searchEnchantingBlocks(World world, BlockPos enchantingTablePos) {
         final ReferenceArrayList<EnchantingBlockEntry> enchantingBlocks = ReferenceArrayList.wrap(new EnchantingBlockEntry[20], 0);
 
-        forEnchantingBlockInRange(world, enchantingTablePos, (final BlockState enchantingBlockState, final BlockPos pos, final int dX, final int dY, final int dZ) ->
+        forEnchantingBlockInRange(world, enchantingTablePos, (BlockState enchantingBlockState, BlockPos pos, int dX, int dY, int dZ) ->
             enchantingBlocks.add(LimitlessConfiguration.instance.enchantment.enchantingBlockToEntry.get(enchantingBlockState.getBlock()))
         );
 
         return enchantingBlocks;
     }
 
-    static void forEnchantingBlockInRange(final World world, final BlockPos center, final EnchantingBlockConsumer action) {
+    static void forEnchantingBlockInRange(World world, BlockPos center, EnchantingBlockConsumer action) {
         final HorizontalRadius horizontalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.xz;
         final VerticalRadius verticalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.y;
 
         forEnchantingBlockInRange(world, center, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max, action);
     }
 
-    static void forEnchantingBlockInRange(final World world, final BlockPos center, final int minHorizontalRadius, final int maxHorizontalRadius, final int minVerticalRadius, final int maxVerticalRadius, final EnchantingBlockConsumer action) {
+    static void forEnchantingBlockInRange(World world, BlockPos center, int minHorizontalRadius, int maxHorizontalRadius, int minVerticalRadius, int maxVerticalRadius, EnchantingBlockConsumer action) {
         int verticalRadius;
         int horizontalRadius;
         int end;

@@ -3,10 +3,12 @@ plugins {
 }
 
 project.group = "user11681"
-project.version = "1.2.0"
+project.version = "1.1.0"
 
 loom {
     minecraftVersion = "1.16.4"
+
+    accessWidener("src/main/resources/limitless.accesswidener")
 }
 
 repositories {
@@ -31,6 +33,4 @@ dependencies {
     intransitive("mod-menu:1.14.6+")
 
     mod("api:0.28.3+1.16")
-    mod("aquarius")
-    mod("charm")
 }

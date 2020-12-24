@@ -19,7 +19,7 @@ public interface EnchantmentUtil {
     int ADD = 1;
     int CONFLICT = 2;
 
-    static void getHighestSuitableLevel(final int power, final Enchantment enchantment, final List<EnchantmentLevelEntry> entries) {
+    static void getHighestSuitableLevel(int power, Enchantment enchantment, List<EnchantmentLevelEntry> entries) {
         boolean found = false;
         int lastCandidate = 0;
 
@@ -41,7 +41,7 @@ public interface EnchantmentUtil {
         }
     }
 
-    static void mergeEnchantment(final ItemStack itemStack, final EnchantmentLevelEntry enchantment, final boolean mergeConflicts) {
+    static void mergeEnchantment(ItemStack itemStack, EnchantmentLevelEntry enchantment, boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
 
         if (book || itemStack.hasEnchantments()) {
@@ -57,7 +57,7 @@ public interface EnchantmentUtil {
         }
     }
 
-    static void mergeEnchantment(final ItemStack itemStack, final Enchantment enchantment, final int level, final boolean mergeConflicts) {
+    static void mergeEnchantment(ItemStack itemStack, Enchantment enchantment, int level, boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
 
         if (book || itemStack.hasEnchantments()) {
@@ -73,11 +73,11 @@ public interface EnchantmentUtil {
         }
     }
 
-    static int tryMerge(final ItemStack itemStack, final EnchantmentLevelEntry enchantment, final boolean mergeConflicts) {
+    static int tryMerge(ItemStack itemStack, EnchantmentLevelEntry enchantment, boolean mergeConflicts) {
         return tryMerge(itemStack, enchantment.enchantment, enchantment.level, mergeConflicts);
     }
 
-    static int tryMerge(final ItemStack itemStack, final Enchantment enchantment, final int level, final boolean mergeConflicts) {
+    static int tryMerge(ItemStack itemStack, Enchantment enchantment, int level, boolean mergeConflicts) {
         final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
         final ListTag enchantments;
 
@@ -89,7 +89,7 @@ public interface EnchantmentUtil {
 
         int status = ADD;
 
-        for (final CompoundTag enchantmentTag : (Iterable<CompoundTag>) (Object) enchantments) {
+        for (CompoundTag enchantmentTag : (Iterable<CompoundTag>) (Object) enchantments) {
             if (new Identifier(enchantmentTag.getString("id")).equals(Registry.ENCHANTMENT.getId(enchantment))) {
                 final int tagLevel = enchantmentTag.getInt("lvl");
 

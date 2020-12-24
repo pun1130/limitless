@@ -18,13 +18,13 @@ import user11681.limitless.enchantment.ExperienceUtil;
 
 @Mixin(AnvilScreen.class)
 abstract class AnvilScreenMixin extends HandledScreen<AnvilScreenHandler> {
-    public AnvilScreenMixin(final AnvilScreenHandler handler, final PlayerInventory inventory, final Text title) {
+    public AnvilScreenMixin(AnvilScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 
     @ModifyConstant(method = "drawForeground",
                     constant = @Constant(intValue = 40))
-    public int modifyLimit(final int limit) {
+    public int modifyLimit(int limit) {
         return LimitlessConfiguration.instance.anvil.levelLimit;
     }
 
@@ -32,7 +32,7 @@ abstract class AnvilScreenMixin extends HandledScreen<AnvilScreenHandler> {
                at = @At(value = "INVOKE",
                         target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V"),
                index = 1)
-    public Object[] showNormalizedCost(final Object[] arguments) {
+    public Object[] showNormalizedCost(Object[] arguments) {
         final int cost = this.handler.getLevelCost();
         final PlayerEntity player = this.playerInventory.player;
         final AnvilNormalizationEntry normalization = LimitlessConfiguration.instance.anvil.normalization;

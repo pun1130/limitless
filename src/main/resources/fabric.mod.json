@@ -29,5 +29,6 @@
         "modmenu": [
             "user11681.limitless.integration.LimitlessModMenuIntegration"
         ]
-    }
+    },
+    "accessWidener": "limitless.accesswidener"
 }

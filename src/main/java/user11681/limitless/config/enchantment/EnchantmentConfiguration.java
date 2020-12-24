@@ -58,7 +58,7 @@ public class EnchantmentConfiguration implements ConfigData {
         this.enchantingBlocks.allowed = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)});
         this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
 
-        for (final EnchantingBlockEntry entry : enchantingBlocks.allowed) {
+        for (EnchantingBlockEntry entry : enchantingBlocks.allowed) {
             this.enchantingBlockToEntry.put(entry.getBlock(), entry);
         }
     }
@@ -77,7 +77,7 @@ public class EnchantmentConfiguration implements ConfigData {
         if (oldMaxLevels != null) {
             EnchantmentAccess enchantment;
 
-            for (final EnchantmentEntry configuration : oldMaxLevels) {
+            for (EnchantmentEntry configuration : oldMaxLevels) {
                 if (this.maxLevels.contains(configuration)) {
                     this.maxLevels.remove(configuration);
                     this.maxLevels.add(configuration);

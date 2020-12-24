@@ -121,8 +121,8 @@ public class LimitlessMixinPlugin extends TransformerPlugin implements Opcodes {
         final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
         Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
-            (final AbstractInsnNode instruction) -> {
+            (AbstractInsnNode instruction) -> instruction.getOpcode() == ICONST_0,
+            (AbstractInsnNode instruction) -> {
                 ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
                 iterator.set(new MethodInsnNode(INVOKESTATIC, "user11681/limitless/enchantment/EnchantingBlocks", "countEnchantingPower", Shortcode.composeMethodDescriptor("F", this.klass("World"), this.klass("BlockPos")), true));
                 iterator.previous();
@@ -147,13 +147,13 @@ public class LimitlessMixinPlugin extends TransformerPlugin implements Opcodes {
         }
 
         Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD && ((VarInsnNode) instruction).var == 4,
-            (final AbstractInsnNode instruction) -> ((VarInsnNode) instruction).setOpcode(FLOAD)
+            (AbstractInsnNode instruction) -> instruction.getOpcode() == ILOAD && ((VarInsnNode) instruction).var == 4,
+            (AbstractInsnNode instruction) -> ((VarInsnNode) instruction).setOpcode(FLOAD)
         );
 
         Shortcode.findForward(iterator,
-            (final AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
-            (final AbstractInsnNode instruction) -> {
+            (AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
+            (AbstractInsnNode instruction) -> {
                 final MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
 
                 methodInstruction.owner = "user11681/limitless/enchantment/EnchantingBlocks";
@@ -207,7 +207,7 @@ public class LimitlessMixinPlugin extends TransformerPlugin implements Opcodes {
             }
         }
 
-        for (final MethodNode method : methods) {
+        for (MethodNode method : methods) {
             instruction = method.instructions.getFirst();
 
             while (instruction != null) {
