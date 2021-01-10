@@ -24,7 +24,7 @@
             "user11681.limitless.Limitless"
         ],
         "gfh:prePrePreLaunch": [
-            "user11681.limitless.asm.LimitlessMixinPlugin"
+            "user11681.limitless.asm.LimitlessTransformer"
         ],
         "modmenu": [
             "user11681.limitless.integration.LimitlessModMenuIntegration"
