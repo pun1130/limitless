@@ -19,6 +19,7 @@ public interface EnchantmentUtil {
     int ADD = 1;
     int CONFLICT = 2;
 
+    @SuppressWarnings("unused") // invoked by bytecode manipulation
     static void getHighestSuitableLevel(int power, Enchantment enchantment, List<EnchantmentLevelEntry> entries) {
         boolean found = false;
         int lastCandidate = 0;

@@ -1,13 +1,17 @@
 plugins {
-    id("loom")
+    id("wheel").version("snapshot")
 }
 
-project.group = "user11681"
-project.version = "1.1.1"
+project.with {
+    group("user11681")
+    version("1.1.3")
+}
+
+wheel {
+    minecraftVersion = "1.16.5"
+}
 
 loom {
-    minecraftVersion = "1.16.4"
-
     accessWidener("src/main/resources/limitless.accesswidener")
 }
 
@@ -19,18 +23,21 @@ dependencies {
     modInclude("api-base")
     modInclude("api-resource-loader:0.3.1+")
     modInclude("api-tag-extensions:1.0.3+")
+
+    modInclude("common-formatting")
+    modInclude("huntingham-hills")
+
     modInclude("gross-fabric-hacks")
 
     bloatedInclude("auto-config")
     bloatedInclude("cloth-config:4.+")
 
-    mod("phormat")
-    modInclude("common-formatting")
-    modInclude("huntingham-hills")
-
     apiInclude("shortcode")
 
-    intransitive("mod-menu:1.14.6+")
+    mod("phormat")
 
-    mod("api:0.28.3+1.16")
+    intransitive("mod-menu:1.14+")
+
+//    mod("api:0.29.4+1.16")
+//    mod("com.github.Spottedleaf:Starlight:fabric-SNAPSHOT")
 }
