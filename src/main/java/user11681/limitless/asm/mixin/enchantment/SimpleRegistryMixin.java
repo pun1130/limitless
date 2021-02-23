@@ -22,18 +22,20 @@ abstract class SimpleRegistryMixin<T> {
             if (enchantmentAccess.limitless_getOriginalMaxLevel() == 1) {
                 enchantmentAccess.limitless_setMaxLevel(1);
             } else {
-                int maxIterations = Math.min(1000, enchantmentAccess.limitless_getOriginalMaxLevel() - enchantment.getMinLevel());
-                int previousPower = 0;
-                int iterations = 0;
+                int minLevel = enchantment.getMinLevel();
+                int maxIterations = Math.min(1000, enchantmentAccess.limitless_getOriginalMaxLevel() - minLevel);
+                int previousPower = enchantment.getMinPower(minLevel);
 
-                for (int i = enchantment.getMinLevel(); i < maxIterations; i++, iterations++) {
-                    if (previousPower < enchantment.getMinPower(i)) {
+                for (int i = 1; i <= maxIterations; i++) {
+                    int power = enchantment.getMinPower(minLevel + i);
+
+                    if (previousPower < power) {
                         enchantmentAccess.limitless_setMaxLevel(Integer.MAX_VALUE);
 
                         return;
                     }
 
-                    previousPower = enchantment.getMinPower(i);
+                    previousPower = power;
                 }
 
                 enchantmentAccess.limitless_setMaxLevel(enchantmentAccess.limitless_getOriginalMaxLevel());

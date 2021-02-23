@@ -36,6 +36,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     private static final String putInt = method(10569);
 
     private static final String limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
+    private static final String limitless_useGlobalMaxLevel = "limitless_useGlobalMaxLevel";
     private static final String limitless_maxLevel = "limitless_maxLevel";
 
     private static final ObjectOpenHashSet<String> enchantmentClassNames = new ObjectOpenHashSet<>(new String[]{Enchantment});
@@ -164,7 +165,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         );
     }
 
-    @SuppressWarnings("ForLoopReplaceableByForEach")
+    @SuppressWarnings("ForLoopReplaceableByForEach") // prevent ConcurrentModificationException from visitMethod
     public static boolean transform(ClassNode klass) {
         List<MethodNode> methods = klass.methods;
         boolean transformed = false;
@@ -178,17 +179,24 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                 MethodNode method = methods.get(i);
 
                 if (method.name.equals(getMaxLevel) && method.desc.equals("()I")) {
-                    ((MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, getMaxLevel, "()I", null, null)).instructions = new ExtendedInsnList()
+                    ((MethodNode) klass.visitMethod(Opcodes.ACC_PUBLIC, getMaxLevel, method.desc, null, null)).instructions = new ExtendedInsnList()
                         .aload(0) // this
-                        .getfield(klass.name, "limitless_useGlobalMaxLevel", "Z") // I
-                        .ifeq("getCustom")
+                        .getfield(klass.name, limitless_useGlobalMaxLevel, "Z") // I
+                        .ifeq("custom")
                         .getstatic(LimitlessConfiguration.INTERNAL_NAME, "instance", LimitlessConfiguration.DESCRIPTOR) // LimitlessConfiguration
                         .getfield(LimitlessConfiguration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
                         .getfield(EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I") // I
                         .ireturn()
-                        .label("getCustom")
+                        .label("custom")
                         .aload(0) // this
                         .getfield(klass.name, limitless_maxLevel, "I") // I
+                        .dup() // I I
+                        .ldc(Integer.MIN_VALUE) // I I I
+                        .if_icmpne("end") // I
+                        .pop()
+                        .aload(0) // this
+                        .invokespecial(klass.name, limitless_getOriginalMaxLevel, method.desc) // I
+                        .label("end")
                         .ireturn();
 
                     method.name = limitless_getOriginalMaxLevel;
