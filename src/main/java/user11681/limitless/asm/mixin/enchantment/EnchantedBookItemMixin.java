@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.LimitlessConfiguration;
+import user11681.limitless.enchantment.EnchantmentWrapper;
 
 @Mixin(EnchantedBookItem.class)
 abstract class EnchantedBookItemMixin extends Item {
@@ -19,7 +19,7 @@ abstract class EnchantedBookItemMixin extends Item {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     public int fixStacks(Enchantment enchantment) {
-        return ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel();
+        return ((EnchantmentWrapper) enchantment).getOriginalMaxLevel();
     }
 
     @SuppressWarnings("DefaultAnnotationParam")

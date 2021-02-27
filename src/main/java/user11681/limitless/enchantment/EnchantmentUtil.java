@@ -7,10 +7,8 @@ import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import user11681.limitless.asm.access.EnchantmentAccess;
 
 public interface EnchantmentUtil {
     String INTERNAL_NAME = "user11681/limitless/enchantment/EnchantmentUtil";
@@ -29,7 +27,7 @@ public interface EnchantmentUtil {
                 lastCandidate = i;
                 found = true;
 
-                if (((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel() == 1) {
+                if (((EnchantmentWrapper) enchantment).getOriginalMaxLevel() == 1) {
                     break;
                 }
             } else {
@@ -78,19 +76,18 @@ public interface EnchantmentUtil {
         return tryMerge(itemStack, enchantment.enchantment, enchantment.level, mergeConflicts);
     }
 
+    @SuppressWarnings("unchecked")
     static int tryMerge(ItemStack itemStack, Enchantment enchantment, int level, boolean mergeConflicts) {
-        final boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
-        final ListTag enchantments;
-
-        if (book) {
-            enchantments = EnchantedBookItem.getEnchantmentTag(itemStack);
-        } else {
-            enchantments = itemStack.getEnchantments();
-        }
+        boolean book = itemStack.getItem() == Items.ENCHANTED_BOOK;
+        Iterable<CompoundTag> enchantments = (Iterable<CompoundTag>) (Object) (
+           book
+            ? EnchantedBookItem.getEnchantmentTag(itemStack)
+            : itemStack.getEnchantments()
+        );
 
         int status = ADD;
 
-        for (CompoundTag enchantmentTag : (Iterable<CompoundTag>) (Object) enchantments) {
+        for (CompoundTag enchantmentTag : enchantments) {
             if (new Identifier(enchantmentTag.getString("id")).equals(Registry.ENCHANTMENT.getId(enchantment))) {
                 final int tagLevel = enchantmentTag.getInt("lvl");
 

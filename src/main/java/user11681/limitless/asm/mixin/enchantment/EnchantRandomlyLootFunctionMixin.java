@@ -5,7 +5,7 @@ import net.minecraft.loot.function.EnchantRandomlyLootFunction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import user11681.limitless.asm.access.EnchantmentAccess;
+import user11681.limitless.enchantment.EnchantmentWrapper;
 
 @Mixin(EnchantRandomlyLootFunction.class)
 abstract class EnchantRandomlyLootFunctionMixin {
@@ -13,6 +13,6 @@ abstract class EnchantRandomlyLootFunctionMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     private static int fixUpperBound(Enchantment enchantment) {
-        return ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel();
+        return ((EnchantmentWrapper) enchantment).getOriginalMaxLevel();
     }
 }

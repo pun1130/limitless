@@ -12,10 +12,9 @@ import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.text.TranslatableText;
-import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.enchantment.entry.EnchantmentEntry;
+import user11681.limitless.enchantment.EnchantmentWrapper;
 
 @Environment(EnvType.CLIENT)
 public class EnchantmentListProvider implements GuiProvider {
@@ -30,15 +29,15 @@ public class EnchantmentListProvider implements GuiProvider {
             final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
             for (EnchantmentEntry entry : levels) {
-                final Enchantment enchantment = entry.getEnchantment();
+                final EnchantmentWrapper enchantment = entry.getEnchantment();
 
                 if (enchantment != null) {
                     final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(enchantment.getTranslationKey()));
 
                     builder.add(0, new IntFieldBuilder(resetKey, new TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
-                        .setDefaultValue(((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel())
+                        .setDefaultValue(enchantment.getOriginalMaxLevel())
                         .setSaveConsumer((Integer level) -> {
-                            ((EnchantmentAccess) enchantment).limitless_setMaxLevel(level);
+                            enchantment.maxLevel = level;
                             entry.maxLevel = level;
                         }).build()
                     );
@@ -46,7 +45,7 @@ public class EnchantmentListProvider implements GuiProvider {
                     builder.add(1, new BooleanToggleBuilder(resetKey, new TranslatableText("config.limitless.useGlobalMaxLevel"), entry.useGlobalMaxLevel)
                         .setDefaultValue(false)
                         .setSaveConsumer((Boolean useGlobalMaxLevel) -> {
-                            ((EnchantmentAccess) enchantment).limitless_setUseGlobalMaxLevel(useGlobalMaxLevel);
+                            enchantment.useGlobalMaxLevel = useGlobalMaxLevel;
                             entry.useGlobalMaxLevel = useGlobalMaxLevel;
                         }).build()
                     );

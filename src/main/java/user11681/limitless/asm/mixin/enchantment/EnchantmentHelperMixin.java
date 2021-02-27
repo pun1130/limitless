@@ -86,13 +86,7 @@ abstract class EnchantmentHelperMixin {
                        target = "Lnet/minecraft/enchantment/EnchantmentHelper;removeConflicts(Ljava/util/List;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
     private static void keepConflicts(List<EnchantmentLevelEntry> possibleEntries, EnchantmentLevelEntry pickedEntry) {
         if (LimitlessConfiguration.instance.enchantment.conflicts.generate) {
-            final ListIterator<EnchantmentLevelEntry> iterator = possibleEntries.listIterator();
-
-            while (iterator.hasNext()) {
-                if (iterator.next().enchantment == pickedEntry.enchantment) {
-                    iterator.remove();
-                }
-            }
+            possibleEntries.removeIf((EnchantmentLevelEntry entry) -> entry.enchantment == pickedEntry.enchantment);
         } else {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);
         }

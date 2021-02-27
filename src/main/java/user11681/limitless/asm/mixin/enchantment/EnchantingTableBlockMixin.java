@@ -25,11 +25,6 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
         super(settings);
     }
 
-//    /**
-//     * @author user11681
-//     * @reason replacing the loop in order to increase glyph particle range.
-//     */
-//    @Overwrite
     @Inject(at = @At("HEAD"), method = "randomDisplayTick", cancellable = true)
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState enchantingTableState, World world, BlockPos enchantingTablePos, Random random, CallbackInfo info) {

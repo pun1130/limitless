@@ -4,7 +4,7 @@ plugins {
 
 project.with {
     group("user11681")
-    version("1.1.5")
+    version("1.2.0")
 }
 
 wheel {
@@ -27,7 +27,7 @@ dependencies {
     modInclude("common-formatting")
     modInclude("huntingham-hills")
 
-    modInclude("gross-fabric-hacks")
+    modInclude("reflect")
 
     bloatedInclude("auto-config")
     bloatedInclude("cloth-config:4.+")
@@ -38,8 +38,8 @@ dependencies {
 
     intransitive("mod-menu:1.14.15")
 
-     mod("api:0.29.4+1.16")
+    mod("api:0.29.4+1.16")
 
-//     mod("curse.maven:moenchantments-320806:3084973")
+    mod("curse.maven:moenchantments-320806:3084973")
 //     mod("com.github.Spottedleaf:Starlight:fabric-SNAPSHOT")
 }
