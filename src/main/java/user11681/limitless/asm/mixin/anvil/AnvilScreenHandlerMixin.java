@@ -27,22 +27,16 @@ abstract class AnvilScreenHandlerMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z"))
     public boolean configureAcceptableItem(Enchantment enchantment, ItemStack stack) {
-        if (enchantment.isAcceptableItem(stack)) {
-            return true;
-        }
+        return enchantment.isAcceptableItem(stack) || LimitlessConfiguration.instance.anvil.mergeIncompatible;
 
-        return LimitlessConfiguration.instance.anvil.mergeIncompatible;
     }
 
     @Redirect(method = "updateResult",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;canCombine(Lnet/minecraft/enchantment/Enchantment;)Z"))
     public boolean configureConflict(Enchantment enchantment, Enchantment other) {
-        if (enchantment.canCombine(other)) {
-            return true;
-        }
+        return enchantment.canCombine(other) || LimitlessConfiguration.instance.anvil.mergeConflicts;
 
-        return LimitlessConfiguration.instance.anvil.mergeConflicts;
     }
 
     @ModifyConstant(method = "updateResult",

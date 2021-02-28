@@ -21,13 +21,14 @@ public interface EnchantmentUtil {
     static void getHighestSuitableLevel(int power, Enchantment enchantment, List<EnchantmentLevelEntry> entries) {
         boolean found = false;
         int lastCandidate = 0;
+        int maxLevel = enchantment.getMaxLevel();
 
-        for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
+        for (int i = enchantment.getMinLevel(); i <= maxLevel; i++) {
             if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
                 lastCandidate = i;
                 found = true;
 
-                if (((EnchantmentWrapper) enchantment).getOriginalMaxLevel() == 1) {
+                if (((EnchantmentWrapper) enchantment).originalMaxLevel() == 1) {
                     break;
                 }
             } else {

@@ -13,6 +13,6 @@ abstract class EnchantRandomlyLootFunctionMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     private static int fixUpperBound(Enchantment enchantment) {
-        return ((EnchantmentWrapper) enchantment).getOriginalMaxLevel();
+        return ((EnchantmentWrapper) enchantment).originalMaxLevel();
     }
 }

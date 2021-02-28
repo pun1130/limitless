@@ -12,6 +12,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import user11681.fabricasmtools.plugin.TransformerPlugin;
+import user11681.limitless.enchantment.EnchantingBlocks;
 import user11681.limitless.enchantment.EnchantmentUtil;
 import user11681.limitless.enchantment.EnchantmentWrapper;
 import user11681.reflect.Accessor;
@@ -58,7 +59,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
             (AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(this.method("getMaxLevel")),
             (MethodInsnNode instruction) -> {
                 instruction.owner = EnchantmentWrapper.INTERNAL_NAME;
-                instruction.name = "getOriginalMaxLevel";
+                instruction.name = "originalMaxLevel";
 
                 method.instructions.insertBefore(instruction, new TypeInsnNode(Opcodes.CHECKCAST, EnchantmentWrapper.INTERNAL_NAME));
             }
@@ -101,7 +102,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                 ((VarInsnNode) instruction.getNext()).setOpcode(FSTORE);
                 iterator.set(new MethodInsnNode(
                     INVOKESTATIC,
-                    "user11681/limitless/enchantment/EnchantingBlocks",
+                    EnchantingBlocks.INTERNAL_NAME,
                     "countEnchantingPower",
                     Shortcode.composeMethodDescriptor("F", this.klass("World"), this.klass("BlockPos")),
                     true
@@ -135,7 +136,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         Shortcode.findForward(iterator,
             (AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKESTATIC,
             (MethodInsnNode instruction) -> {
-                instruction.owner = "user11681/limitless/enchantment/EnchantingBlocks";
+                instruction.owner = EnchantingBlocks.INTERNAL_NAME;
                 instruction.name = "calculateRequiredExperienceLevel";
                 instruction.desc = instruction.desc.replaceFirst("II", "IF");
                 instruction.itf = true;

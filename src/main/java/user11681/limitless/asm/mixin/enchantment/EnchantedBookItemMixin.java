@@ -19,7 +19,7 @@ abstract class EnchantedBookItemMixin extends Item {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
     public int fixStacks(Enchantment enchantment) {
-        return ((EnchantmentWrapper) enchantment).getOriginalMaxLevel();
+        return ((EnchantmentWrapper) enchantment).originalMaxLevel();
     }
 
     @SuppressWarnings("DefaultAnnotationParam")

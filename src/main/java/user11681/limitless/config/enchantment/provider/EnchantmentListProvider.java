@@ -35,7 +35,7 @@ public class EnchantmentListProvider implements GuiProvider {
                     final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(enchantment.getTranslationKey()));
 
                     builder.add(0, new IntFieldBuilder(resetKey, new TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
-                        .setDefaultValue(enchantment.getOriginalMaxLevel())
+                        .setDefaultValue(enchantment.originalMaxLevel())
                         .setSaveConsumer((Integer level) -> {
                             enchantment.maxLevel = level;
                             entry.maxLevel = level;

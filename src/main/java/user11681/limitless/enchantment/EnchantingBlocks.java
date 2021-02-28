@@ -16,6 +16,8 @@ import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
 import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
 
 public interface EnchantingBlocks {
+    String INTERNAL_NAME = "user11681/limitless/enchantment/EnchantingBlocks";
+
     Tag<Block> tag = TagRegistry.block(new Identifier("c", "enchanting_blocks"));
 
     static int calculateRequiredExperienceLevel(Random random, int slotIndex, float enchantingPower, ItemStack stack) {

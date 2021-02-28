@@ -33,12 +33,12 @@ abstract class AnvilScreenMixin extends HandledScreen<AnvilScreenHandler> {
                         target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V"),
                index = 1)
     public Object[] showNormalizedCost(Object[] arguments) {
-        final int cost = this.handler.getLevelCost();
-        final PlayerEntity player = this.playerInventory.player;
-        final AnvilNormalizationEntry normalization = LimitlessConfiguration.instance.anvil.normalization;
+        int cost = this.handler.getLevelCost();
+        PlayerEntity player = this.playerInventory.player;
+        AnvilNormalizationEntry normalization = LimitlessConfiguration.instance.anvil.normalization;
 
         if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > cost) {
-            final int relative = ExperienceUtil.normalizedCost(player, cost);
+            int relative = ExperienceUtil.normalizedCost(player, cost);
 
             if (normalization.display == CostDisplay.REPLACE) {
                 arguments[0] = Integer.toString(relative);

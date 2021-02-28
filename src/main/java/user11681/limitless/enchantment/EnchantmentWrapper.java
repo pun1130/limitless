@@ -52,7 +52,7 @@ public class EnchantmentWrapper extends Enchantment {
         }
     }
 
-    public int getOriginalMaxLevel() {
+    public int originalMaxLevel() {
         return this.delegate.getMaxLevel();
     }
 
@@ -102,6 +102,10 @@ public class EnchantmentWrapper extends Enchantment {
 
     @Override
     protected boolean canAccept(Enchantment other) {
+        if (other instanceof EnchantmentWrapper) {
+            other = ((EnchantmentWrapper) other).delegate;
+        }
+
         return ((EnchantmentAccess) this.delegate).invokeCanAccept(other);
     }
 
