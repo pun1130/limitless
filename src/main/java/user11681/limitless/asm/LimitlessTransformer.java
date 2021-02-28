@@ -19,6 +19,23 @@ import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.ExtendedInsnList;
 
 public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
+    private static void transformEnchantmentHelperGenerateEnchantments(MethodNode method) {
+        ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+
+        Shortcode.findForward(iterator,
+            (AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
+            () -> {
+                iterator.remove();
+
+                iterator.add(new VarInsnNode(ILOAD, 2));
+                iterator.add(new InsnNode(ICONST_2));
+                iterator.add(new InsnNode(IDIV));
+                iterator.add(new IntInsnNode(BIPUSH, 20));
+                iterator.add(new InsnNode(IADD));
+            }
+        );
+    }
+
     @Override
     public void onLoad(String mixinPackage) {
         super.onLoad(mixinPackage);
@@ -30,9 +47,9 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         this.putMethod("calculateRequiredExperienceLevel", 8227);
         this.putMethod("getMaxLevel", 8183);
 
+        this.registerPostMixinMethodTransformer(klass(1890), method(8230), null, LimitlessTransformer::transformEnchantmentHelperGenerateEnchantments);
         this.registerPostMixinMethodTransformer(klass(3853, 1648), method(7246), null, this::transformEnchantBookFactoryCreate);
         this.registerPostMixinMethodTransformer(klass(1890), method(8229), null, this::transformEnchantmentHelperGetPossibleEntries);
-        this.registerPostMixinMethodTransformer(klass(1890), method(8230), null, LimitlessTransformer::transformEnchantmentHelperGenerateEnchantments);
         this.registerPostMixinMethodTransformer(klass(1718), method(17411), null, this::transformEnchantmentScreenHandler);
     }
 
@@ -40,6 +57,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
         Shortcode.findForward(method.instructions.iterator(),
             (AbstractInsnNode instruction) -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(this.method("getMaxLevel")),
             (MethodInsnNode instruction) -> {
+                instruction.owner = EnchantmentWrapper.INTERNAL_NAME;
                 instruction.name = "getOriginalMaxLevel";
 
                 method.instructions.insertBefore(instruction, new TypeInsnNode(Opcodes.CHECKCAST, EnchantmentWrapper.INTERNAL_NAME));
@@ -70,23 +88,6 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
                         true
                     )
                 );
-            }
-        );
-    }
-
-    private static void transformEnchantmentHelperGenerateEnchantments(MethodNode method) {
-        ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-        Shortcode.findForward(iterator,
-            (AbstractInsnNode instruction) -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
-            () -> {
-                iterator.remove();
-
-                iterator.add(new VarInsnNode(ILOAD, 2));
-                iterator.add(new InsnNode(ICONST_2));
-                iterator.add(new InsnNode(IDIV));
-                iterator.add(new IntInsnNode(BIPUSH, 20));
-                iterator.add(new InsnNode(IADD));
             }
         );
     }
