@@ -19,7 +19,7 @@ public class EnchantmentWrapper extends Enchantment {
 
     private static final boolean moEnchantments = FabricLoader.getInstance().isModLoaded("moenchantments");
 
-    private final Enchantment delegate;
+    public final Enchantment delegate;
 
     public int maxLevel;
     public boolean useGlobalMaxLevel;
@@ -50,6 +50,16 @@ public class EnchantmentWrapper extends Enchantment {
 
             this.maxLevel = delegate.getMaxLevel();
         }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        return this == that || this.delegate.equals(that instanceof EnchantmentWrapper ? ((EnchantmentWrapper) that).delegate : that);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.delegate.hashCode();
     }
 
     public int originalMaxLevel() {

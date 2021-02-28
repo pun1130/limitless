@@ -40,6 +40,10 @@ dependencies {
 
     mod("api:0.29.4+1.16")
 
+    api("toml4j")
+    api("com.electronwill.night-config:toml:latest.release")
+    api("com.electronwill.night-config:core:latest.release")
+    mod("com.github.svenhjol:Charm:master-SNAPSHOT")
     mod("curse.maven:moenchantments-320806:3084973")
 //     mod("com.github.Spottedleaf:Starlight:fabric-SNAPSHOT")
 }
