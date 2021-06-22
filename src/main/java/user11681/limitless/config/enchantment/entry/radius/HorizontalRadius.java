@@ -1,6 +1,6 @@
 package user11681.limitless.config.enchantment.entry.radius;
 
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.BoundedDiscrete;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.BoundedDiscrete;
 
 public class HorizontalRadius {
     @BoundedDiscrete(max = 64)

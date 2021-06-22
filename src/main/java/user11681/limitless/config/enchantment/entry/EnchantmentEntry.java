@@ -1,6 +1,6 @@
 package user11681.limitless.config.enchantment.entry;
 
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

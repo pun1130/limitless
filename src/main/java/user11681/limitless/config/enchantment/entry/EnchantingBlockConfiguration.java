@@ -1,8 +1,8 @@
 package user11681.limitless.config.enchantment.entry;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.CollapsibleObject;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import user11681.limitless.config.enchantment.entry.radius.Radius;
 import user11681.limitless.enchantment.EnchantingBlockEntry;
 

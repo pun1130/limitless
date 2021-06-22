@@ -1,6 +1,6 @@
 package user11681.limitless.config.enchantment.entry.radius;
 
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.CollapsibleObject;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
 
 public class Radius {
     @CollapsibleObject(startExpanded = true)

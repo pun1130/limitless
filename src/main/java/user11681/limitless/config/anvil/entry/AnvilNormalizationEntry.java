@@ -1,6 +1,6 @@
 package user11681.limitless.config.anvil.entry;
 
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler;
 import user11681.limitless.config.common.CostDisplay;
 
 public class AnvilNormalizationEntry {

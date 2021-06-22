@@ -1,11 +1,11 @@
 package user11681.limitless.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config.Gui.Background;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Category;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.TransitiveObject;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.Config.Gui.Background;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Category;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.TransitiveObject;
 import user11681.limitless.Limitless;
 import user11681.limitless.config.anvil.AnvilConfiguration;
 import user11681.limitless.config.enchantment.EnchantmentConfiguration;

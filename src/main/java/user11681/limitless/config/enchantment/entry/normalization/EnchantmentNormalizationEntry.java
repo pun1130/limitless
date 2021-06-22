@@ -1,7 +1,7 @@
 package user11681.limitless.config.enchantment.entry.normalization;
 
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.BoundedDiscrete;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.EnumHandler;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.BoundedDiscrete;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler;
 import user11681.limitless.config.common.CostDisplay;
 
 public class EnchantmentNormalizationEntry {
