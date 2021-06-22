@@ -42,7 +42,7 @@ abstract class EnchantmentHelperMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     private static Item replaceEnchantedBook(ItemStack stack) {
-        final Item item = stack.getItem();
+        Item item = stack.getItem();
 
         return item == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
     }
