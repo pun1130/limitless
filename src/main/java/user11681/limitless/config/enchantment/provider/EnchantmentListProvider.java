@@ -12,9 +12,10 @@ import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.text.TranslatableText;
+import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.enchantment.entry.EnchantmentEntry;
-import user11681.limitless.enchantment.EnchantmentWrapper;
 
 @Environment(EnvType.CLIENT)
 public class EnchantmentListProvider implements GuiProvider {
@@ -23,21 +24,20 @@ public class EnchantmentListProvider implements GuiProvider {
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess guiRegistry) {
         try {
-            final ObjectLinkedOpenHashSet<EnchantmentEntry> levels = (ObjectLinkedOpenHashSet<EnchantmentEntry>) field.get(config);
-            final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
-
-            final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
+            ObjectLinkedOpenHashSet<EnchantmentEntry> levels = (ObjectLinkedOpenHashSet<EnchantmentEntry>) field.get(config);
+            ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[levels.size()], 0);
+            SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.limitless.enchantments"));
 
             for (EnchantmentEntry entry : levels) {
-                final EnchantmentWrapper enchantment = entry.getEnchantment();
+                EnchantmentAccess enchantment = entry.enchantment();
 
                 if (enchantment != null) {
-                    final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(enchantment.getTranslationKey()));
+                    SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(((Enchantment) enchantment).getTranslationKey()));
 
                     builder.add(0, new IntFieldBuilder(resetKey, new TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
-                        .setDefaultValue(enchantment.originalMaxLevel())
+                        .setDefaultValue(enchantment.limitless_getOriginalMaxLevel())
                         .setSaveConsumer((Integer level) -> {
-                            enchantment.maxLevel = level;
+                            enchantment.limitless_setMaxLevel(level);
                             entry.maxLevel = level;
                         }).build()
                     );
@@ -45,7 +45,7 @@ public class EnchantmentListProvider implements GuiProvider {
                     builder.add(1, new BooleanToggleBuilder(resetKey, new TranslatableText("config.limitless.useGlobalMaxLevel"), entry.useGlobalMaxLevel)
                         .setDefaultValue(false)
                         .setSaveConsumer((Boolean useGlobalMaxLevel) -> {
-                            enchantment.useGlobalMaxLevel = useGlobalMaxLevel;
+                            enchantment.limitless_setUseGlobalMaxLevel(useGlobalMaxLevel);
                             entry.useGlobalMaxLevel = useGlobalMaxLevel;
                         }).build()
                     );

@@ -1,10 +1,10 @@
 {
     "required": true,
     "package": "user11681.limitless.asm.mixin",
-    "compatibilityLevel": "JAVA_8",
+    "compatibilityLevel": "JAVA_16",
     "plugin": "user11681.limitless.asm.LimitlessTransformer",
     "mixins": [
-        "EulaReaderMixin", "anvil.AnvilScreenHandlerMixin", "enchantment.EnchantedBookItemMixin", "enchantment.EnchantmentAccess",
+        "EulaReaderMixin", "access.EnchantmentScreenHandlerAccess", "anvil.AnvilScreenHandlerMixin", "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin", "enchantment.EnchantmentMixin", "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin", "enchantment.ItemStackMixin", "enchantment.PlayerEntityMixin", "enchantment.SimpleRegistryMixin",
         "enchantment.dummy.EnchantBookFactoryDummyMixin"

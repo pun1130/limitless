@@ -4,7 +4,7 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import user11681.limitless.enchantment.EnchantmentWrapper;
+import user11681.limitless.asm.access.EnchantmentAccess;
 
 public class EnchantmentEntry {
     public final String identifier;
@@ -27,8 +27,8 @@ public class EnchantmentEntry {
         this.useGlobalMaxLevel = false;
     }
 
-    public EnchantmentWrapper getEnchantment() {
-        return (EnchantmentWrapper) (this.enchantment == null ? this.enchantment = Registry.ENCHANTMENT.get(new Identifier(this.identifier)) : this.enchantment);
+    public EnchantmentAccess enchantment() {
+        return (EnchantmentAccess) (this.enchantment == null ? this.enchantment = Registry.ENCHANTMENT.get(new Identifier(this.identifier)) : this.enchantment);
     }
 
     @Override

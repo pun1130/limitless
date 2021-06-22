@@ -13,11 +13,13 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import user11681.limitless.asm.mixin.access.EnchantmentScreenHandlerAccess;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.common.CostDisplay;
 import user11681.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry;
 import user11681.limitless.enchantment.ExperienceUtil;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(EnchantmentScreen.class)
 abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHandler> {
     @Unique
@@ -42,10 +44,10 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                     at = @At(value = "STORE"),
                     ordinal = 0)
     public String showNormalizedCost(String level) {
-        PlayerEntity player = this.playerInventory.player;
+        PlayerEntity player = this.client.player;
         EnchantmentNormalizationEntry normalization = LimitlessConfiguration.instance.enchantment.normalization;
 
-        if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.abilities.creativeMode && player.experienceLevel > 30) {
+        if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.getAbilities().creativeMode && player.experienceLevel > 30) {
             int relative = ExperienceUtil.relativeCost(player, normalization.offset, this.backgroundEntryID + 1);
 
             if (normalization.display == CostDisplay.REPLACE) {
@@ -75,7 +77,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
         if (LimitlessConfiguration.instance.enchantment.revealEnchantments) {
             int index = 0;
 
-            for (EnchantmentLevelEntry enchantment : this.handler.generateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {
+            for (EnchantmentLevelEntry enchantment : ((EnchantmentScreenHandlerAccess) this.handler).invokeGenerateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {
                 enchantments.add(index++, enchantment.enchantment.getName(enchantment.level));
             }
         } else {

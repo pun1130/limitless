@@ -1,36 +1,45 @@
 package user11681.limitless.asm.mixin.enchantment;
 
-import java.util.HashMap;
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import user11681.limitless.enchantment.EnchantmentWrapper;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import user11681.limitless.asm.access.EnchantmentAccess;
 
 @Mixin(SimpleRegistry.class)
 abstract class SimpleRegistryMixin<T> {
-    @Unique
-    private static final HashMap<Object, EnchantmentWrapper> wrappers = new HashMap<>();
+    @Inject(method = "set(ILnet/minecraft/util/registry/RegistryKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;Z)Ljava/lang/Object;",
+            at = @At("RETURN"))
+    public <V> void initializeEnchantment(int rawId, RegistryKey<T> key, V entry, Lifecycle lifecycle, boolean checkDuplicateKeys, CallbackInfoReturnable<V> info) {
+        if (entry instanceof Enchantment enchantment) {
+            EnchantmentAccess enchantmentAccess = (EnchantmentAccess) enchantment;
 
-    @ModifyVariable(method = "set(ILnet/minecraft/util/registry/RegistryKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;Z)Ljava/lang/Object;",
-                    at = @At("HEAD"),
-                    ordinal = 0)
-    public <V extends T> Object wrapEnchantment(V entry) {
-        if (entry instanceof Enchantment) {
-            EnchantmentWrapper wrapper = new EnchantmentWrapper((Enchantment) entry);
+            if (enchantmentAccess.limitless_getOriginalMaxLevel() == 1) {
+                enchantmentAccess.limitless_setMaxLevel(1);
+            } else {
+                int minLevel = enchantment.getMinLevel();
+                int maxIterations = Math.min(1000, enchantmentAccess.limitless_getOriginalMaxLevel() - minLevel);
+                int previousPower = enchantment.getMinPower(minLevel);
 
-            wrappers.put(entry, wrapper);
+                for (int i = 1; i <= maxIterations; i++) {
+                    int power = enchantment.getMinPower(minLevel + i);
 
-            return wrapper;
+                    if (previousPower < power) {
+                        enchantmentAccess.limitless_setMaxLevel(Integer.MAX_VALUE);
+
+                        return;
+                    }
+
+                    previousPower = power;
+                }
+
+                enchantmentAccess.limitless_setMaxLevel(enchantmentAccess.limitless_getOriginalMaxLevel());
+            }
         }
-
-        return entry;
     }
 
-    @ModifyVariable(method = "getId", at = @At("HEAD"))
-    public Object fixDelegateID(T entry) {
-        return entry instanceof EnchantmentWrapper ? entry : entry instanceof Enchantment ? wrappers.get(entry) : entry;
-    }
 }

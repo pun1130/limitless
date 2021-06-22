@@ -9,6 +9,7 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Collapsible
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry.Gui.Excluded;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
+import user11681.limitless.asm.access.EnchantmentAccess;
 import user11681.limitless.config.enchantment.annotation.EnchantmentList;
 import user11681.limitless.config.enchantment.entry.EnchantingBlockConfiguration;
 import user11681.limitless.config.enchantment.entry.EnchantingConflicts;
@@ -17,7 +18,6 @@ import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfigura
 import user11681.limitless.config.enchantment.entry.ReenchantingConfiguration;
 import user11681.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry;
 import user11681.limitless.enchantment.EnchantingBlockEntry;
-import user11681.limitless.enchantment.EnchantmentWrapper;
 
 public class EnchantmentConfiguration implements ConfigData {
     @Excluded
@@ -80,9 +80,9 @@ public class EnchantmentConfiguration implements ConfigData {
                     this.maxLevels.remove(configuration);
                     this.maxLevels.add(configuration);
 
-                    EnchantmentWrapper enchantment = configuration.getEnchantment();
-                    enchantment.maxLevel = configuration.maxLevel;
-                    enchantment.useGlobalMaxLevel = configuration.useGlobalMaxLevel;
+                    EnchantmentAccess enchantment = configuration.enchantment();
+                    enchantment.limitless_setMaxLevel(configuration.maxLevel);
+                    enchantment.limitless_setUseGlobalMaxLevel(configuration.useGlobalMaxLevel);
                 }
             }
         }

@@ -9,8 +9,8 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,15 +53,15 @@ abstract class EnchantmentHelperMixin {
                     ordinal = 1)
     private static List<EnchantmentLevelEntry> removeConflictsWithItem(List<EnchantmentLevelEntry> possibleEnchantments, Random random, ItemStack itemStack) {
         if (Limitless.forConflictRemoval.remove(itemStack)) {
-            final ListIterator<EnchantmentLevelEntry> iterator = possibleEnchantments.listIterator();
+            ListIterator<EnchantmentLevelEntry> iterator = possibleEnchantments.listIterator();
 
             outer:
             while (iterator.hasNext()) {
-                final Enchantment enchantment = iterator.next().enchantment;
+                Enchantment enchantment = iterator.next().enchantment;
                 boolean foundConflict = false;
 
-                for (Tag enchantmentTag : itemStack.getEnchantments()) {
-                    final Enchantment other = Registry.ENCHANTMENT.get(new Identifier(((CompoundTag) enchantmentTag).getString("id")));
+                for (NbtElement enchantmentTag : itemStack.getEnchantments()) {
+                    Enchantment other = Registry.ENCHANTMENT.get(new Identifier(((NbtCompound) enchantmentTag).getString("id")));
 
                     if (enchantment == other) {
                         continue outer;
@@ -86,7 +86,7 @@ abstract class EnchantmentHelperMixin {
                        target = "Lnet/minecraft/enchantment/EnchantmentHelper;removeConflicts(Ljava/util/List;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
     private static void keepConflicts(List<EnchantmentLevelEntry> possibleEntries, EnchantmentLevelEntry pickedEntry) {
         if (LimitlessConfiguration.instance.enchantment.conflicts.generate) {
-            possibleEntries.removeIf((EnchantmentLevelEntry entry) -> entry.enchantment == pickedEntry.enchantment);
+            possibleEntries.removeIf(entry -> entry.enchantment == pickedEntry.enchantment);
         } else {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);
         }

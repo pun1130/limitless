@@ -31,10 +31,8 @@ abstract class EnchantmentScreenHandlerMixin {
         }
     }
 
-    @Redirect(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    public Item fixEnchantedBook(ItemStack stack) {
-        final Item item = stack.getItem();
-
-        return item == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
+    @Redirect(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z"))
+    public boolean fixEnchantedBook(ItemStack stack, Item item) {
+        return stack.getItem() == item || stack.getItem() == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks();
     }
 }

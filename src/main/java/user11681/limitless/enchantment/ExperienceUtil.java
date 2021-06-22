@@ -10,16 +10,12 @@ public class ExperienceUtil {
     public static void addExperienceLevelsRelatively(PlayerEntity player, int offset, int levels) {
         if (player.experienceLevel <= offset) {
             player.addExperienceLevels(levels);
-        } else {
-            if (levels > 0) {
-                for (levels = offset - levels; levels != offset; levels++) {
-                    player.addExperience((int) fromPreviousLevel(levels));
-                }
-            } else {
-                for (levels = offset + levels; levels != offset; levels++) {
-                    player.addExperience((int) -fromPreviousLevel(-levels));
-                }
+        } else if (levels > 0) {
+            for (levels = offset - levels; levels != offset; levels++) {
+                player.addExperience((int) fromPreviousLevel(levels));
             }
+        } else for (levels = offset + levels; levels != offset; levels++) {
+            player.addExperience((int) -fromPreviousLevel(-levels));
         }
     }
 
@@ -30,11 +26,9 @@ public class ExperienceUtil {
     public static int relativeCost(PlayerEntity player, int offset, int levels) {
         final int level = player.experienceLevel;
 
-        if (level <= offset) {
-            return level - levels;
-        } else {
-            return level - ExperienceUtil.toLevel(ExperienceUtil.getCurrentExperience(player) - ExperienceUtil.difference(offset - levels, offset));
-        }
+        return level > offset
+            ? level - ExperienceUtil.toLevel(ExperienceUtil.getCurrentExperience(player) - ExperienceUtil.difference(offset - levels, offset))
+            : level - levels;
     }
 
     public static long getCurrentExperience(PlayerEntity player) {
@@ -140,6 +134,6 @@ public class ExperienceUtil {
             }
         }
 
-        return (int) Float.NaN;
+        return 0;
     }
 }
