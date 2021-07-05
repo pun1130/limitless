@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "user11681"
-version = "1.2.2"
+version = "1.3.0"
 
 dependencies {
     modInclude("api-base")
@@ -16,7 +16,7 @@ dependencies {
 
     apiInclude("shortcode")
 
-    intransitive("mod-menu:latest.integration")
+    // intransitive("mod-menu:latest.integration")
 
     mod("api-screen")
     //mod("curse.maven:moenchantments-320806:3084973") // one horrible mess of a mod

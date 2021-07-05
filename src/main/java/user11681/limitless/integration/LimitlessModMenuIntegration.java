@@ -1,5 +1,6 @@
 package user11681.limitless.integration;
 
+/*
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -12,3 +13,4 @@ public class LimitlessModMenuIntegration implements ModMenuApi {
         return (Screen parent) -> AutoConfig.getConfigScreen(LimitlessConfiguration.class, parent).get();
     }
 }
+*/
