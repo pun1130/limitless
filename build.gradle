@@ -22,3 +22,7 @@ dependencies {
     mod("curse.maven:modmenu-308702:3348711")
     //mod("curse.maven:moenchantments-320806:3084973") // one horrible mess of a mod
 }
+
+jar {
+    exclude("**/EulaReaderMixin.class")
+}
