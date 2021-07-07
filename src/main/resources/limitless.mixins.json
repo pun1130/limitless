@@ -4,9 +4,16 @@
     "compatibilityLevel": "JAVA_16",
     "plugin": "user11681.limitless.asm.LimitlessTransformer",
     "mixins": [
-        "EulaReaderMixin", "access.EnchantmentScreenHandlerAccess", "anvil.AnvilScreenHandlerMixin", "enchantment.EnchantedBookItemMixin",
-        "enchantment.EnchantmentHelperMixin", "enchantment.EnchantmentMixin", "enchantment.EnchantmentScreenHandlerMixin",
-        "enchantment.EnchantRandomlyLootFunctionMixin", "enchantment.ItemStackMixin", "enchantment.PlayerEntityMixin", "enchantment.SimpleRegistryMixin",
+        "access.EnchantmentScreenHandlerAccess",
+        "anvil.AnvilScreenHandlerMixin",
+        "enchantment.EnchantedBookItemMixin",
+        "enchantment.EnchantmentHelperMixin",
+        "enchantment.EnchantmentMixin",
+        "enchantment.EnchantmentScreenHandlerMixin",
+        "enchantment.EnchantRandomlyLootFunctionMixin",
+        "enchantment.ItemStackMixin",
+        "enchantment.PlayerEntityMixin",
+        "enchantment.SimpleRegistryMixin",
         "enchantment.dummy.EnchantBookFactoryDummyMixin"
     ],
     "client": [

@@ -8,6 +8,3 @@ run
 !.gitmodules
 
 !.github
-
-src/main/java/user11681/limitless/asm/mixin/EulaReaderMixin.java
-

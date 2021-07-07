@@ -3,28 +3,17 @@
     "id": "limitless",
     "version": "${version}",
     "name": "limitless",
-    "description": "a mod for exceeding Minecraft's limits",
-    "authors": [
-        "user11681"
-    ],
+    "description": "a mod about enchanting and exceeding Minecraft's limits",
+    "authors": ["user11681"],
     "contact": {
-        "sources": "https://github.com/user11681/limitless"
-    },
+       "sources": "https://github.com/user11681/limitless"
+   },
     "license": "GNU LGPL v3.0",
     "icon": "assets/limitless/icon.png",
-    "environment": "*",
-    "mixins": [
-        "limitless.mixins.json"
-    ],
+    "mixins": ["limitless.mixins.json"],
     "entrypoints": {
-        "main": [
-            "user11681.limitless.Limitless"
-        ],
-        "client": [
-            "user11681.limitless.Limitless"
-        ],
-        "modmenu": [
-            "user11681.limitless.integration.LimitlessModMenuIntegration"
-        ]
+        "main": ["user11681.limitless.Limitless"],
+        "client": ["user11681.limitless.Limitless"],
+        "modmenu": ["user11681.limitless.integration.LimitlessModMenuIntegration"]
     }
 }

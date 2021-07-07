@@ -18,7 +18,7 @@ abstract class EnchantedBookItemMixin extends Item {
     @Redirect(method = "appendStacks",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;getMaxLevel()I"))
-    public int fixStacks(Enchantment enchantment) {
+    public int appendOriginalLevelsToGroup(Enchantment enchantment) {
         return ((EnchantmentAccess) enchantment).limitless_getOriginalMaxLevel();
     }
 
