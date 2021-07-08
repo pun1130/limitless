@@ -18,13 +18,13 @@ import user11681.shortcode.Shortcode;
 import user11681.shortcode.instruction.ExtendedInsnList;
 
 public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
-    static final String Enchantment = internal(1887);
-    static final String getMaxLevel = method(8183);
-    static final String getMaxPower = method(20742);
-
     static final String limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel";
     static final String limitless_useGlobalMaxLevel = "limitless_useGlobalMaxLevel";
     static final String limitless_maxLevel = "limitless_maxLevel";
+
+    static final String Enchantment = internal(1887);
+    static final String getMaxLevel = method(8183);
+    static final String getMaxPower = method(20742);
 
     private static void transformEnchantmentHelperGenerateEnchantments(MethodNode method) {
         ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();

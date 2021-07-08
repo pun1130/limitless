@@ -91,4 +91,14 @@ abstract class EnchantmentHelperMixin {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);
         }
     }
+
+    @Redirect(method = "createNbt", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;putShort(Ljava/lang/String;S)V"))
+    private static void dontTruncateLevel(NbtCompound tag, String key, short truncated, Identifier id, int level) {
+        tag.putInt(key, level);
+    }
+
+    @Redirect(method = "writeLevelToNbt", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;putShort(Ljava/lang/String;S)V"))
+    private static void writeUntruncatedLevel(NbtCompound tag, String key, short truncated, NbtCompound tag1, int level) {
+        tag.putInt(key, level);
+    }
 }
