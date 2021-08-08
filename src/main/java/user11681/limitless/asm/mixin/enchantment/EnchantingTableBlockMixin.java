@@ -3,10 +3,14 @@ package user11681.limitless.asm.mixin.enchantment;
 import java.util.Random;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.EnchantingTableBlock;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,10 +21,11 @@ import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import user11681.limitless.config.enchantment.entry.radius.HorizontalRadius;
 import user11681.limitless.config.enchantment.entry.radius.VerticalRadius;
-import user11681.limitless.enchantment.EnchantingBlocks;
 
 @Mixin(value = EnchantingTableBlock.class)
 abstract class EnchantingTableBlockMixin extends BlockWithEntity {
+    private static final Tag<Block> bookshelvesTag = BlockTags.getTagGroup().getTag(new Identifier("c", "bookshelves"));
+
     protected EnchantingTableBlockMixin(Settings settings) {
         super(settings);
     }
@@ -58,8 +63,9 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
                                 int displacement = direction * distance;
                                 BlockState blockState = world.getBlockState(enchantingTablePos.add(displacement, verticalRadius, end));
 
-                                if (blockState.isIn(EnchantingBlocks.tag)) {
-                                    world.addParticle(ParticleTypes.ENCHANT,
+                                if (blockState.isIn(bookshelvesTag)) {
+                                    world.addParticle(
+                                        ParticleTypes.ENCHANT,
                                         enchantingTablePos.getX() + 0.5,
                                         enchantingTablePos.getY() + 2,
                                         enchantingTablePos.getZ() + 0.5,
@@ -72,8 +78,9 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
                                 if (distance != -horizontalRadius && distance != horizontalRadius) {
                                     blockState = world.getBlockState(enchantingTablePos.add(end, verticalRadius, displacement));
 
-                                    if (blockState.isIn(EnchantingBlocks.tag)) {
-                                        world.addParticle(ParticleTypes.ENCHANT,
+                                    if (blockState.isIn(bookshelvesTag)) {
+                                        world.addParticle(
+                                            ParticleTypes.ENCHANT,
                                             enchantingTablePos.getX() + 0.5,
                                             enchantingTablePos.getY() + 2,
                                             enchantingTablePos.getZ() + 0.5,

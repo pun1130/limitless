@@ -1,6 +1,7 @@
 package user11681.limitless;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import java.lang.reflect.Field;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -11,8 +12,6 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
 import user11681.limitless.config.LimitlessConfiguration;
 import user11681.limitless.config.enchantment.provider.EnchantmentListProvider;
-
-import java.lang.reflect.Field;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
 public class Limitless implements ModInitializer, ClientModInitializer {
