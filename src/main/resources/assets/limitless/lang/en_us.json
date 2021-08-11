@@ -12,7 +12,6 @@
     "text.autoconfig.limitless.option.enchantment.normalization": "normalization",
     "text.autoconfig.limitless.option.enchantment.normalization.enabled": "enabled",
     "text.autoconfig.limitless.option.enchantment.normalization.offset": "level offset",
-    "text.autoconfig.limitless.option.enchantment.normalization.display": "cost display",
     "text.autoconfig.limitless.option.enchantment.reenchanting": "reenchanting",
     "text.autoconfig.limitless.option.enchantment.reenchanting.enabled": "enabled",
     "text.autoconfig.limitless.option.enchantment.reenchanting.removeConflicts": "remove conflicting enchantments",
