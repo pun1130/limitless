@@ -4,16 +4,16 @@
     "version": "${version}",
     "name": "limitless",
     "description": "a mod about enchanting and exceeding Minecraft's limits",
-    "authors": ["user11681"],
+    "authors": ["auoeke"],
     "contact": {
-       "sources": "https://github.com/user11681/limitless"
-   },
+        "sources": "https://git.auoeke.net/limitless"
+    },
     "license": "GNU LGPL v3.0",
     "icon": "assets/limitless/icon.png",
     "mixins": ["limitless.mixins.json"],
     "entrypoints": {
-        "main": ["user11681.limitless.Limitless"],
-        "client": ["user11681.limitless.Limitless"],
-        "modmenu": ["user11681.limitless.integration.LimitlessModMenuIntegration"]
+        "main": ["net.auoeke.limitless.Limitless"],
+        "client": ["net.auoeke.limitless.Limitless"],
+        "modmenu": ["net.auoeke.limitless.Limitless$ModMenu"]
     }
 }

@@ -9,4 +9,8 @@ pluginManagement {
 
 rootProject.name = "limitless"
 
-includeBuild("shortcode")
+includeBuild("shortcode") {
+    dependencySubstitution {
+        substitute(module("user11681:shortcode")).using(project(":"))
+    }
+}

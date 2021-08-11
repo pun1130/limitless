@@ -1,8 +1,8 @@
 {
     "required": true,
-    "package": "user11681.limitless.asm.mixin",
+    "package": "net.auoeke.limitless.asm.mixin",
     "compatibilityLevel": "JAVA_16",
-    "plugin": "user11681.limitless.asm.LimitlessTransformer",
+    "plugin": "net.auoeke.limitless.asm.LimitlessTransformer",
     "mixins": [
         "access.EnchantmentScreenHandlerAccess",
         "anvil.AnvilScreenHandlerMixin",

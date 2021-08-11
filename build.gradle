@@ -2,7 +2,7 @@ plugins {
     id("wheel-fabric").version("latest.integration")
 }
 
-group = "user11681"
+group = "net.auoeke"
 version = "1.3.4"
 
 dependencies {
@@ -13,16 +13,10 @@ dependencies {
     modInclude("reflect")
 
     bloatedInclude("cloth-config")
+    mod("mod-menu:latest.integration")
 
     apiInclude("shortcode")
 
-    intransitive("mod-menu:latest.integration")
-    // mod("cf:modmenu-308702:3348711")
-
-    mod("api-screen")
-
     // mod("cf:xaerominimap-263420:3379204")
     // mod("api")
-
-    // mod("cf:moenchantments-320806:3084973") // one horrible mess of a mod
 }
