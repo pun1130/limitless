@@ -12,6 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.item.ItemStack;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
@@ -22,7 +23,9 @@ public class Limitless implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        LimitlessConfiguration.instance = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new).getConfig();
+        LimitlessConfiguration.holder = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new);
+        LimitlessConfiguration.refresh();
+        CommandRegistrationCallback.EVENT.register(LimitlessCommand::register);
     }
 
     @Override

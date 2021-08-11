@@ -9,6 +9,7 @@ dependencies {
     modInclude("api-base")
     modInclude("api-resource-loader")
     modInclude("api-tag-extensions")
+    modInclude("net.fabricmc.fabric-api:fabric-command-api-v1:latest.integration")
     modInclude("huntingham-hills")
     modInclude("reflect")
 

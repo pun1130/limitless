@@ -1,5 +1,6 @@
 package net.auoeke.limitless.config;
 
+import me.shedaniel.autoconfig.ConfigHolder;
 import net.auoeke.limitless.config.enchantment.EnchantmentConfiguration;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -30,7 +31,14 @@ public class LimitlessConfiguration implements ConfigData {
     public static transient final String COMMAND = "command";
 
     @Excluded
+    public transient static ConfigHolder<LimitlessConfiguration> holder;
+
+    @Excluded
     public transient static LimitlessConfiguration instance;
+
+    public static void refresh() {
+        instance = holder.get();
+    }
 
     @Category(ENCHANTMENT)
     @TransitiveObject
