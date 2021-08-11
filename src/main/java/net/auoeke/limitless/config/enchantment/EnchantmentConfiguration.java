@@ -1,5 +1,11 @@
 package net.auoeke.limitless.config.enchantment;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import java.util.stream.Collectors;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
+import net.auoeke.limitless.asm.access.EnchantmentAccess;
 import net.auoeke.limitless.config.enchantment.annotation.EnchantmentList;
 import net.auoeke.limitless.config.enchantment.entry.EnchantingBlockConfiguration;
 import net.auoeke.limitless.config.enchantment.entry.EnchantingConflicts;
@@ -7,17 +13,7 @@ import net.auoeke.limitless.config.enchantment.entry.EnchantmentEntry;
 import net.auoeke.limitless.config.enchantment.entry.EnchantmentParticleConfiguration;
 import net.auoeke.limitless.config.enchantment.entry.ReenchantingConfiguration;
 import net.auoeke.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry;
-import net.auoeke.limitless.enchantment.EnchantingBlockEntry;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import java.util.stream.Collectors;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
-import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
-import net.auoeke.limitless.asm.access.EnchantmentAccess;
 
 public class EnchantmentConfiguration implements ConfigData {
     @Excluded
@@ -51,18 +47,6 @@ public class EnchantmentConfiguration implements ConfigData {
     @EnchantmentList
     public ObjectLinkedOpenHashSet<EnchantmentEntry> maxLevels;
 
-    @Excluded
-    public transient final Reference2ReferenceOpenHashMap<Block, EnchantingBlockEntry> enchantingBlockToEntry;
-
-    public EnchantmentConfiguration() {
-        this.enchantingBlocks.allowed = new ObjectOpenHashSet<>(new EnchantingBlockEntry[]{new EnchantingBlockEntry("bookshelf", 2)});
-        this.enchantingBlockToEntry = new Reference2ReferenceOpenHashMap<>();
-
-        for (EnchantingBlockEntry entry : enchantingBlocks.allowed) {
-            this.enchantingBlockToEntry.put(entry.getBlock(), entry);
-        }
-    }
-
     @Override
     public void validatePostLoad() {
         ObjectLinkedOpenHashSet<EnchantmentEntry> oldMaxLevels = this.maxLevels;
@@ -86,5 +70,7 @@ public class EnchantmentConfiguration implements ConfigData {
                 }
             }
         }
+        
+        this.enchantingBlocks.validatePostLoad();
     }
 }

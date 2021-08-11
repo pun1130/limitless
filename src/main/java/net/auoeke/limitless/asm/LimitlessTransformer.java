@@ -1,13 +1,11 @@
 package net.auoeke.limitless.asm;
 
-import java.util.ListIterator;
 import net.auoeke.limitless.enchantment.EnchantingBlocks;
 import net.auoeke.limitless.enchantment.EnchantmentUtil;
 import net.auoeke.shortcode.Shortcode;
 import net.auoeke.shortcode.instruction.ExtendedInsnList;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -27,7 +25,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     static final String getMaxPower = method(20742);
 
     private static void transformEnchantmentHelperGenerateEnchantments(MethodNode method) {
-        ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+        var iterator = method.instructions.iterator();
 
         Shortcode.findForward(iterator,
             instruction -> instruction.getType() == AbstractInsnNode.INT_INSN && ((IntInsnNode) instruction).operand == 50,
@@ -44,7 +42,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     }
 
     private static void transformEnchantBookFactoryCreate(MethodNode method) {
-        AbstractInsnNode instruction = method.instructions.getFirst();
+        var instruction = method.instructions.getFirst();
 
         while (instruction != null) {
             if (instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(getMaxLevel)) {
@@ -73,8 +71,8 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     }
 
     private void transformEnchantmentHelperGetPossibleEntries(MethodNode method) {
-        InsnList instructions = method.instructions;
-        ListIterator<AbstractInsnNode> iterator = instructions.iterator();
+        var instructions = method.instructions;
+        var iterator = instructions.iterator();
 
         Shortcode.findForward(iterator,
             instruction -> instruction.getOpcode() == INVOKEVIRTUAL && ((MethodInsnNode) instruction).name.equals(this.method("getMaxLevel")),
@@ -100,7 +98,7 @@ public class LimitlessTransformer extends TransformerPlugin implements Opcodes {
     }
 
     private void transformEnchantmentScreenHandler(MethodNode method) {
-        ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+        var iterator = method.instructions.iterator();
 
         Shortcode.findForward(iterator,
             instruction -> instruction.getOpcode() == ICONST_0,

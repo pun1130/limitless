@@ -4,7 +4,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.auoeke.limitless.config.LimitlessConfiguration;
 import net.auoeke.limitless.config.enchantment.provider.EnchantmentListProvider;
 import net.fabricmc.api.ClientModInitializer;
@@ -23,7 +23,7 @@ public class Limitless implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        LimitlessConfiguration.holder = AutoConfig.register(LimitlessConfiguration.class, JanksonConfigSerializer::new);
+        LimitlessConfiguration.holder = AutoConfig.register(LimitlessConfiguration.class, GsonConfigSerializer::new);
         LimitlessConfiguration.refresh();
         CommandRegistrationCallback.EVENT.register(LimitlessCommand::register);
     }

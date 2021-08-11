@@ -48,7 +48,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
     public void showNormalizedCost(MatrixStack matrixes, float delta, int mouseX, int mouseY, CallbackInfo info, int i, int j) {
         var normalization = LimitlessConfiguration.instance.enchantment.normalization;
 
-        if (normalization.enabled && !this.client.player.getAbilities().creativeMode && this.client.player.experienceLevel > normalization.offset) {
+        if (normalization.enabled && !this.client.player.getAbilities().creativeMode && this.client.player.experienceLevel > Math.max(normalization.offset, this.handler.enchantmentPower[this.backgroundEntryID])) {
             int relative = ExperienceUtil.relativeCost(this.client.player, normalization.offset, this.backgroundEntryID + 1);
             String string = "(%s)".formatted(Integer.toString(relative));
             int x = i + 78;
@@ -56,7 +56,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
             int color;
             int outline;
 
-            if (this.client.player.experienceLevel >= this.handler.enchantmentPower[this.backgroundEntryID] && this.handler.getLapisCount() >= this.backgroundEntryID + 1) {
+            if (this.handler.getLapisCount() >= this.backgroundEntryID + 1) {
                 color = 0xC8FF8F;
                 outline = 0x2D2102;
             } else {
