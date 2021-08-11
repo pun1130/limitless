@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.3.4"
+version = "1.4.0"
 
 dependencies {
     modInclude("api-base")
@@ -12,11 +12,10 @@ dependencies {
     modInclude("net.fabricmc.fabric-api:fabric-command-api-v1:latest.integration")
     modInclude("huntingham-hills")
     modInclude("reflect")
-
     bloatedInclude("cloth-config")
-    mod("mod-menu:latest.integration")
-
     apiInclude("shortcode")
+
+    mod("mod-menu:latest.integration")
 
     // mod("cf:xaerominimap-263420:3379204")
     // mod("api")
