@@ -20,6 +20,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class EnchantingBlockConfiguration implements ConfigData {
+    private static final String EXAMPLE_BLOCK = "examplemod:example_block";
+
     public int maxBlocks = 512;
     public int maxPower = 1024;
 
@@ -37,8 +39,6 @@ public class EnchantingBlockConfiguration implements ConfigData {
 
     @Excluded
     public transient final Set<Block> blockBlacklist = new ReferenceOpenHashSet<>();
-
-    private static final String EXAMPLE_BLOCK = "examplemod:example_block";
 
     private static Optional<Block> verifyBlock(String key, String type) {
         var id = Identifier.tryParse(key);
