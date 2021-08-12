@@ -67,7 +67,6 @@ public class LimitlessMixinTransformerProxy extends FabricMixinTransformerProxy 
         }
 
         return transformed;
-
     }
 
     @Override

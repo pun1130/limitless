@@ -1,8 +1,7 @@
 package net.auoeke.limitless.log;
 
 import java.io.PrintStream;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.LocalTime;
 import net.auoeke.limitless.Limitless;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Level;
@@ -30,7 +29,7 @@ public class LimitlessLogger {
         if (development) {
             logger.printf(level, message, arguments);
         } else {
-            stream.printf("[%s] [%s/%s] (%s) %s%n", DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT), Thread.currentThread().getName(), level, Limitless.ID, message.formatted(arguments));
+            stream.printf("[%s] [%s/%s] (%s) %s%n", LocalTime.now().withNano(0), Thread.currentThread().getName(), level, Limitless.ID, message.formatted(arguments));
         }
     }
 }

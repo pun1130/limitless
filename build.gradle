@@ -16,7 +16,4 @@ dependencies {
     apiInclude("shortcode")
 
     mod("mod-menu:latest.integration")
-
-    // mod("cf:xaerominimap-263420:3379204")
-    // mod("api")
 }
