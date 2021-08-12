@@ -17,10 +17,10 @@ import net.minecraft.util.registry.Registry;
 
 public class EnchantmentConfiguration implements ConfigData {
     @Excluded
-    public static transient final String INTERNAL_NAME = "net/auoeke/limitless/config/enchantment/EnchantmentConfiguration";
+    public static final String INTERNAL_NAME = "net/auoeke/limitless/config/enchantment/EnchantmentConfiguration";
 
     @Excluded
-    public static transient final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
+    public static final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
 
     @SuppressWarnings("unused")
     public int globalMaxLevel = Integer.MAX_VALUE;

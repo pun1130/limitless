@@ -20,6 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class EnchantingBlockConfiguration implements ConfigData {
+    @Excluded
     private static final String EXAMPLE_BLOCK = "examplemod:example_block";
 
     public int maxBlocks = 512;

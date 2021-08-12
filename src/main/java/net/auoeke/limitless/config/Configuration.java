@@ -16,25 +16,25 @@ import net.auoeke.limitless.config.anvil.AnvilConfiguration;
 @Background("textures/block/andesite.png")
 public class Configuration implements ConfigData {
     @Excluded
-    public transient static final String INTERNAL_NAME = "net/auoeke/limitless/config/Configuration";
+    public static final String INTERNAL_NAME = "net/auoeke/limitless/config/Configuration";
 
     @Excluded
-    public transient static final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
+    public static final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
 
     @Excluded
-    public static transient final String ENCHANTMENT = "default";
+    public static final String ENCHANTMENT = "default";
 
     @Excluded
-    public static transient final String ANVIL = "anvil";
+    public static final String ANVIL = "anvil";
 
     @Excluded
-    public static transient final String COMMAND = "command";
+    public static final String COMMAND = "command";
 
     @Excluded
-    public transient static ConfigHolder<Configuration> holder;
+    public static ConfigHolder<Configuration> holder;
 
     @Excluded
-    public transient static Configuration instance;
+    public static Configuration instance;
 
     public static void refresh() {
         instance = holder.get();
