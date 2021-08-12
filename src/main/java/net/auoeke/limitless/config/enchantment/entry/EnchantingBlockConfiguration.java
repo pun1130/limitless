@@ -27,10 +27,10 @@ public class EnchantingBlockConfiguration implements ConfigData {
     public Radius radius = new Radius();
 
     @Excluded
-    public Map<String, Float> whitelist = new Object2FloatOpenHashMap<>(new String[]{"examplemod:example_block"}, new float[]{5});
+    public Map<String, Float> whitelist = new Object2FloatOpenHashMap<>(new String[]{EXAMPLE_BLOCK}, new float[]{5});
 
     @Excluded
-    public List<String> blacklist = new ObjectArrayList<>(new String[]{"examplemod:example_block"});
+    public List<String> blacklist = new ObjectArrayList<>(new String[]{EXAMPLE_BLOCK});
 
     @Excluded
     public transient final Reference2FloatMap<Block> blockWhitelist = new Reference2FloatOpenHashMap<>();
@@ -38,12 +38,14 @@ public class EnchantingBlockConfiguration implements ConfigData {
     @Excluded
     public transient final Set<Block> blockBlacklist = new ReferenceOpenHashSet<>();
 
+    private static final String EXAMPLE_BLOCK = "examplemod:example_block";
+
     private static Optional<Block> verifyBlock(String key, String type) {
         var id = Identifier.tryParse(key);
 
         if (id == null) {
             LimitlessLogger.error("Key \"%s\" listed in limitless' enchanting block %slist is not formatted correctly.", type);
-        } else {
+        } else if (!key.equals(EXAMPLE_BLOCK)) {
             var block = Registry.BLOCK.getOrEmpty(id);
 
             if (block.isPresent()) {

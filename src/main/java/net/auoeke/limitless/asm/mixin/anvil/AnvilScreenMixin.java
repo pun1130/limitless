@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.config.anvil.entry.AnvilNormalizationEntry;
 import net.auoeke.limitless.config.common.CostDisplay;
 import net.auoeke.limitless.enchantment.ExperienceUtil;
@@ -26,7 +26,7 @@ abstract class AnvilScreenMixin extends HandledScreen<AnvilScreenHandler> {
     @ModifyConstant(method = "drawForeground",
                     constant = @Constant(intValue = 40))
     public int modifyLimit(int limit) {
-        return LimitlessConfiguration.instance.anvil.levelLimit;
+        return Configuration.instance.anvil.levelLimit;
     }
 
     @ModifyArg(method = "drawForeground",
@@ -36,7 +36,7 @@ abstract class AnvilScreenMixin extends HandledScreen<AnvilScreenHandler> {
     public Object[] showNormalizedCost(Object[] arguments) {
         int cost = this.handler.getLevelCost();
         PlayerEntity player = this.client.player;
-        AnvilNormalizationEntry normalization = LimitlessConfiguration.instance.anvil.normalization;
+        AnvilNormalizationEntry normalization = Configuration.instance.anvil.normalization;
 
         if (normalization.enabled && normalization.display != CostDisplay.NORMAL && !player.getAbilities().creativeMode && player.experienceLevel > cost) {
             int relative = ExperienceUtil.normalizedCost(player, cost);

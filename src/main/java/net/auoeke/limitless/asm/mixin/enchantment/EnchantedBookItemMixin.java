@@ -1,7 +1,7 @@
 package net.auoeke.limitless.asm.mixin.enchantment;
 
 import net.auoeke.limitless.asm.access.EnchantmentAccess;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
@@ -26,13 +26,13 @@ abstract class EnchantedBookItemMixin extends Item {
     @ModifyConstant(method = "isEnchantable",
                     constant = @Constant(intValue = 0))
     public int makeReenchantable(int previous) {
-        return LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? 1 : previous;
+        return Configuration.instance.enchantment.reenchanting.allowEnchantedBooks() ? 1 : previous;
     }
 
     @Intrinsic
     @Override
     public int getEnchantability() {
-        return LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK.getEnchantability() : 0;
+        return Configuration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK.getEnchantability() : 0;
     }
 
     public EnchantedBookItemMixin(Settings settings) {

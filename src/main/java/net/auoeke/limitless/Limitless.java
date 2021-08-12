@@ -5,7 +5,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.config.enchantment.provider.EnchantmentListProvider;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -23,15 +23,15 @@ public class Limitless implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        LimitlessConfiguration.holder = AutoConfig.register(LimitlessConfiguration.class, GsonConfigSerializer::new);
-        LimitlessConfiguration.refresh();
+        Configuration.holder = AutoConfig.register(Configuration.class, GsonConfigSerializer::new);
+        Configuration.refresh();
         CommandRegistrationCallback.EVENT.register(LimitlessCommand::register);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void onInitializeClient() {
-        AutoConfig.getGuiRegistry(LimitlessConfiguration.class).registerPredicateProvider(new EnchantmentListProvider(), field -> field.getName().equals("maxLevels"));
+        AutoConfig.getGuiRegistry(Configuration.class).registerPredicateProvider(new EnchantmentListProvider(), field -> field.getName().equals("maxLevels"));
     }
 
     @Environment(EnvType.CLIENT)
@@ -39,7 +39,7 @@ public class Limitless implements ModInitializer, ClientModInitializer {
     public static class ModMenu implements ModMenuApi {
         @Override
         public ConfigScreenFactory<?> getModConfigScreenFactory() {
-            return parent -> AutoConfig.getConfigScreen(LimitlessConfiguration.class, parent).get();
+            return parent -> AutoConfig.getConfigScreen(Configuration.class, parent).get();
         }
     }
 }

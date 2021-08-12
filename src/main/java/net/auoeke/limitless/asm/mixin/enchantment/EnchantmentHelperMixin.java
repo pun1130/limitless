@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import net.auoeke.limitless.Limitless;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Mixin(EnchantmentHelper.class)
@@ -28,14 +28,14 @@ abstract class EnchantmentHelperMixin {
     @ModifyConstant(method = "calculateRequiredExperienceLevel",
                     constant = @Constant(intValue = 15))
     private static int modifyMaxBookshelves(int previousMaxBookshelves) {
-        return LimitlessConfiguration.instance.enchantment.enchantingBlocks.maxBlocks;
+        return Configuration.instance.enchantment.enchantingBlocks.maxBlocks;
     }
 
     @Redirect(method = "getPossibleEntries",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;isTreasure()Z"))
     private static boolean allowTreasure(Enchantment enchantment) {
-        return LimitlessConfiguration.instance.enchantment.allowTreasure ? enchantment.isCursed() : enchantment.isTreasure();
+        return Configuration.instance.enchantment.allowTreasure ? enchantment.isCursed() : enchantment.isTreasure();
     }
 
     @Redirect(method = "getPossibleEntries",
@@ -44,7 +44,7 @@ abstract class EnchantmentHelperMixin {
     private static Item replaceEnchantedBook(ItemStack stack) {
         Item item = stack.getItem();
 
-        return item == Items.ENCHANTED_BOOK && LimitlessConfiguration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
+        return item == Items.ENCHANTED_BOOK && Configuration.instance.enchantment.reenchanting.allowEnchantedBooks() ? Items.BOOK : item;
     }
 
     @ModifyVariable(method = "generateEnchantments",
@@ -85,7 +85,7 @@ abstract class EnchantmentHelperMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/EnchantmentHelper;removeConflicts(Ljava/util/List;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
     private static void keepConflicts(List<EnchantmentLevelEntry> possibleEntries, EnchantmentLevelEntry pickedEntry) {
-        if (LimitlessConfiguration.instance.enchantment.conflicts.generate) {
+        if (Configuration.instance.enchantment.conflicts.generate) {
             possibleEntries.removeIf(entry -> entry.enchantment == pickedEntry.enchantment);
         } else {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);

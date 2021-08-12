@@ -2,7 +2,7 @@ package net.auoeke.limitless.asm.mixin.enchantment;
 
 import java.util.List;
 import net.auoeke.limitless.asm.mixin.access.EnchantmentScreenHandlerAccess;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.enchantment.ExperienceUtil;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -46,7 +46,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                      target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Ljava/lang/String;FFI)I"),
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void showNormalizedCost(MatrixStack matrixes, float delta, int mouseX, int mouseY, CallbackInfo info, int i, int j) {
-        var normalization = LimitlessConfiguration.instance.enchantment.normalization;
+        var normalization = Configuration.instance.enchantment.normalization;
 
         if (normalization.enabled && !this.client.player.getAbilities().creativeMode && this.client.player.experienceLevel > Math.max(normalization.offset, this.handler.enchantmentPower[this.backgroundEntryID])) {
             int relative = ExperienceUtil.relativeCost(this.client.player, normalization.offset, this.backgroundEntryID + 1);
@@ -86,7 +86,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                        target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
                        ordinal = 0))
     public boolean revealEnchantments(List<Object> enchantments, Object enchantmentText) {
-        if (LimitlessConfiguration.instance.enchantment.revealEnchantments) {
+        if (Configuration.instance.enchantment.revealEnchantments) {
             int index = 0;
 
             for (EnchantmentLevelEntry enchantment : ((EnchantmentScreenHandlerAccess) this.handler).invokeGenerateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {

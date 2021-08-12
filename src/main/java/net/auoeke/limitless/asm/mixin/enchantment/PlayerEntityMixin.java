@@ -1,6 +1,6 @@
 package net.auoeke.limitless.asm.mixin.enchantment;
 
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.enchantment.ExperienceUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ abstract class PlayerEntityMixin {
                        target = "Lnet/minecraft/entity/player/PlayerEntity;experienceLevel:I",
                        ordinal = 1))
     public void normalizeCost(PlayerEntity player, int levels) {
-        var normalization = LimitlessConfiguration.instance.enchantment.normalization;
+        var normalization = Configuration.instance.enchantment.normalization;
 
         if (normalization.enabled && player.experienceLevel > normalization.offset) {
             ExperienceUtil.addExperienceLevelsRelatively(player, normalization.offset, levels - player.experienceLevel);

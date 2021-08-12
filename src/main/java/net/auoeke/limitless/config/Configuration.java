@@ -14,9 +14,9 @@ import net.auoeke.limitless.config.anvil.AnvilConfiguration;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Config(name = Limitless.ID)
 @Background("textures/block/andesite.png")
-public class LimitlessConfiguration implements ConfigData {
+public class Configuration implements ConfigData {
     @Excluded
-    public transient static final String INTERNAL_NAME = "net/auoeke/limitless/config/LimitlessConfiguration";
+    public transient static final String INTERNAL_NAME = "net/auoeke/limitless/config/Configuration";
 
     @Excluded
     public transient static final String DESCRIPTOR = "L" + INTERNAL_NAME + ";";
@@ -31,10 +31,10 @@ public class LimitlessConfiguration implements ConfigData {
     public static transient final String COMMAND = "command";
 
     @Excluded
-    public transient static ConfigHolder<LimitlessConfiguration> holder;
+    public transient static ConfigHolder<Configuration> holder;
 
     @Excluded
-    public transient static LimitlessConfiguration instance;
+    public transient static Configuration instance;
 
     public static void refresh() {
         instance = holder.get();

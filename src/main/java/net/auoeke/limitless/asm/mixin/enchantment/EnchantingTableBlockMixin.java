@@ -1,7 +1,7 @@
 package net.auoeke.limitless.asm.mixin.enchantment;
 
 import java.util.Random;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.config.enchantment.entry.radius.HorizontalRadius;
 import net.auoeke.limitless.config.enchantment.entry.radius.VerticalRadius;
 import net.fabricmc.api.EnvType;
@@ -28,7 +28,7 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
     public void expandEnchantmentParticles(BlockState enchantingTableState, World world, BlockPos enchantingTablePos, Random random, CallbackInfo info) {
         super.randomDisplayTick(enchantingTableState, world, enchantingTablePos, random);
 
-        var configuration = LimitlessConfiguration.instance;
+        var configuration = Configuration.instance;
         var particleConfiguration = configuration.enchantment.particles;
 
         if (particleConfiguration.enabled) {

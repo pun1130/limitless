@@ -2,7 +2,7 @@ package net.auoeke.limitless.asm;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.List;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.config.enchantment.EnchantmentConfiguration;
 import net.auoeke.shortcode.instruction.ExtendedInsnList;
 import org.objectweb.asm.ClassReader;
@@ -35,8 +35,8 @@ public class LimitlessMixinTransformerProxy extends FabricMixinTransformerProxy 
                         .aload(0) // this
                         .getfield(klass.name, LimitlessTransformer.limitless_useGlobalMaxLevel, "Z") // I
                         .ifeq("custom")
-                        .getstatic(LimitlessConfiguration.INTERNAL_NAME, "instance", LimitlessConfiguration.DESCRIPTOR) // LimitlessConfiguration
-                        .getfield(LimitlessConfiguration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
+                        .getstatic(Configuration.INTERNAL_NAME, "instance", Configuration.DESCRIPTOR) // Configuration
+                        .getfield(Configuration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
                         .getfield(EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I") // I
                         .ireturn()
                         .label("custom")

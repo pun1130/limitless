@@ -1,7 +1,7 @@
 package net.auoeke.limitless.enchantment;
 
 import java.util.Random;
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -21,7 +21,7 @@ public interface EnchantingBlocks {
             return 0;
         }
 
-        int maxEnchantingPower = LimitlessConfiguration.instance.enchantment.enchantingBlocks.maxPower;
+        int maxEnchantingPower = Configuration.instance.enchantment.enchantingBlocks.maxPower;
 
         if (enchantingPower > maxEnchantingPower) {
             enchantingPower = maxEnchantingPower;
@@ -37,12 +37,12 @@ public interface EnchantingBlocks {
     }
 
     static float countEnchantingPower(World world, BlockPos enchantingTablePos) {
-        var horizontalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.xz;
-        var verticalRadiusRange = LimitlessConfiguration.instance.enchantment.enchantingBlocks.radius.y;
+        var horizontalRadiusRange = Configuration.instance.enchantment.enchantingBlocks.radius.xz;
+        var verticalRadiusRange = Configuration.instance.enchantment.enchantingBlocks.radius.y;
         var power = new MutableFloat();
 
         forBlockInRange(world, enchantingTablePos, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max, (tableBlockState, pos, dX, dY, dZ) ->
-            power.add(LimitlessConfiguration.instance.enchantment.enchantingBlocks.enchantingPower(tableBlockState.getBlock()))
+            power.add(Configuration.instance.enchantment.enchantingBlocks.enchantingPower(tableBlockState.getBlock()))
         );
 
         return power.floatValue();

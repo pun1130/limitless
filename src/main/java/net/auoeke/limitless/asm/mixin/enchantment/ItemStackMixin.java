@@ -1,6 +1,6 @@
 package net.auoeke.limitless.asm.mixin.enchantment;
 
-import net.auoeke.limitless.config.LimitlessConfiguration;
+import net.auoeke.limitless.config.Configuration;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -15,7 +15,7 @@ abstract class ItemStackMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/item/ItemStack;hasEnchantments()Z"))
     public boolean makeReenchantable(ItemStack stack) {
-        return !LimitlessConfiguration.instance.enchantment.reenchanting.allowEquipment() && stack.hasEnchantments();
+        return !Configuration.instance.enchantment.reenchanting.allowEquipment() && stack.hasEnchantments();
     }
 
     @Redirect(method = "addEnchantment", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;createNbt(Lnet/minecraft/util/Identifier;I)Lnet/minecraft/nbt/NbtCompound;"))
