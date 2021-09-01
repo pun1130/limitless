@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.0"
+version = "1.5.1"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 defaultTasks("generateMetadata")
@@ -37,7 +37,15 @@ dependencies {
     bloatedInclude("cloth-config")
     apiInclude("shortcode")
 
-    mod("mod-menu:latest.integration")
+    bloated("mod-menu:latest.integration")
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.name == "fabric-resource-loader-v0") {
+            useVersion("0.4.8+a00e834b18")
+        }
+    }
 }
 
 mod {
@@ -45,6 +53,7 @@ mod {
 
     contact {
         sources = "https://git.auoeke.net/limitless"
+        issues = "https://git.auoeke.net/limitless/issues"
     }
 
     license("GNU LGPL v3.0")
