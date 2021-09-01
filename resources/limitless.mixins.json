@@ -6,7 +6,6 @@
     "mixins": [
         "access.EnchantmentScreenHandlerAccess",
         "anvil.AnvilScreenHandlerMixin",
-        "anvil.AnvilScreenHandlerStaticMixin",
         "enchantment.EnchantedBookItemMixin",
         "enchantment.EnchantmentHelperMixin",
         "enchantment.EnchantmentMixin",

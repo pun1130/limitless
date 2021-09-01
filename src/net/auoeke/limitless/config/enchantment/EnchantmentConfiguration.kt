@@ -3,7 +3,6 @@ package net.auoeke.limitless.config.enchantment
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded
 import net.auoeke.limitless.config.enchantment.annotation.EnchantmentList
 import net.auoeke.limitless.config.enchantment.entry.*
 import net.auoeke.limitless.config.enchantment.entry.normalization.EnchantmentNormalizationEntry
@@ -57,10 +56,7 @@ class EnchantmentConfiguration : ConfigData {
     }
 
     companion object {
-        @Excluded
         const val INTERNAL_NAME = "net/auoeke/limitless/config/enchantment/EnchantmentConfiguration"
-
-        @Excluded
         const val DESCRIPTOR = "L${this.INTERNAL_NAME};"
     }
 }

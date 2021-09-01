@@ -6,10 +6,12 @@ import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.auoeke.limitless.config.Configuration
+import net.auoeke.limitless.config.ExcludingNonprovider
 import net.auoeke.limitless.config.enchantment.provider.EnchantmentListProvider
 import net.fabricmc.api.*
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.item.ItemStack
+import java.lang.reflect.Modifier
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer::class)
 object Limitless : ModInitializer, ClientModInitializer {
@@ -24,7 +26,10 @@ object Limitless : ModInitializer, ClientModInitializer {
 
     @Environment(EnvType.CLIENT)
     override fun onInitializeClient() {
-        AutoConfig.getGuiRegistry(Configuration::class.java).registerPredicateProvider(EnchantmentListProvider) {field -> field.name == "maxLevels"}
+        AutoConfig.getGuiRegistry(Configuration::class.java).apply {
+            registerPredicateProvider(EnchantmentListProvider) {field -> field.name == "maxLevels"}
+            registerPredicateProvider(ExcludingNonprovider) {field -> field.modifiers and (Modifier.STATIC or Modifier.TRANSIENT or 0x1000 /*synthetic*/) != 0}
+        }
     }
 
     @Environment(EnvType.CLIENT)

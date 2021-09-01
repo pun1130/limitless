@@ -8,7 +8,5 @@ interface EnchantmentAccess {
 
     fun limitless_setUseGlobalMaxLevel(useGlobalMaxLevel: Boolean)
 
-    // fun limitless_useGlobalMaxLevel(): Boolean
-
     fun limitless_getOriginalMaxPower(level: Int): Int
 }

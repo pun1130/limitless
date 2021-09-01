@@ -24,7 +24,7 @@ object EnchantmentListProvider : GuiProvider {
         val entries = ReferenceArrayList<AbstractConfigListEntry<*>>()
         val listBuilder = SubCategoryBuilder(this.resetKey, TranslatableText("config.limitless.enchantments"))
 
-        for (entry in field[config] as ObjectLinkedOpenHashSet<EnchantmentEntry>) {
+        for (entry in field.apply {trySetAccessible()}[config] as ObjectLinkedOpenHashSet<EnchantmentEntry>) {
             val enchantment = entry.enchantment
 
             if (enchantment !== null) {

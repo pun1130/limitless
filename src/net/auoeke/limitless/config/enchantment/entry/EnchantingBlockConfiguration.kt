@@ -19,16 +19,14 @@ class EnchantingBlockConfiguration : ConfigData {
     var radius = Radius()
 
     @Excluded
-    var whitelist: Map<String, Float> = Object2FloatOpenHashMap(arrayOf(EXAMPLE_BLOCK), floatArrayOf(5F))
+    private var whitelist: Map<String, Float> = Object2FloatOpenHashMap(arrayOf(EXAMPLE_BLOCK), floatArrayOf(5F))
 
     @Excluded
-    var blacklist: List<String> = ObjectArrayList(arrayOf(EXAMPLE_BLOCK))
+    private var blacklist: List<String> = ObjectArrayList(arrayOf(EXAMPLE_BLOCK))
 
-    @Excluded
     @Transient
     val blockWhitelist: Reference2FloatMap<Block> = Reference2FloatOpenHashMap()
 
-    @Excluded
     @Transient
     val blockBlacklist: MutableSet<Block> = ReferenceOpenHashSet()
 
@@ -50,7 +48,6 @@ class EnchantingBlockConfiguration : ConfigData {
     }
 
     companion object {
-        @Excluded
         private const val EXAMPLE_BLOCK = "examplemod:example_block"
 
         private fun verifyBlock(key: String, type: String): Block? {
