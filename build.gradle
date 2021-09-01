@@ -10,6 +10,7 @@ description = "a mod about enchanting and exceeding Minecraft's limits"
 
 sourceSets {
     main {
+        kotlin.srcDir("src")
         java.srcDir("src")
 
         resources {
@@ -49,8 +50,8 @@ mod {
     mixin("limitless.mixins.json")
 
     entrypoints(
-        main: 'net.auoeke.limitless.Limitless',
-        client: 'net.auoeke.limitless.Limitless',
+        main: [kbootstrap: 'net.auoeke.limitless.Limitless'],
+        client: [kbootstrap: 'net.auoeke.limitless.Limitless'],
         modmenu: 'net.auoeke.limitless.Limitless$ModMenu'
     )
 }
