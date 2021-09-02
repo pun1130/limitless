@@ -4,6 +4,7 @@ import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
 import net.auoeke.shortcode.Shortcode
 import net.auoeke.shortcode.instruction.ExtendedInsnList
+import net.fabricmc.loader.api.FabricLoader
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
 import user11681.huntinghamhills.plugin.TransformerPlugin
@@ -23,6 +24,10 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         this.methodAfter(klass(3853, 1648), method(7246), null, this::transformEnchantBookFactoryCreate)
         this.methodAfter(klass(1890), method(8229), null, this::transformEnchantmentHelperGetPossibleEntries)
         this.methodAfter(klass(1718), method(17411), null, this::transformEnchantmentScreenHandler)
+    }
+
+    override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean {
+        return !FabricLoader.getInstance().isModLoaded("taxfreelevels") || !mixinClassName.startsWith("net.auoeke.limitless.asm.mixin.normalization")
     }
 
     private fun transformEnchantmentHelperGetPossibleEntries(method: MethodNode) {

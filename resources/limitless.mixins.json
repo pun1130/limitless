@@ -12,9 +12,10 @@
         "enchantment.EnchantmentScreenHandlerMixin",
         "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.ItemStackMixin",
-        "enchantment.PlayerEntityMixin",
         "enchantment.SimpleRegistryMixin",
-        "enchantment.dummy.EnchantBookFactoryDummyMixin"
+        "enchantment.dummy.EnchantBookFactoryDummyMixin",
+        "normalization.AnvilScreenHandlerMixin",
+        "normalization.PlayerEntityMixin"
     ],
     "client": [
         "anvil.AnvilScreenMixin",

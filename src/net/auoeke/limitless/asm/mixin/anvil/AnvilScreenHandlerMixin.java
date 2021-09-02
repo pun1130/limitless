@@ -1,7 +1,7 @@
 package net.auoeke.limitless.asm.mixin.anvil;
 
+import net.auoeke.limitless.config.Configuration;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.auoeke.limitless.config.Configuration;
-import net.auoeke.limitless.enchantment.ExperienceUtil;
 
 @Mixin(value = AnvilScreenHandler.class, priority = -1000)
 abstract class AnvilScreenHandlerMixin {
@@ -43,16 +41,5 @@ abstract class AnvilScreenHandlerMixin {
                     constant = @Constant(intValue = 40))
     public int modifyLimit(int originalLimit) {
         return Configuration.instance.getAnvil().getLevelLimit();
-    }
-
-    @Redirect(method = "onTakeOutput",
-              at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/entity/player/PlayerEntity;addExperienceLevels(I)V"))
-    public void normalizeCost(PlayerEntity player, int levels) {
-        if (Configuration.instance.getAnvil().getNormalization().getEnabled()) {
-            ExperienceUtil.INSTANCE.addExperienceLevelsNormalized(player, levels);
-        } else {
-            player.addExperience(levels);
-        }
     }
 }
