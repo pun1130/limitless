@@ -63,6 +63,6 @@ mod {
     entrypoints(
         main: [kbootstrap: 'net.auoeke.limitless.Limitless'],
         client: [kbootstrap: 'net.auoeke.limitless.Limitless'],
-        modmenu: 'net.auoeke.limitless.Limitless$ModMenu'
+        modmenu: [kbootstrap: 'net.auoeke.limitless.Limitless$ModMenu']
     )
 }
