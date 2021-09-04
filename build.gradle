@@ -82,4 +82,21 @@ task modrinth(type: TaskModrinthUpload) {
 
     addGameVersion("1.17.1")
     addLoader("fabric")
+
+    doFirst {
+        logger.lifecycle(/Enter the changelog ending with "EOF"./)
+        changelog = ""
+
+        while (true) {
+            def line = System.in.newReader().readLine()
+
+            if (line.endsWith("EOF")) {
+                changelog += line.replaceFirst(/EOF$/, "")
+
+                break
+            }
+
+            changelog += line
+        }
+    }
 }
