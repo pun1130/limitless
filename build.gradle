@@ -96,7 +96,7 @@ task modrinth(type: TaskModrinthUpload) {
                 break
             }
 
-            changelog += line
+            changelog += line + System.lineSeparator()
         }
     }
 }
