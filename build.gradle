@@ -1,7 +1,10 @@
+import com.modrinth.minotaur.TaskModrinthUpload
+
 plugins {
     id("wheel-fabric").version("latest.integration")
     id("kbootstrap").version("latest.integration")
     id("fabric.mod.gradle").version("latest.integration")
+    id("com.modrinth.minotaur").version("latest.integration")
 }
 
 group = "net.auoeke"
@@ -65,4 +68,18 @@ mod {
         client: [kbootstrap: 'net.auoeke.limitless.Limitless'],
         modmenu: [kbootstrap: 'net.auoeke.limitless.Limitless$ModMenu']
     )
+}
+
+task modrinth(type: TaskModrinthUpload) {
+    if (token = System.properties["modrinth"]) {
+        publish.finalizedBy(it)
+        it.dependsOn(publish)
+    }
+
+    projectId = "Qx0jUYY8"
+    versionNumber = version
+    uploadFile = remapJar
+
+    addGameVersion("1.17.1")
+    addLoader("fabric")
 }

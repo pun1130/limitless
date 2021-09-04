@@ -9,28 +9,28 @@ import java.time.LocalTime
 
 // log4j does not display logger names in production.
 object LimitlessLogger {
-    private val logger = when {
-        FabricLoader.getInstance().isDevelopmentEnvironment -> LogManager.getLogger("limitless")
-        else -> null
+    private val logger = when (FabricLoader.getInstance().isDevelopmentEnvironment) {
+        true -> LogManager.getLogger("limitless")
+        false -> null
     }
 
-    fun info(message: String, vararg arguments: Any) {
-        this.print(System.out, Level.INFO, message, *arguments)
+    fun info(message: String) {
+        this.print(System.out, Level.INFO, message)
     }
 
-    fun warn(message: String, vararg arguments: Any) {
-        this.print(System.out, Level.WARN, message, *arguments)
+    fun warn(message: String) {
+        this.print(System.out, Level.WARN, message)
     }
 
-    fun error(message: String, vararg arguments: Any) {
-        this.print(System.err, Level.ERROR, message, *arguments)
+    fun error(message: String) {
+        this.print(System.err, Level.ERROR, message)
     }
 
-    private fun print(stream: PrintStream, level: Level, message: String, vararg arguments: Any) {
+    private fun print(stream: PrintStream, level: Level, message: String) {
         if (this.logger === null) {
-            stream.printf("[${LocalTime.now().withNano(0)}] [${Thread.currentThread().name}/$level] (${Limitless.ID}) ${message.formatted(arguments)}%n")
+            stream.printf("[${LocalTime.now().withNano(0)}] [${Thread.currentThread().name}/$level] (${Limitless.ID}) $message%n")
         } else {
-            this.logger.printf(level, message, *arguments)
+            this.logger.printf(level, message)
         }
     }
 }
