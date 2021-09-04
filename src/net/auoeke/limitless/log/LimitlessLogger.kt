@@ -14,17 +14,9 @@ object LimitlessLogger {
         false -> null
     }
 
-    fun info(message: String) {
-        this.print(System.out, Level.INFO, message)
-    }
-
-    fun warn(message: String) {
-        this.print(System.out, Level.WARN, message)
-    }
-
-    fun error(message: String) {
-        this.print(System.err, Level.ERROR, message)
-    }
+    fun info(message: String) = this.print(System.out, Level.INFO, message)
+    fun warn(message: String) = this.print(System.out, Level.WARN, message)
+    fun error(message: String) = this.print(System.err, Level.ERROR, message)
 
     private fun print(stream: PrintStream, level: Level, message: String) {
         if (this.logger === null) {
