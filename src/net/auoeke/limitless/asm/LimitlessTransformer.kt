@@ -27,7 +27,13 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
     }
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean {
-        return !FabricLoader.getInstance().isModLoaded("taxfreelevels") || !mixinClassName.startsWith("net.auoeke.limitless.asm.mixin.normalization")
+        incompatibleMixins.forEach {
+            if (FabricLoader.getInstance().isModLoaded(it.key) && it.value.matches(mixinClassName.substringAfter("net.auoeke.limitless.asm.mixin."))) {
+                return false
+            }
+        }
+
+        return true
     }
 
     private fun transformEnchantmentHelperGetPossibleEntries(method: MethodNode) {
@@ -128,6 +134,10 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         val Enchantment: String = internal(1887)
         val getMaxLevel: String = method(8183)
         val getMaxPower: String = method(20742)
+        val incompatibleMixins: Map<String, Regex> = mapOf(
+            "taxfreelevels" to "normalization.*",
+            "levelz" to "normalization.AnvilScreenHandlerMixin"
+        ).mapValues {it.value.toRegex()}
 
         init {
             Classes.reinterpret(Accessor.getObject(Accessor.getObject(LimitlessTransformer::class.java.classLoader, "delegate") as Any, "mixinTransformer"), LimitlessMixinTransformerProxy::class.java)
