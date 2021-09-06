@@ -1,2 +1,2 @@
 ### features
-See [this mod's CurseForge page](https://curseforge.com/minecraft/mc-mods/limitless).
+See [this mod's Modrinth page](https://modrinth.com/mod/limitless).
