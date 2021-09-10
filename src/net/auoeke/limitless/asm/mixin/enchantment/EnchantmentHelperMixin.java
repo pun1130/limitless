@@ -28,14 +28,14 @@ abstract class EnchantmentHelperMixin {
     @ModifyConstant(method = "calculateRequiredExperienceLevel",
                     constant = @Constant(intValue = 15))
     private static int modifyMaxBookshelves(int previousMaxBookshelves) {
-        return Configuration.instance.getEnchantment().getEnchantingBlocks().getMaxBlocks();
+        return Configuration.instance.enchantment.getEnchantingBlocks().getMaxBlocks();
     }
 
     @Redirect(method = "getPossibleEntries",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;isTreasure()Z"))
     private static boolean allowTreasure(Enchantment enchantment) {
-        return Configuration.instance.getEnchantment().getAllowTreasure() ? enchantment.isCursed() : enchantment.isTreasure();
+        return Configuration.instance.enchantment.getAllowTreasure() ? enchantment.isCursed() : enchantment.isTreasure();
     }
 
     @Redirect(method = "getPossibleEntries",
@@ -44,7 +44,7 @@ abstract class EnchantmentHelperMixin {
     private static Item replaceEnchantedBook(ItemStack stack) {
         Item item = stack.getItem();
 
-        return item == Items.ENCHANTED_BOOK && Configuration.instance.getEnchantment().getReenchanting().allowEnchantedBooks() ? Items.BOOK : item;
+        return item == Items.ENCHANTED_BOOK && Configuration.instance.enchantment.getReenchanting().allowEnchantedBooks() ? Items.BOOK : item;
     }
 
     @ModifyVariable(method = "generateEnchantments",
@@ -85,7 +85,7 @@ abstract class EnchantmentHelperMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/EnchantmentHelper;removeConflicts(Ljava/util/List;Lnet/minecraft/enchantment/EnchantmentLevelEntry;)V"))
     private static void keepConflicts(List<EnchantmentLevelEntry> possibleEntries, EnchantmentLevelEntry pickedEntry) {
-        if (Configuration.instance.getEnchantment().getConflicts().getGenerate()) {
+        if (Configuration.instance.enchantment.getConflicts().getGenerate()) {
             possibleEntries.removeIf(entry -> entry.enchantment == pickedEntry.enchantment);
         } else {
             EnchantmentHelper.removeConflicts(possibleEntries, pickedEntry);

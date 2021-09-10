@@ -21,18 +21,18 @@ import net.auoeke.limitless.Limitless;
 abstract class EnchantmentScreenHandlerMixin {
     @Redirect(method = "method_17410", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;addEnchantment(Lnet/minecraft/enchantment/Enchantment;I)V"))
     public void mergeEnchantments(ItemStack stack, Enchantment enchantment, int level) {
-        EnchantmentUtil.INSTANCE.mergeEnchantment(stack, enchantment, level, Configuration.instance.getEnchantment().getConflicts().getMerge());
+        EnchantmentUtil.INSTANCE.mergeEnchantment(stack, enchantment, level, Configuration.instance.enchantment.getConflicts().getMerge());
     }
 
     @Inject(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;generateEnchantments(Ljava/util/Random;Lnet/minecraft/item/ItemStack;IZ)Ljava/util/List;"))
     public void markItemForConflictRemoval(ItemStack stack, int slot, int level, CallbackInfoReturnable<List<EnchantmentLevelEntry>> info) {
-        if (stack.hasEnchantments() && Configuration.instance.getEnchantment().getReenchanting().getRemoveConflicts()) {
+        if (stack.hasEnchantments() && Configuration.instance.enchantment.getReenchanting().getRemoveConflicts()) {
             Limitless.INSTANCE.getForConflictRemoval().add(stack);
         }
     }
 
     @Redirect(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z"))
     public boolean fixEnchantedBook(ItemStack stack, Item item) {
-        return stack.getItem() == item || stack.getItem() == Items.ENCHANTED_BOOK && Configuration.instance.getEnchantment().getReenchanting().allowEnchantedBooks();
+        return stack.getItem() == item || stack.getItem() == Items.ENCHANTED_BOOK && Configuration.instance.enchantment.getReenchanting().allowEnchantedBooks();
     }
 }

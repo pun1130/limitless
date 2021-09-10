@@ -20,23 +20,20 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
         val node = ClassNode().also {ClassReader(basicClass).accept(it, 0)}
 
         return when {
-            transform(node) -> {
-                MixinClassWriter(ClassWriter.COMPUTE_FRAMES).also {
-                    node.accept(it)
-                }.toByteArray()
-            }
+            transform(node) -> MixinClassWriter(ClassWriter.COMPUTE_FRAMES).also(node::accept).toByteArray()
             else -> basicClass
         }
     }
 
     companion object {
+        private const val limitless_useGlobalMaxLevel = "limitless_useGlobalMaxLevel"
+        private const val limitless_maxLevel = "limitless_maxLevel"
         private val enchantmentClassNames = ObjectOpenHashSet(arrayOf(LimitlessTransformer.Enchantment))
 
         init {
             Classes.load(ClassNode::class.java.name, ClassReader::class.java.name, ClassWriter::class.java.name)
         }
 
-        // prevent ConcurrentModificationException from visitMethod
         private fun transform(klass: ClassNode): Boolean {
             val methods = klass.methods
             var transformed = false
@@ -52,7 +49,7 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
                     if (method.name == LimitlessTransformer.getMaxLevel && method.desc == "()I") {
                         (klass.visitMethod(Opcodes.ACC_PUBLIC, LimitlessTransformer.getMaxLevel, method.desc, null, null) as MethodNode).instructions = ExtendedInsnList()
                             .aload(0) // this
-                            .getfield(klass.name, LimitlessTransformer.limitless_useGlobalMaxLevel, "Z") // I
+                            .getfield(klass.name, limitless_useGlobalMaxLevel, "Z") // I
                             .ifeq("custom")
                             .getstatic(Configuration.INTERNAL_NAME, "instance", Configuration.DESCRIPTOR) // Configuration
                             .getfield(Configuration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
@@ -60,7 +57,7 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
                             .ireturn()
                             .label("custom")
                             .aload(0) // this
-                            .getfield(klass.name, LimitlessTransformer.limitless_maxLevel, "I") // I
+                            .getfield(klass.name, limitless_maxLevel, "I") // I
                             .dup() // I I
                             .ldc(Int.MIN_VALUE) // I I I
                             .if_icmpne("end") // I

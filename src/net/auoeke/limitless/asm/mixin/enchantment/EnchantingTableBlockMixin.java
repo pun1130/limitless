@@ -29,15 +29,15 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
         super.randomDisplayTick(enchantingTableState, world, enchantingTablePos, random);
 
         var configuration = Configuration.instance;
-        var particleConfiguration = configuration.getEnchantment().getParticles();
+        var particleConfiguration = configuration.enchantment.getParticles();
 
         if (particleConfiguration.getEnabled()) {
             HorizontalRadius horizontalRadiusRange;
             VerticalRadius verticalRadiusRange;
 
             if (particleConfiguration.getInherit()) {
-                horizontalRadiusRange = configuration.getEnchantment().getEnchantingBlocks().getRadius().getXz();
-                verticalRadiusRange = configuration.getEnchantment().getEnchantingBlocks().getRadius().getY();
+                horizontalRadiusRange = configuration.enchantment.getEnchantingBlocks().getRadius().getXz();
+                verticalRadiusRange = configuration.enchantment.getEnchantingBlocks().getRadius().getY();
             } else {
                 horizontalRadiusRange = particleConfiguration.getRadius().getXz();
                 verticalRadiusRange = particleConfiguration.getRadius().getY();
@@ -45,7 +45,7 @@ abstract class EnchantingTableBlockMixin extends BlockWithEntity {
 
             int maxVerticalRadius = verticalRadiusRange.getMax();
             int maxHorizontalRadius = horizontalRadiusRange.getMax();
-            var enchantingBlocks = configuration.getEnchantment().getEnchantingBlocks();
+            var enchantingBlocks = configuration.enchantment.getEnchantingBlocks();
 
             for (int direction = -1; direction <= 1; direction += 2) {
                 for (int verticalRadius = verticalRadiusRange.getMin(); verticalRadius <= maxVerticalRadius; verticalRadius++) {

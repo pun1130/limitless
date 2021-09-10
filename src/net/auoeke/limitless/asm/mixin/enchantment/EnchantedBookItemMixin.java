@@ -26,13 +26,13 @@ abstract class EnchantedBookItemMixin extends Item {
     @ModifyConstant(method = "isEnchantable",
                     constant = @Constant(intValue = 0))
     public int makeReenchantable(int previous) {
-        return Configuration.instance.getEnchantment().getReenchanting().allowEnchantedBooks() ? 1 : previous;
+        return Configuration.instance.enchantment.getReenchanting().allowEnchantedBooks() ? 1 : previous;
     }
 
     @Intrinsic
     @Override
     public int getEnchantability() {
-        return Configuration.instance.getEnchantment().getReenchanting().allowEnchantedBooks() ? Items.BOOK.getEnchantability() : 0;
+        return Configuration.instance.enchantment.getReenchanting().allowEnchantedBooks() ? Items.BOOK.getEnchantability() : 0;
     }
 
     public EnchantedBookItemMixin(Settings settings) {

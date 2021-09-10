@@ -13,6 +13,7 @@ import net.auoeke.limitless.config.enchantment.EnchantmentConfiguration
 @Config(name = Limitless.ID)
 @Background("textures/block/andesite.png")
 class Configuration : ConfigData {
+    @JvmField
     @Category(ENCHANTMENT)
     @TransitiveObject
     var enchantment = EnchantmentConfiguration()
@@ -27,16 +28,15 @@ class Configuration : ConfigData {
 
     companion object {
         const val INTERNAL_NAME: String = "net/auoeke/limitless/config/Configuration"
-        const val DESCRIPTOR: String = "L${this.INTERNAL_NAME};"
+        const val DESCRIPTOR: String = "L$INTERNAL_NAME;"
         const val ENCHANTMENT: String = "default"
         const val ANVIL: String = "anvil"
-        const val COMMAND: String = "command"
 
         lateinit var holder: ConfigHolder<Configuration>
         lateinit var instance: Configuration
 
         fun refresh() {
-            this.instance = this.holder.get()
+            instance = holder.get()
         }
     }
 }

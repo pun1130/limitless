@@ -61,7 +61,7 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
     private fun transformEnchantmentScreenHandler(method: MethodNode) {
         val iterator = method.instructions.iterator()
 
-        Shortcode.findForward(iterator, {instruction -> instruction.opcode == Opcodes.ICONST_0}) {instruction: InsnNode ->
+        Shortcode.findForward(iterator, {it.opcode == Opcodes.ICONST_0}) {instruction: InsnNode ->
             (instruction.next as VarInsnNode).opcode = Opcodes.FSTORE
             iterator.set(MethodInsnNode(
                 Opcodes.INVOKESTATIC,
@@ -93,7 +93,7 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
             instruction.opcode = Opcodes.FLOAD
         }
 
-        Shortcode.findForward(iterator, {instruction -> instruction.opcode == Opcodes.INVOKESTATIC}) {instruction: MethodInsnNode ->
+        Shortcode.findForward(iterator, {it.opcode == Opcodes.INVOKESTATIC}) {instruction: MethodInsnNode ->
             instruction.owner = EnchantingBlocks.INTERNAL_NAME
             instruction.name = "calculateRequiredExperienceLevel"
             instruction.desc = instruction.desc.replaceFirst("II".toRegex(), "IF")
@@ -128,8 +128,6 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
 
     companion object {
         const val limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel"
-        const val limitless_useGlobalMaxLevel = "limitless_useGlobalMaxLevel"
-        const val limitless_maxLevel = "limitless_maxLevel"
 
         val Enchantment: String = internal(1887)
         val getMaxLevel: String = method(8183)

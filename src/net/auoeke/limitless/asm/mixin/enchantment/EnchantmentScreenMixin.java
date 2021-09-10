@@ -46,7 +46,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                      target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Ljava/lang/String;FFI)I"),
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void showNormalizedCost(MatrixStack matrixes, float delta, int mouseX, int mouseY, CallbackInfo info, int i, int j) {
-        var normalization = Configuration.instance.getEnchantment().getNormalization();
+        var normalization = Configuration.instance.enchantment.getNormalization();
 
         if (normalization.getEnabled() && !this.client.player.getAbilities().creativeMode && this.client.player.experienceLevel > Math.max(normalization.getOffset(), this.handler.enchantmentPower[this.backgroundEntryID])) {
             int relative = ExperienceUtil.INSTANCE.relativeCost(this.client.player, normalization.getOffset(), this.backgroundEntryID + 1);
@@ -86,7 +86,7 @@ abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentScreenHan
                        target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
                        ordinal = 0))
     public boolean revealEnchantments(List<Object> enchantments, Object enchantmentText) {
-        if (Configuration.instance.getEnchantment().getRevealEnchantments()) {
+        if (Configuration.instance.enchantment.getRevealEnchantments()) {
             int index = 0;
 
             for (EnchantmentLevelEntry enchantment : ((EnchantmentScreenHandlerAccess) this.handler).invokeGenerateEnchantments(this.handler.getSlot(0).getStack(), this.renderEntryID, this.handler.enchantmentPower[this.renderEntryID])) {

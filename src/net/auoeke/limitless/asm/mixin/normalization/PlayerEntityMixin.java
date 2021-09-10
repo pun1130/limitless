@@ -14,7 +14,7 @@ abstract class PlayerEntityMixin {
                        target = "Lnet/minecraft/entity/player/PlayerEntity;experienceLevel:I",
                        ordinal = 1))
     public void normalizeCost(PlayerEntity player, int levels) {
-        var normalization = Configuration.instance.getEnchantment().getNormalization();
+        var normalization = Configuration.instance.enchantment.getNormalization();
 
         if (normalization.getEnabled() && player.experienceLevel > normalization.getOffset()) {
             ExperienceUtil.INSTANCE.addExperienceLevelsRelatively(player, normalization.getOffset(), levels - player.experienceLevel);

@@ -9,7 +9,10 @@ import net.auoeke.limitless.config.enchantment.entry.normalization.EnchantmentNo
 import net.minecraft.util.registry.Registry
 
 class EnchantmentConfiguration : ConfigData {
+    @Suppress("unused")
+    @JvmField
     var globalMaxLevel = Int.MAX_VALUE
+
     var allowTreasure = true
     var revealEnchantments = false
 
@@ -57,6 +60,6 @@ class EnchantmentConfiguration : ConfigData {
 
     companion object {
         const val INTERNAL_NAME = "net/auoeke/limitless/config/enchantment/EnchantmentConfiguration"
-        const val DESCRIPTOR = "L${this.INTERNAL_NAME};"
+        const val DESCRIPTOR = "L$INTERNAL_NAME;"
     }
 }
