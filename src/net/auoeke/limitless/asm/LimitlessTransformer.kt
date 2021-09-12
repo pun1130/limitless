@@ -9,9 +9,7 @@ import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
 import net.auoeke.reflect.Accessor
 import net.auoeke.reflect.Classes
-import net.auoeke.reflect.Invoker
 import net.fabricmc.loader.api.FabricLoader
-import net.fabricmc.mappings.EntryTriple
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -145,8 +143,8 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         val getMaxLevel: String = method(8183)
         val getMaxPower: String = method(20742)
         val incompatibleMixins: Map<String, Regex> = mapOf(
-            "taxfreelevels" to "normalization.*",
-            "levelz" to "normalization.AnvilScreenHandlerMixin"
+            "taxfreelevels" to "normalization\\..*",
+            "levelz" to "normalization\\.AnvilScreenHandlerMixin"
         ).mapValues {it.value.toRegex()}
 
         init {

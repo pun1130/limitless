@@ -1,6 +1,5 @@
 import com.modrinth.minotaur.TaskModrinthUpload
 
-/*
 buildscript {
     configurations.classpath {
         resolutionStrategy.eachDependency {
@@ -10,7 +9,6 @@ buildscript {
         }
     }
 }
-*/
 
 plugins {
     id("wheel-fabric").version("latest.integration")
@@ -20,7 +18,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.5"
+version = "1.5.7"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 defaultTasks("generateMetadata")
@@ -39,10 +37,6 @@ sourceSets {
     test {
         java.srcDir("test")
     }
-}
-
-kbootstrap {
-    modules("reflect")
 }
 
 repositories {

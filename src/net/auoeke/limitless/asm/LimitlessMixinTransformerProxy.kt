@@ -10,7 +10,6 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.ClassNode
-import org.objectweb.asm.tree.MethodNode
 import org.spongepowered.asm.mixin.transformer.FabricMixinTransformerProxy
 import org.spongepowered.asm.transformers.MixinClassWriter
 
@@ -27,8 +26,8 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
     }
 
     companion object {
-        private const val limitless_useGlobalMaxLevel = "limitless_useGlobalMaxLevel"
-        private const val limitless_maxLevel = "limitless_maxLevel"
+        private const val limitless_useGlobalMaxLevel: String = "limitless_useGlobalMaxLevel"
+        private const val limitless_maxLevel: String = "limitless_maxLevel"
         private val Enchantment: String = Mapper.internal(1887)
         private val enchantmentClassNames = ObjectOpenHashSet(arrayOf(Enchantment))
 
@@ -49,7 +48,7 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
                     val method = methods[i]
 
                     if (method.name == LimitlessTransformer.getMaxLevel && method.desc == "()I") {
-                        (klass.visitMethod(Opcodes.ACC_PUBLIC, LimitlessTransformer.getMaxLevel, method.desc, null, null) as MethodNode).instructions = InstructionList()
+                        klass.method(Opcodes.ACC_PUBLIC, LimitlessTransformer.getMaxLevel, method.desc).instructions = InstructionList()
                             .aload(0) // this
                             .getfield(klass.name, limitless_useGlobalMaxLevel, "Z") // I
                             .ifeq("custom")
@@ -71,7 +70,8 @@ class LimitlessMixinTransformerProxy : FabricMixinTransformerProxy() {
                         method.name = LimitlessTransformer.limitless_getOriginalMaxLevel
                     } else if (method.name == LimitlessTransformer.getMaxPower && method.desc == "(I)I") {
                         method.name = "limitless_getOriginalMaxPower"
-                        (klass.visitMethod(Opcodes.ACC_PUBLIC, LimitlessTransformer.getMaxPower, "(I)I", null, null) as MethodNode).instructions = InstructionList()
+
+                        klass.method(Opcodes.ACC_PUBLIC, LimitlessTransformer.getMaxPower, "(I)I").instructions = InstructionList()
                             .ldc(Int.MAX_VALUE)
                             .ireturn()
                     } else {
