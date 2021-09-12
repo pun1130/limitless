@@ -25,10 +25,6 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         putField("creativeMode", 7477)
         putMethod("calculateRequiredExperienceLevel", 8227)
         putMethod("getMaxLevel", 8183)
-
-        val methods = Accessor.getObject<Map<EntryTriple, String>>(Invoker.unreflect(FabricLoader.getInstance().mappingResolver, "getNamespaceData")("intermediary"), "methodNames")
-        val thing = methods.filter {it.key.owner.endsWith("1652")}
-        val bp = true
     }
 
     override fun shouldApplyMixin(targetName: String, mixinName: String): Boolean = true.also {
