@@ -23,7 +23,7 @@ class Configuration : ConfigData {
     var anvil = AnvilConfiguration()
 
     override fun validatePostLoad() {
-        this.enchantment.validatePostLoad()
+        enchantment.validatePostLoad()
     }
 
     companion object {

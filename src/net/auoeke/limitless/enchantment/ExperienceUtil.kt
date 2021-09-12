@@ -6,7 +6,7 @@ import kotlin.math.min
 
 @Suppress("NAME_SHADOWING")
 object ExperienceUtil {
-    private val PlayerEntity.currentExperience: Long get() = normalizedExperience(this.experienceLevel) + (toNextLevel(this.experienceLevel) * this.experienceProgress.toDouble()).toLong()
+    private val PlayerEntity.currentExperience: Long get() = normalizedExperience(experienceLevel) + (toNextLevel(experienceLevel) * experienceProgress.toDouble()).toLong()
 
     fun addExperienceLevelsRelatively(player: PlayerEntity, offset: Int, levels: Int) {
         var levels = levels
@@ -17,7 +17,7 @@ object ExperienceUtil {
                 levels = offset - levels
 
                 while (levels != offset) {
-                    player.addExperience(this.fromPreviousLevel(levels).toInt())
+                    player.addExperience(fromPreviousLevel(levels).toInt())
                     levels++
                 }
             }
@@ -25,25 +25,25 @@ object ExperienceUtil {
                 levels += offset
 
                 while (levels != offset) {
-                    player.addExperience((-this.fromPreviousLevel(-levels)).toInt())
+                    player.addExperience((-fromPreviousLevel(-levels)).toInt())
                     levels++
                 }
             }
         }
     }
 
-    fun addExperienceLevelsNormalized(player: PlayerEntity, levels: Int) = this.addExperienceLevelsRelatively(player, 0, levels)
+    fun addExperienceLevelsNormalized(player: PlayerEntity, levels: Int) = addExperienceLevelsRelatively(player, 0, levels)
 
     fun relativeCost(player: PlayerEntity, offset: Int, levels: Int): Int {
         val level = player.experienceLevel
 
         return when {
-            level > offset -> level - this.toLevel(player.currentExperience - this.difference(offset - levels, offset))
+            level > offset -> level - toLevel(player.currentExperience - difference(offset - levels, offset))
             else -> level - levels
         }
     }
 
-    fun normalizedCost(player: PlayerEntity, levels: Int): Int = this.relativeCost(player, 0, levels)
+    fun normalizedCost(player: PlayerEntity, levels: Int): Int = relativeCost(player, 0, levels)
 
     fun normalizedDifference(from: Int, to: Int): Long {
         var from = from
@@ -59,17 +59,17 @@ object ExperienceUtil {
 
         return when {
             from > to -> {
-                this.difference(from - to, 0)
+                difference(from - to, 0)
             }
-            else -> this.difference(0, to - from)
+            else -> difference(0, to - from)
         }
     }
 
     fun normalizedExperience(level: Int, progress: Double): Long = this.normalizedExperience(level) + (progress * this.normalizedExperience(level + 1)).toLong()
 
-    private fun normalizedExperience(level: Int): Long = this.difference(0, level)
-    private fun fromPreviousLevel(level: Int): Long = this.difference(level - 1, level)
-    private fun toNextLevel(level: Int): Long = this.difference(level, level + 1)
+    private fun normalizedExperience(level: Int): Long = difference(0, level)
+    private fun fromPreviousLevel(level: Int): Long = difference(level - 1, level)
+    private fun toNextLevel(level: Int): Long = difference(level, level + 1)
 
     private fun difference(from: Int, to: Int): Long {
         var from = from
@@ -88,7 +88,7 @@ object ExperienceUtil {
         }
 
         if (from > to) {
-            return this.difference(to, from)
+            return difference(to, from)
         }
 
         var toMin: Int
@@ -128,7 +128,7 @@ object ExperienceUtil {
         }
 
         if (experience < 0) {
-            return -this.toLevel(-experience)
+            return -toLevel(-experience)
         }
 
         var normalizedExperience: Long

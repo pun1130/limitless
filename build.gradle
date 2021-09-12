@@ -1,5 +1,17 @@
 import com.modrinth.minotaur.TaskModrinthUpload
 
+/*
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.eachDependency {
+            if (requested.name == "fabric-loom") {
+                useVersion("0.9.+")
+            }
+        }
+    }
+}
+*/
+
 plugins {
     id("wheel-fabric").version("latest.integration")
     id("kbootstrap").version("latest.integration")
@@ -29,16 +41,26 @@ sourceSets {
     }
 }
 
+kbootstrap {
+    modules("reflect")
+}
+
+repositories {
+    maven {url = "https://maven.auoeke.net"}
+}
+
 dependencies {
-    mod("net.auoeke:kbootstrap:latest.integration")
-    modInclude("api-base")
-    modInclude("api-resource-loader")
-    modInclude("api-tag-extensions")
-    modInclude("net.fabricmc.fabric-api:fabric-command-api-v1:latest.integration")
-    modInclude("huntingham-hills")
-    modInclude("reflect")
-    bloatedInclude("cloth-config")
-    apiInclude("shortcode")
+    include(
+        mod("api-base"),
+        mod("api-resource-loader"),
+        mod("api-tag-extensions"),
+        mod("net.fabricmc.fabric-api:fabric-command-api-v1:latest.integration"),
+        mod("net.auoeke:huntingham-hills:latest.integration"),
+        mod("net.auoeke:reflect"),
+        bloated("cloth-config"),
+        api("net.auoeke:extensions"),
+        api("net.auoeke:asm-extensions")
+    )
 
     bloated("mod-menu:latest.integration")
 }
@@ -71,9 +93,8 @@ mod {
 }
 
 task modrinth(type: TaskModrinthUpload) {
-    if (token = System.properties["modrinth"]) {
-        publish.finalizedBy(it)
-        it.dependsOn(publish)
+    if (token = System.properties.modrinth) {
+        dependsOn(publish.finalizedBy(it))
     }
 
     projectId = "Qx0jUYY8"
@@ -87,16 +108,16 @@ task modrinth(type: TaskModrinthUpload) {
         logger.lifecycle(/Enter the changelog ending with "EOF"./)
         changelog = ""
 
-        while (true) {
-            def line = System.in.newReader().readLine()
+        for (def reader = System.in.newReader(), line; true; changelog += line + System.lineSeparator()) {
+            line = reader.readLine()
 
             if (line.endsWith("EOF")) {
-                changelog += line.replaceFirst(/EOF$/, "")
+                if (line.length() > 3) {
+                    changelog += line.replaceFirst(/EOF$/, "")
+                }
 
                 break
             }
-
-            changelog += line + System.lineSeparator()
         }
     }
 }

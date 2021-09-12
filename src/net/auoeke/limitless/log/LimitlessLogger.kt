@@ -19,10 +19,10 @@ object LimitlessLogger {
     fun error(message: String) = this.print(System.err, Level.ERROR, message)
 
     private fun print(stream: PrintStream, level: Level, message: String) {
-        if (this.logger === null) {
+        if (logger === null) {
             stream.printf("[${LocalTime.now().withNano(0)}] [${Thread.currentThread().name}/$level] (${Limitless.ID}) $message%n")
         } else {
-            this.logger.printf(level, message)
+            logger.printf(level, message)
         }
     }
 }

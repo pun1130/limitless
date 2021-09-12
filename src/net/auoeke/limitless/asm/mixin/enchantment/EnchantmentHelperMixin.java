@@ -3,6 +3,8 @@ package net.auoeke.limitless.asm.mixin.enchantment;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
+import net.auoeke.limitless.Limitless;
+import net.auoeke.limitless.config.Configuration;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -19,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import net.auoeke.limitless.Limitless;
-import net.auoeke.limitless.config.Configuration;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Mixin(EnchantmentHelper.class)

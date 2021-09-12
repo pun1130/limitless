@@ -44,7 +44,7 @@ object EnchantmentUtil {
             val book = itemStack.item === Items.ENCHANTED_BOOK
 
             if (book || itemStack.hasEnchantments()) {
-                if (this.tryMerge(itemStack, enchantment, mergeConflicts) == this.ADD) {
+                if (this.tryMerge(itemStack, enchantment, mergeConflicts) == ADD) {
                     if (book) {
                         EnchantedBookItem.addEnchantment(itemStack, enchantment)
                     } else {
@@ -60,7 +60,7 @@ object EnchantmentUtil {
             val book = itemStack.item === Items.ENCHANTED_BOOK
 
             if (book || itemStack.hasEnchantments()) {
-                if (this.tryMerge(itemStack, enchantment, level, mergeConflicts) == this.ADD) {
+                if (this.tryMerge(itemStack, enchantment, level, mergeConflicts) == ADD) {
                     if (book) {
                         EnchantedBookItem.addEnchantment(itemStack, EnchantmentLevelEntry(enchantment, level))
                     } else {
@@ -80,7 +80,7 @@ object EnchantmentUtil {
                 book -> EnchantedBookItem.getEnchantmentNbt(itemStack)
                 else -> itemStack.enchantments
             } as Any as Iterable<NbtCompound>
-            var status = this.ADD
+            var status = ADD
 
             for (enchantmentTag in enchantments) {
                 if (Identifier(enchantmentTag.getString("id")) == Registry.ENCHANTMENT.getId(enchantment)) {
@@ -89,9 +89,9 @@ object EnchantmentUtil {
                         else -> max(tagLevel, level)
                     })
 
-                    return this.SUCCESS
-                } else if (!mergeConflicts && status != this.CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT[Identifier(enchantmentTag.getString("id"))])) {
-                    status = this.CONFLICT
+                    return SUCCESS
+                } else if (!mergeConflicts && status != CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT[Identifier(enchantmentTag.getString("id"))])) {
+                    status = CONFLICT
                 }
             }
 

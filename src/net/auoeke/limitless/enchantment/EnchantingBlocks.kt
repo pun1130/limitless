@@ -38,7 +38,7 @@ object EnchantingBlocks {
         val verticalRadiusRange = config.radius.y
         var power = 0F
 
-        this.forBlockInRange(world, enchantingTablePos, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max) {tableBlockState, _, _, _, _ ->
+        forBlockInRange(world, enchantingTablePos, horizontalRadiusRange.min, horizontalRadiusRange.max, verticalRadiusRange.min, verticalRadiusRange.max) {tableBlockState, _, _, _, _ ->
             power += config.enchantingPower(tableBlockState.block)
         }
 

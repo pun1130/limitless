@@ -6,6 +6,6 @@ class ReenchantingConfiguration {
     var allowEnchantedBooks = true
     var allowEquipment = true
 
-    fun allowEnchantedBooks(): Boolean = this.enabled && this.allowEnchantedBooks
-    fun allowEquipment(): Boolean = this.enabled && this.allowEquipment
+    fun allowEnchantedBooks(): Boolean = enabled && allowEnchantedBooks
+    fun allowEquipment(): Boolean = enabled && allowEquipment
 }

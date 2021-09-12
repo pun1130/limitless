@@ -22,14 +22,14 @@ object EnchantmentListProvider : GuiProvider {
 
     override fun get(i13n: String, field: Field, config: Any, defaults: Any, guiRegistry: GuiRegistryAccess): List<AbstractConfigListEntry<*>> {
         val entries = ReferenceArrayList<AbstractConfigListEntry<*>>()
-        val listBuilder = SubCategoryBuilder(this.resetKey, TranslatableText("config.limitless.enchantments"))
+        val listBuilder = SubCategoryBuilder(resetKey, TranslatableText("config.limitless.enchantments"))
 
         for (entry in field.apply {trySetAccessible()}[config] as ObjectLinkedOpenHashSet<EnchantmentEntry>) {
             val enchantment = entry.enchantment
 
             if (enchantment !== null) {
-                val builder = SubCategoryBuilder(this.resetKey, TranslatableText((enchantment as Enchantment).translationKey))
-                builder.add(0, IntFieldBuilder(this.resetKey, TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
+                val builder = SubCategoryBuilder(resetKey, TranslatableText((enchantment as Enchantment).translationKey))
+                builder.add(0, IntFieldBuilder(resetKey, TranslatableText("config.limitless.maxLevel"), entry.maxLevel)
                     .setDefaultValue(enchantment.limitless_getOriginalMaxLevel())
                     .setSaveConsumer {level ->
                         enchantment.limitless_setMaxLevel(level)
@@ -37,7 +37,7 @@ object EnchantmentListProvider : GuiProvider {
                     }.build()
                 )
 
-                builder.add(1, BooleanToggleBuilder(this.resetKey, TranslatableText("config.limitless.useGlobalMaxLevel"), entry.useGlobalMaxLevel)
+                builder.add(1, BooleanToggleBuilder(resetKey, TranslatableText("config.limitless.useGlobalMaxLevel"), entry.useGlobalMaxLevel)
                     .setDefaultValue(false)
                     .setSaveConsumer {useGlobalMaxLevel ->
                         enchantment.limitless_setUseGlobalMaxLevel(useGlobalMaxLevel)

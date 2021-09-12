@@ -31,19 +31,19 @@ class EnchantingBlockConfiguration : ConfigData {
     val blockBlacklist: MutableSet<Block> = ReferenceOpenHashSet()
 
     fun enchantingPower(block: Block): Float = when {
-        this.blockWhitelist.containsKey(block) -> this.blockWhitelist.getFloat(block)
-        this.blockBlacklist.contains(block) || block !in EnchantingBlockTag -> 0F
+        blockWhitelist.containsKey(block) -> blockWhitelist.getFloat(block)
+        blockBlacklist.contains(block) || block !in EnchantingBlockTag -> 0F
         else -> 2F
     }
 
     override fun validatePostLoad() {
-        this.blockWhitelist.clear()
-        this.blockBlacklist.clear()
-        this.whitelist.forEach {(key, power) -> verifyBlock(key, "white")?.also {this.blockWhitelist[it] = power}}
-        this.blacklist.forEach {key -> verifyBlock(key, "black")?.also {this.blockBlacklist.add(it)}}
+        blockWhitelist.clear()
+        blockBlacklist.clear()
+        whitelist.forEach {(key, power) -> verifyBlock(key, "white")?.also {blockWhitelist[it] = power}}
+        blacklist.forEach {key -> verifyBlock(key, "black")?.also {blockBlacklist.add(it)}}
 
-        this.blockWhitelist.keys
-            .filter {this.blockBlacklist.contains(it)}
+        blockWhitelist.keys
+            .filter {blockBlacklist.contains(it)}
             .forEach {LimitlessLogger.warn("""Block with identifier "${Registry.BLOCK.getId(it)}" was found in whitelist and blacklist; whitelist takes precedence.""")}
     }
 
@@ -55,7 +55,7 @@ class EnchantingBlockConfiguration : ConfigData {
 
             if (id === null) {
                 LimitlessLogger.error("""Key "$key" listed in limitless' enchanting block ${type}list is not formatted correctly.""")
-            } else if (key != this.EXAMPLE_BLOCK) {
+            } else if (key != EXAMPLE_BLOCK) {
                 Registry.BLOCK.getOrEmpty(id).also {
                     if (it.isPresent) {
                         return it.get()

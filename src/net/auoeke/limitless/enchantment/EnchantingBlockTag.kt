@@ -9,6 +9,6 @@ object EnchantingBlockTag : Tag<Block> {
     private val enchantingBlocks = TagFactory.BLOCK.create(Identifier("c", "enchanting_blocks"))
     private val bookshelves = TagFactory.BLOCK.create(Identifier("c", "bookshelves"))
 
-    override operator fun contains(entry: Block): Boolean = this.enchantingBlocks.contains(entry) || this.bookshelves.contains(entry)
-    override fun values(): List<Block> = this.enchantingBlocks.values().toMutableList().also {it += this.bookshelves.values()}
+    override operator fun contains(entry: Block): Boolean = enchantingBlocks.contains(entry) || bookshelves.contains(entry)
+    override fun values(): List<Block> = enchantingBlocks.values().toMutableList().also {it += bookshelves.values()}
 }

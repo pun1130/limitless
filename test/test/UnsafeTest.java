@@ -2,6 +2,9 @@ package test;
 
 import java.lang.annotation.RetentionPolicy;
 import java.lang.invoke.MethodHandle;
+import net.auoeke.reflect.Classes;
+import net.auoeke.reflect.Fields;
+import net.auoeke.reflect.Invoker;
 import net.gudenau.lib.unsafe.Unsafe;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
@@ -9,9 +12,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import user11681.reflect.Classes;
-import user11681.reflect.Fields;
-import user11681.reflect.Invoker;
 
 @Testable
 public class UnsafeTest {

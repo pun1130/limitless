@@ -36,26 +36,24 @@ class EnchantmentConfiguration : ConfigData {
 
     @Suppress("SENSELESS_COMPARISON")
     override fun validatePostLoad() {
-        val oldMaxLevels = this.maxLevels
-        this.maxLevels = Registry.ENCHANTMENT
+        val oldMaxLevels = maxLevels
+        maxLevels = Registry.ENCHANTMENT
             .ids
             .sorted()
-            .mapTo(ObjectLinkedOpenHashSet()) {EnchantmentEntry(it)}
+            .mapTo(ObjectLinkedOpenHashSet(), ::EnchantmentEntry)
 
-        if (oldMaxLevels != null) {
-            for (configuration in oldMaxLevels) {
-                if (this.maxLevels!!.remove(configuration)) {
-                    this.maxLevels!!.add(configuration)
+        oldMaxLevels?.onEach {configuration ->
+            if (maxLevels!!.remove(configuration)) {
+                maxLevels!!.add(configuration)
 
-                    configuration.enchantment!!.also {
-                        it.limitless_setMaxLevel(configuration.maxLevel)
-                        it.limitless_setUseGlobalMaxLevel(configuration.useGlobalMaxLevel)
-                    }
+                configuration.enchantment!!.also {
+                    it.limitless_setMaxLevel(configuration.maxLevel)
+                    it.limitless_setUseGlobalMaxLevel(configuration.useGlobalMaxLevel)
                 }
             }
         }
 
-        this.enchantingBlocks.validatePostLoad()
+        enchantingBlocks.validatePostLoad()
     }
 
     companion object {
