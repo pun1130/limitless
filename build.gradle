@@ -47,7 +47,6 @@ dependencies {
         bloated("cloth-config"),
         api("net.auoeke:extensions"),
         api("net.auoeke:asm-extensions"),
-        api("net.bytebuddy:byte-buddy-agent")
     )
 
     bloated("mod-menu:2.0.14")
