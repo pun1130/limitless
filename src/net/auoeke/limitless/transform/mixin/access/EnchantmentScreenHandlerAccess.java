@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.access;
+package net.auoeke.limitless.transform.mixin.access;
 
 import java.util.List;
 import net.minecraft.enchantment.EnchantmentLevelEntry;

@@ -1,15 +1,5 @@
 import com.modrinth.minotaur.TaskModrinthUpload
 
-buildscript {
-    configurations.classpath {
-        resolutionStrategy.eachDependency {
-            if (requested.name == "fabric-loom") {
-                useVersion("0.9.+")
-            }
-        }
-    }
-}
-
 plugins {
     id("wheel-fabric").version("latest.integration")
     id("kbootstrap").version("latest.integration")
@@ -18,10 +8,13 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.7"
+version = "1.5.8"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 defaultTasks("generateMetadata")
+
+sourceCompatibility = 16
+targetCompatibility = 16
 
 sourceSets {
     main {
@@ -53,10 +46,11 @@ dependencies {
         mod("net.auoeke:reflect"),
         bloated("cloth-config"),
         api("net.auoeke:extensions"),
-        api("net.auoeke:asm-extensions")
+        api("net.auoeke:asm-extensions"),
+        api("net.bytebuddy:byte-buddy-agent")
     )
 
-    bloated("mod-menu:latest.integration")
+    bloated("mod-menu:2.0.14")
 }
 
 configurations.all {

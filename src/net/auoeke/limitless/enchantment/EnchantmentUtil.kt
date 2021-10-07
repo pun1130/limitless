@@ -1,6 +1,6 @@
 package net.auoeke.limitless.enchantment
 
-import net.auoeke.limitless.asm.access.EnchantmentAccess
+import net.auoeke.limitless.transform.access.EnchantmentAccess
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentLevelEntry
 import net.minecraft.item.EnchantedBookItem

@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.enchantment;
+package net.auoeke.limitless.transform.mixin.enchantment;
 
 import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.enchantment.EnchantmentUtil;

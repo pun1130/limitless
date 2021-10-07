@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.normalization;
+package net.auoeke.limitless.transform.mixin.normalization;
 
 import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.enchantment.ExperienceUtil;

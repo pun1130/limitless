@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm
+package net.auoeke.limitless.transform
 
 import net.auoeke.extensions.asm.*
 import net.auoeke.extensions.cast
@@ -7,14 +7,13 @@ import net.auoeke.huntinghamhills.plugin.transformer.MethodTransformer
 import net.auoeke.huntinghamhills.plugin.transformer.TransformerPlugin
 import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
-import net.auoeke.reflect.Accessor
-import net.auoeke.reflect.Classes
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
+import org.spongepowered.asm.mixin.transformer.LimitlessCoprocessor
 
 class LimitlessTransformer : TransformerPlugin(), Opcodes {
     override fun onLoad(mixinPackage: String) {
@@ -140,15 +139,14 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
     companion object {
         const val limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel"
 
-        val getMaxLevel: String = method(8183)
-        val getMaxPower: String = method(20742)
+        val getMaxLevel: String get() = method(8183)
         val incompatibleMixins: Map<String, Regex> = mapOf(
             "taxfreelevels" to "normalization\\..*",
             "levelz" to "normalization\\.AnvilScreenHandlerMixin"
         ).mapValues {it.value.toRegex()}
 
         init {
-            Classes.reinterpret(Accessor.getObject(Accessor.getObject<Any>(LimitlessTransformer::class.java.classLoader, "delegate"), "mixinTransformer"), LimitlessMixinTransformerProxy::class.java)
+            LimitlessCoprocessor.init()
         }
     }
 }

@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.enchantment;
+package net.auoeke.limitless.transform.mixin.enchantment;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.enchantment.Enchantment;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.auoeke.limitless.asm.access.EnchantmentAccess;
+import net.auoeke.limitless.transform.access.EnchantmentAccess;
 
 @Mixin(SimpleRegistry.class)
 abstract class SimpleRegistryMixin<T> {

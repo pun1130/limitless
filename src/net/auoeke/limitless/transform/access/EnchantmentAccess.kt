@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.access
+package net.auoeke.limitless.transform.access
 
 @Suppress("FunctionName")
 interface EnchantmentAccess {

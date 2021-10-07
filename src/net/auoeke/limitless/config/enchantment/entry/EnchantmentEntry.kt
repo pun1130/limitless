@@ -1,6 +1,6 @@
 package net.auoeke.limitless.config.enchantment.entry
 
-import net.auoeke.limitless.asm.access.EnchantmentAccess
+import net.auoeke.limitless.transform.access.EnchantmentAccess
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry

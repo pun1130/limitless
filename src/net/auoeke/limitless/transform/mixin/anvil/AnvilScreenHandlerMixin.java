@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.anvil;
+package net.auoeke.limitless.transform.mixin.anvil;
 
 import net.auoeke.limitless.config.Configuration;
 import net.minecraft.enchantment.Enchantment;

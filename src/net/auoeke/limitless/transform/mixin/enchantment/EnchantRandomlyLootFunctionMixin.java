@@ -1,11 +1,11 @@
-package net.auoeke.limitless.asm.mixin.enchantment;
+package net.auoeke.limitless.transform.mixin.enchantment;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.loot.function.EnchantRandomlyLootFunction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import net.auoeke.limitless.asm.access.EnchantmentAccess;
+import net.auoeke.limitless.transform.access.EnchantmentAccess;
 
 @Mixin(EnchantRandomlyLootFunction.class)
 abstract class EnchantRandomlyLootFunctionMixin {

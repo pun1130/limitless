@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.enchantment.dummy;
+package net.auoeke.limitless.transform.mixin.enchantment.dummy;
 
 import org.spongepowered.asm.mixin.Mixin;
 

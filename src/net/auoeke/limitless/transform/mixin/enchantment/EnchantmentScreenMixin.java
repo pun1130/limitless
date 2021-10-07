@@ -1,7 +1,7 @@
-package net.auoeke.limitless.asm.mixin.enchantment;
+package net.auoeke.limitless.transform.mixin.enchantment;
 
 import java.util.List;
-import net.auoeke.limitless.asm.mixin.access.EnchantmentScreenHandlerAccess;
+import net.auoeke.limitless.transform.mixin.access.EnchantmentScreenHandlerAccess;
 import net.auoeke.limitless.config.Configuration;
 import net.auoeke.limitless.enchantment.ExperienceUtil;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;

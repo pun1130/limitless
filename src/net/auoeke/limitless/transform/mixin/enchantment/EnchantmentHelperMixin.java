@@ -1,4 +1,4 @@
-package net.auoeke.limitless.asm.mixin.enchantment;
+package net.auoeke.limitless.transform.mixin.enchantment;
 
 import java.util.List;
 import java.util.ListIterator;
