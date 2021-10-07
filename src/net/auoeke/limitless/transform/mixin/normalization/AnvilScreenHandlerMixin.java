@@ -17,7 +17,7 @@ abstract class AnvilScreenHandlerMixin {
         if (Configuration.instance.getAnvil().getNormalization().getEnabled()) {
             ExperienceUtil.INSTANCE.addExperienceLevelsNormalized(player, levels);
         } else {
-            player.addExperience(levels);
+            player.addExperienceLevels(levels);
         }
     }
 }

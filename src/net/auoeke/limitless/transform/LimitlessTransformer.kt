@@ -8,6 +8,8 @@ import net.auoeke.huntinghamhills.plugin.transformer.TransformerPlugin
 import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
 import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.api.Version
+import net.fabricmc.loader.impl.gui.FabricGuiEntry
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -146,6 +148,12 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         ).mapValues {it.value.toRegex()}
 
         init {
+            val requiredVersion = "0.12.1"
+
+            if (FabricLoader.getInstance().getModContainer("fabricloader").get().metadata.version < Version.parse(requiredVersion)) {
+                FabricGuiEntry.displayCriticalError(object : RuntimeException("limitless requires Fabric version $requiredVersion or greater.", null, false, false) {}, true)
+            }
+
             LimitlessCoprocessor.init()
         }
     }
