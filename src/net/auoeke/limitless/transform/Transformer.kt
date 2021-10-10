@@ -1,12 +1,19 @@
 package net.auoeke.limitless.transform
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import net.auoeke.extensions.asm.*
 import net.auoeke.extensions.cast
 import net.auoeke.extensions.find
+import net.auoeke.extensions.type
 import net.auoeke.huntinghamhills.plugin.transformer.MethodTransformer
 import net.auoeke.huntinghamhills.plugin.transformer.TransformerPlugin
+import net.auoeke.limitless.config.Configuration
+import net.auoeke.limitless.config.enchantment.EnchantmentConfiguration
 import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
+import net.auoeke.reflect.Accessor
+import net.auoeke.reflect.Classes
+import net.auoeke.reflect.Invoker
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
 import net.fabricmc.loader.impl.gui.FabricGuiEntry
@@ -15,9 +22,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
-import org.spongepowered.asm.mixin.transformer.LimitlessCoprocessor
+import org.spongepowered.asm.mixin.MixinEnvironment
 
-class LimitlessTransformer : TransformerPlugin(), Opcodes {
+class Transformer : TransformerPlugin(), Opcodes {
     override fun onLoad(mixinPackage: String) {
         super.onLoad(mixinPackage)
 
@@ -63,7 +70,7 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
                 .invokestatic(
                     EnchantmentUtil.INTERNAL_NAME,
                     "getHighestSuitableLevel",
-                    methodDescriptor('V', 'I', Enchantment::class, List::class),
+                    methodDescriptor('V', 'I', type<Enchantment>(), List::class),
                     false
                 )
             )
@@ -138,11 +145,19 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
         }
     }
 
-    companion object {
-        const val limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel"
+    @Suppress("JAVA_CLASS_ON_COMPANION", "UNUSED_EXPRESSION")
+    private companion object {
+        private const val limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel"
+        private const val limitless_useGlobalMaxLevel: String = "limitless_useGlobalMaxLevel"
+        private const val limitless_maxLevel: String = "limitless_maxLevel"
 
-        val getMaxLevel: String get() = method(8183)
-        val incompatibleMixins: Map<String, Regex> = mapOf(
+        private val Enchantment: String = internal(1887)
+        private val enchantmentClassNames = ObjectOpenHashSet(arrayOf(Enchantment))
+
+        private val getMaxLevel: String = method(8183)
+        private val getMaxPower: String = method(20742)
+
+        private val incompatibleMixins: Map<String, Regex> = mapOf(
             "taxfreelevels" to "normalization\\..*",
             "levelz" to "normalization\\.AnvilScreenHandlerMixin"
         ).mapValues {it.value.toRegex()}
@@ -154,7 +169,69 @@ class LimitlessTransformer : TransformerPlugin(), Opcodes {
                 FabricGuiEntry.displayCriticalError(object : RuntimeException("limitless requires Fabric version $requiredVersion or greater.", null, false, false) {}, true)
             }
 
-            LimitlessCoprocessor.init()
+            MixinEnvironment.getCurrentEnvironment().activeTransformer.ref<Any>("processor").ref<ArrayList<Any>>("coprocessors").add(
+                javaClass.classLoader.run {javaClass.classLoader.crossLoad(this, "org.spongepowered.asm.mixin.transformer.LimitlessCoprocessor")}
+                    .constructors[0]
+                    .newInstance(Invoker.bind(this, "transform", Boolean::class.javaPrimitiveType, ClassNode::class.java))
+            )
+        }
+
+        private fun <T> Any?.ref(name: String) = Accessor.getObject<T>(this, name)
+
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        private fun ClassLoader.crossLoad(resourceLoader: ClassLoader, name: String): Class<Any> {
+            return Classes.defineClass(this, name, resourceLoader.getResourceAsStream("${name.replace('.', '/')}.class").readBytes())
+        }
+
+        private fun transform(klass: ClassNode): Boolean {
+            val methods = klass.methods
+            var transformed = false
+
+            if (klass.superName in enchantmentClassNames || Enchantment == klass.name) {
+                if (Enchantment != klass.name) {
+                    enchantmentClassNames += klass.superName
+                }
+
+                for (i in 0 until methods.size) {
+                    val method = methods[i]
+
+                    if (method.name == getMaxLevel && method.desc == "()I") {
+                        method.name = limitless_getOriginalMaxLevel
+
+                        klass.method(Opcodes.ACC_PUBLIC, getMaxLevel, method.desc).instructions = InstructionList()
+                            .aload(0) // this
+                            .getfield(klass.name, limitless_useGlobalMaxLevel, "Z") // I
+                            .ifeq("custom")
+                            .getstatic(Configuration.INTERNAL_NAME, "instance", Configuration.DESCRIPTOR) // Configuration
+                            .getfield(Configuration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
+                            .getfield(EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I") // I
+                            .ireturn()
+                            .label("custom")
+                            .aload(0) // this
+                            .getfield(klass.name, limitless_maxLevel, "I") // I
+                            .dup() // I I
+                            .ldc(Int.MIN_VALUE) // I I I
+                            .if_icmpne("end") // I
+                            .pop()
+                            .aload(0) // this
+                            .invokespecial(klass.name, limitless_getOriginalMaxLevel, method.desc) // I
+                            .label("end")
+                            .ireturn()
+                    } else if (method.name == getMaxPower && method.desc == "(I)I") {
+                        method.name = "limitless_getOriginalMaxPower"
+
+                        klass.method(Opcodes.ACC_PUBLIC, getMaxPower, "(I)I").instructions = InstructionList()
+                            .ldc(Int.MAX_VALUE)
+                            .ireturn()
+                    } else {
+                        continue
+                    }
+
+                    transformed = true
+                }
+            }
+
+            return transformed
         }
     }
 }

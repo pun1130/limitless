@@ -2,7 +2,7 @@
     "required": true,
     "package": "net.auoeke.limitless.transform.mixin",
     "compatibilityLevel": "JAVA_16",
-    "plugin": "net.auoeke.limitless.transform.LimitlessTransformer",
+    "plugin": "net.auoeke.limitless.transform.Transformer",
     "mixins": [
         "access.EnchantmentScreenHandlerAccess",
         "anvil.AnvilScreenHandlerMixin",
