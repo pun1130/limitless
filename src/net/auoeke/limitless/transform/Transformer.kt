@@ -1,11 +1,10 @@
-@file:Suppress("JAVA_CLASS_ON_COMPANION")
-
 package net.auoeke.limitless.transform
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import net.auoeke.extensions.asm.*
 import net.auoeke.extensions.cast
 import net.auoeke.extensions.find
+import net.auoeke.extensions.type
 import net.auoeke.huntinghamhills.plugin.transformer.MethodTransformer
 import net.auoeke.huntinghamhills.plugin.transformer.TransformerPlugin
 import net.auoeke.limitless.config.Configuration
@@ -18,10 +17,9 @@ import net.auoeke.reflect.Invoker
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
 import net.fabricmc.loader.impl.gui.FabricGuiEntry
+import net.minecraft.enchantment.Enchantment
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
 import org.spongepowered.asm.mixin.MixinEnvironment
@@ -48,7 +46,7 @@ class Transformer : TransformerPlugin(), Opcodes {
         val instructions = method.instructions
         val iterator = instructions.iterator()
 
-        iterator.find({it.opcode == Opcodes.INVOKEVIRTUAL && it.cast<MethodInsnNode>().name == method("getMaxLevel")}) {
+        iterator.find({it.opcode == Opcodes.INVOKEVIRTUAL && it.cast<MethodInsnNode>().name == this.method("getMaxLevel")}) {
             while (iterator.previous().type != AbstractInsnNode.LINE) {
                 iterator.remove()
             }
@@ -63,7 +61,6 @@ class Transformer : TransformerPlugin(), Opcodes {
                 }
             }
 
-            // @formatter:off
             iterator.next()
             iterator.remove()
             instructions.insert(iterator.previous(), InstructionList()
@@ -73,10 +70,10 @@ class Transformer : TransformerPlugin(), Opcodes {
                 .invokestatic(
                     EnchantmentUtil.INTERNAL_NAME,
                     "getHighestSuitableLevel",
-                    methodDescriptor('V', 'I', Enchantment::class, List::class),
+                    methodDescriptor('V', 'I', type<Enchantment>(), List::class),
                     false
-            ))
-            // @formatter:on
+                )
+            )
         }
     }
 
@@ -87,15 +84,13 @@ class Transformer : TransformerPlugin(), Opcodes {
         iterator.find({it.opcode == Opcodes.ICONST_0}) {instruction: InsnNode ->
             instruction.next.cast<VarInsnNode>().opcode = Opcodes.FSTORE
 
-            iterator.set(
-                MethodInsnNode(
-                    Opcodes.INVOKESTATIC,
-                    EnchantingBlocks.INTERNAL_NAME,
-                    "countEnchantingPower",
-                    methodDescriptor('F', World::class, BlockPos::class),
-                    false
-                )
-            )
+            iterator.set(MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                EnchantingBlocks.INTERNAL_NAME,
+                "countEnchantingPower",
+                methodDescriptor('F', World::class, BlockPos::class),
+                false
+            ))
 
             iterator.previous()
             iterator.add(VarInsnNode(Opcodes.ALOAD, 2))
@@ -150,7 +145,7 @@ class Transformer : TransformerPlugin(), Opcodes {
         }
     }
 
-    @Suppress("NOTHING_TO_INLINE")
+    @Suppress("JAVA_CLASS_ON_COMPANION")
     private companion object {
         private const val limitless_getOriginalMaxLevel = "limitless_getOriginalMaxLevel"
         private const val limitless_useGlobalMaxLevel: String = "limitless_useGlobalMaxLevel"
@@ -159,8 +154,8 @@ class Transformer : TransformerPlugin(), Opcodes {
         private val Enchantment: String = internal(1887)
         private val enchantmentClassNames = ObjectOpenHashSet(arrayOf(Enchantment))
 
-        private val getMaxLevel: String get() = method(8183)
-        private val getMaxPower: String get() = method(20742)
+        private val getMaxLevel: String = method(8183)
+        private val getMaxPower: String = method(20742)
 
         private val incompatibleMixins: Map<String, Regex> = mapOf(
             "taxfreelevels" to "normalization\\..*",
@@ -169,65 +164,41 @@ class Transformer : TransformerPlugin(), Opcodes {
 
         init {
             // @formatter:off
-            "0.12.1".let {requiredVersion -> if (FabricLoader.getInstance().getModContainer("fabricloader").get().metadata.version < Version.parse(requiredVersion)) {
-                FabricGuiEntry.displayCriticalError(object : RuntimeException("limitless requires Fabric version $requiredVersion or later.", null, false, false) {}, true)
+            "0.12.1".also {requiredVersion -> if (FabricLoader.getInstance().getModContainer("fabricloader").get().metadata.version < Version.parse(requiredVersion)) {
+                FabricGuiEntry.displayCriticalError(object : RuntimeException("limitless requires Fabric version $requiredVersion or greater.", null, false, false) {}, true)
             }}
             // @formatter:on
 
-            Classes.load(ClassNode::class.java.name, ClassReader::class.java.name, ClassWriter::class.java.name)
-
-/*
-            MixinEnvironment.getCurrentEnvironment().activeTransformer.cast<IMixinTransformer>().apply {
-                Mixins.getConfigs().onEach {println(it.name)}.find {it.name == "limitless.mixins.json"}!!.config.apply {
-                    ref("mixinMapping", object : HashMap<String, List<IMixinInfo>>() {
-                        override fun containsKey(key: String): Boolean = true
-                    }.also {it += ref<Map<String, List<IMixinInfo>>>("mixinMapping")})
-                }
-
-                extensions.ref<ArrayList<IExtension>>("extensions") += object : IExtension {
-                    override fun checkActive(environment: MixinEnvironment): Boolean = true
-                    override fun preApply(context: ITargetClassContext) {}
-                    override fun export(env: MixinEnvironment, name: String, force: Boolean, classNode: ClassNode) {}
-
-                    override fun postApply(context: ITargetClassContext) {
-                        println("transforming ${context.classNode.name}")
-
-                        transform(context.classNode)
-                    }
-                }
-            }
-*/
-
-            MixinEnvironment.getCurrentEnvironment().activeTransformer.any("processor").ref<ArrayList<Any>>("coprocessors").add(
-                javaClass.classLoader.run {javaClass.classLoader.crossLoad(this, "org.spongepowered.asm.mixin.transformer.Coprocessor")}
+            MixinEnvironment.getCurrentEnvironment().activeTransformer.ref<Any>("processor").ref<ArrayList<Any>>("coprocessors").add(
+                javaClass.classLoader.run {javaClass.classLoader.crossLoad(this, "org.spongepowered.asm.mixin.transformer.LimitlessCoprocessor")}
                     .constructors[0]
                     .newInstance(Invoker.bind(this, "transform", Boolean::class.javaPrimitiveType, ClassNode::class.java))
             )
         }
 
-        private inline fun <T> Any?.ref(name: String): T = Accessor.getObject(this, name)
-        private inline fun Any?.any(name: String): Any = ref(name)
+        private fun <T> Any?.ref(name: String) = Accessor.getObject<T>(this, name)
 
         @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         private fun ClassLoader.crossLoad(resourceLoader: ClassLoader, name: String): Class<Any> {
             return Classes.defineClass(this, name, resourceLoader.getResourceAsStream("${name.replace('.', '/')}.class").readBytes())
         }
 
-        // private fun Any?.ref(name: String, value: Any?) = Accessor.putObject(this, name, value)
         @Suppress("unused")
         private fun transform(klass: ClassNode): Boolean {
             val methods = klass.methods
             var transformed = false
 
-            if (enchantmentClassNames.contains(klass.superName) || Enchantment == klass.name) {
+            if (klass.superName in enchantmentClassNames || Enchantment == klass.name) {
                 if (Enchantment != klass.name) {
-                    enchantmentClassNames.add(klass.superName)
+                    enchantmentClassNames += klass.superName
                 }
 
                 for (i in 0 until methods.size) {
                     val method = methods[i]
 
                     if (method.name == getMaxLevel && method.desc == "()I") {
+                        method.name = limitless_getOriginalMaxLevel
+
                         klass.method(Opcodes.ACC_PUBLIC, getMaxLevel, method.desc).instructions = InstructionList()
                             .aload(0) // this
                             .getfield(klass.name, limitless_useGlobalMaxLevel, "Z") // I
@@ -247,7 +218,6 @@ class Transformer : TransformerPlugin(), Opcodes {
                             .invokespecial(klass.name, limitless_getOriginalMaxLevel, method.desc) // I
                             .label("end")
                             .ireturn()
-                        method.name = limitless_getOriginalMaxLevel
                     } else if (method.name == getMaxPower && method.desc == "(I)I") {
                         method.name = "limitless_getOriginalMaxPower"
 
