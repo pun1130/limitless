@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.9"
+version = "1.5.10"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 sourceSets {

@@ -11,6 +11,7 @@ import net.auoeke.limitless.config.Configuration
 import net.auoeke.limitless.config.enchantment.EnchantmentConfiguration
 import net.auoeke.limitless.enchantment.EnchantingBlocks
 import net.auoeke.limitless.enchantment.EnchantmentUtil
+import net.auoeke.limitless.log.LimitlessLogger
 import net.auoeke.reflect.Accessor
 import net.auoeke.reflect.Classes
 import net.auoeke.reflect.Invoker
@@ -23,6 +24,7 @@ import net.minecraft.world.World
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.*
 import org.spongepowered.asm.mixin.MixinEnvironment
+import kotlin.system.exitProcess
 
 class Transformer : TransformerPlugin(), Opcodes {
     override fun onLoad(mixinPackage: String) {
@@ -163,8 +165,16 @@ class Transformer : TransformerPlugin(), Opcodes {
         ).mapValues {it.value.toRegex()}
 
         init {
+            if (!Comparable::class.java.isAssignableFrom(Version::class.java)) {
+                repeat(20) {
+                    LimitlessLogger.error("LIMITLESS REQUIRES FABRIC 0.12.0 OR LATER.")
+                }
+
+                exitProcess(1)
+            }
+
             // @formatter:off
-            "0.12.1".also {requiredVersion -> if (FabricLoader.getInstance().getModContainer("fabricloader").get().metadata.version < Version.parse(requiredVersion)) {
+            "0.12.0".also {requiredVersion -> if (FabricLoader.getInstance().getModContainer("fabricloader").get().metadata.version < Version.parse(requiredVersion)) {
                 FabricGuiEntry.displayCriticalError(object : RuntimeException("limitless requires Fabric version $requiredVersion or greater.", null, false, false) {}, true)
             }}
             // @formatter:on

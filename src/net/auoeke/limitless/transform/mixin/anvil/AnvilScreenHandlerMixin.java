@@ -33,7 +33,7 @@ abstract class AnvilScreenHandlerMixin {
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/enchantment/Enchantment;canCombine(Lnet/minecraft/enchantment/Enchantment;)Z"))
     public boolean configureConflict(Enchantment enchantment, Enchantment other) {
-        return enchantment.canCombine(other) || Configuration.instance.getAnvil().getMergeIncompatible();
+        return enchantment.canCombine(other) || Configuration.instance.getAnvil().getMergeConflicts();
 
     }
 
