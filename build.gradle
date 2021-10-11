@@ -3,15 +3,12 @@ import com.modrinth.minotaur.TaskModrinthUpload
 plugins {
     id("wheel-fabric").version("latest.integration")
     id("kbootstrap").version("latest.integration")
-    id("fabric.mod.gradle").version("latest.integration")
     id("com.modrinth.minotaur").version("latest.integration")
 }
 
 group = "net.auoeke"
 version = "1.5.8"
 description = "a mod about enchanting and exceeding Minecraft's limits"
-
-defaultTasks("generateMetadata")
 
 sourceCompatibility = 16
 targetCompatibility = 16
@@ -60,25 +57,6 @@ configurations.all {
     }
 }
 
-mod {
-    author("auoeke")
-
-    contact {
-        sources = "https://git.auoeke.net/limitless"
-        issues = "https://git.auoeke.net/limitless/issues"
-    }
-
-    license("GNU LGPL v3.0")
-    icon("assets/limitless/icon.png")
-    mixin("limitless.mixins.json")
-
-    entrypoints(
-        main: [kbootstrap: 'net.auoeke.limitless.Limitless'],
-        client: [kbootstrap: 'net.auoeke.limitless.Limitless'],
-        modmenu: [kbootstrap: 'net.auoeke.limitless.Limitless$ModMenu']
-    )
-}
-
 task modrinth(type: TaskModrinthUpload) {
     if (token = System.properties.modrinth) {
         dependsOn(publish.finalizedBy(it))
@@ -95,9 +73,7 @@ task modrinth(type: TaskModrinthUpload) {
         logger.lifecycle(/Enter the changelog ending with "EOF"./)
         changelog = ""
 
-        for (def reader = System.in.newReader(), line; true; changelog += line + System.lineSeparator()) {
-            line = reader.readLine()
-
+        for (def reader = System.in.newReader(), line = reader.readLine(); true; changelog += line + System.lineSeparator()) {
             if (line.endsWith("EOF")) {
                 if (line.length() > 3) {
                     changelog += line.replaceFirst(/EOF$/, "")

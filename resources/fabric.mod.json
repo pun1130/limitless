@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "limitless",
+    "version": "1.5.8",
+    "description": "a mod about enchanting and exceeding Minecraft's limits",
+    "contact": {
+        "issues": "https://git.auoeke.net/limitless/issues",
+        "sources": "https://git.auoeke.net/limitless"
+    },
+    "authors": [
+        "auoeke"
+    ],
+    "license": "GNU LGPL v3.0",
+    "icon": "assets/limitless/icon.png",
+    "entrypoints": {
+        "main": [
+            {
+                "adapter": "kbootstrap",
+                "value": "net.auoeke.limitless.Limitless"
+            }
+        ],
+        "client": [
+            {
+                "adapter": "kbootstrap",
+                "value": "net.auoeke.limitless.Limitless"
+            }
+        ],
+        "modmenu": [
+            {
+                "adapter": "kbootstrap",
+                "value": "net.auoeke.limitless.Limitless$ModMenu"
+            }
+        ]
+    },
+    "mixins": [
+        "limitless.mixins.json"
+    ]
+}
