@@ -10,9 +10,6 @@ group = "net.auoeke"
 version = "1.5.9"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
-sourceCompatibility = 16
-targetCompatibility = 16
-
 sourceSets {
     main {
         kotlin.srcDir("src")
@@ -55,6 +52,10 @@ configurations.all {
             useVersion("0.4.8+a00e834b18")
         }
     }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = 16
 }
 
 task modrinth(type: TaskModrinthUpload) {
