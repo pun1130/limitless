@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.8"
+version = "1.5.9"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 sourceCompatibility = 16
@@ -73,7 +73,9 @@ task modrinth(type: TaskModrinthUpload) {
         logger.lifecycle(/Enter the changelog ending with "EOF"./)
         changelog = ""
 
-        for (def reader = System.in.newReader(), line = reader.readLine(); true; changelog += line + System.lineSeparator()) {
+        for (def reader = System.in.newReader(), line; true; changelog += line + System.lineSeparator()) {
+            line = reader.readLine()
+
             if (line.endsWith("EOF")) {
                 if (line.length() > 3) {
                     changelog += line.replaceFirst(/EOF$/, "")
