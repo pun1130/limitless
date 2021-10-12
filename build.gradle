@@ -72,6 +72,6 @@ task modrinth(type: TaskModrinthUpload) {
 
     doFirst {
         logger.lifecycle(/Enter the changelog ending with "EOF"./)
-        changelog = new Scanner(System.in).useDelimiter(/EOF\n/).next().replaceFirst(/EOF\n/, "")
+        changelog = new Scanner(System.in).useDelimiter(/EOF\n/).next()
     }
 }
