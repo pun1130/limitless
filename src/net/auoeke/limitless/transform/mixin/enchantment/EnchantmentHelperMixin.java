@@ -25,6 +25,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @Mixin(EnchantmentHelper.class)
 abstract class EnchantmentHelperMixin {
+    @Redirect(method = "getLevelFromNbt", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I"))
+    private static int unclampLevel(int value, int min, int max) {
+        return value;
+    }
+
     @ModifyConstant(method = "calculateRequiredExperienceLevel",
                     constant = @Constant(intValue = 15))
     private static int modifyMaxBookshelves(int previousMaxBookshelves) {

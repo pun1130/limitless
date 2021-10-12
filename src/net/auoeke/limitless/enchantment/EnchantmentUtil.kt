@@ -59,40 +59,36 @@ object EnchantmentUtil {
         fun mergeEnchantment(itemStack: ItemStack, enchantment: Enchantment, level: Int, mergeConflicts: Boolean) {
             val book = itemStack.item === Items.ENCHANTED_BOOK
 
-            if (book || itemStack.hasEnchantments()) {
-                if (this.tryMerge(itemStack, enchantment, level, mergeConflicts) == ADD) {
-                    if (book) {
-                        EnchantedBookItem.addEnchantment(itemStack, EnchantmentLevelEntry(enchantment, level))
-                    } else {
-                        itemStack.addEnchantment(enchantment, level)
+            when {
+                book || itemStack.hasEnchantments() -> if (tryMerge(itemStack, enchantment, level, mergeConflicts) == ADD) {
+                    when {
+                        book -> EnchantedBookItem.addEnchantment(itemStack, EnchantmentLevelEntry(enchantment, level))
+                        else -> itemStack.addEnchantment(enchantment, level)
                     }
                 }
-            } else {
-                itemStack.addEnchantment(enchantment, level)
+                else -> itemStack.addEnchantment(enchantment, level)
             }
         }
 
-        private fun tryMerge(itemStack: ItemStack, enchantment: EnchantmentLevelEntry, mergeConflicts: Boolean): Int = this.tryMerge(itemStack, enchantment.enchantment, enchantment.level, mergeConflicts)
+        private fun tryMerge(itemStack: ItemStack, enchantment: EnchantmentLevelEntry, mergeConflicts: Boolean): Int = tryMerge(itemStack, enchantment.enchantment, enchantment.level, mergeConflicts)
 
         private fun tryMerge(itemStack: ItemStack, enchantment: Enchantment, level: Int, mergeConflicts: Boolean): Int {
-            val book = itemStack.item === Items.ENCHANTED_BOOK
             val enchantments = when {
-                book -> EnchantedBookItem.getEnchantmentNbt(itemStack)
+                itemStack.item === Items.ENCHANTED_BOOK -> EnchantedBookItem.getEnchantmentNbt(itemStack)
                 else -> itemStack.enchantments
-            } as Any as Iterable<NbtCompound>
+            } as Iterable<NbtCompound>
             var status = ADD
 
-            for (enchantmentTag in enchantments) {
-                if (Identifier(enchantmentTag.getString("id")) == Registry.ENCHANTMENT.getId(enchantment)) {
+            for (enchantmentTag in enchantments) when {
+                Identifier(enchantmentTag.getString("id")) == Registry.ENCHANTMENT.getId(enchantment) -> {
                     enchantmentTag.putInt("lvl", when (val tagLevel = enchantmentTag.getInt("lvl")) {
                         level -> min(tagLevel + 1, enchantment.maxLevel)
                         else -> max(tagLevel, level)
                     })
 
                     return SUCCESS
-                } else if (!mergeConflicts && status != CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT[Identifier(enchantmentTag.getString("id"))])) {
-                    status = CONFLICT
                 }
+                !mergeConflicts && status != CONFLICT && !enchantment.canCombine(Registry.ENCHANTMENT[Identifier(enchantmentTag.getString("id"))]) -> status = CONFLICT
             }
 
             return status

@@ -25,9 +25,7 @@ import org.spongepowered.asm.mixin.MixinEnvironment
 import kotlin.system.exitProcess
 
 class Transformer : TransformerPlugin(), Opcodes {
-    override fun onLoad(mixinPackage: String) {
-        super.onLoad(mixinPackage)
-
+    override fun onLoad(mixinPackage: String) = super.onLoad(mixinPackage).also {
         putField("creativeMode", 7477)
         putMethod("calculateRequiredExperienceLevel", 8227)
         putMethod("getMaxLevel", 8183)
