@@ -1,10 +1,8 @@
 package net.auoeke.limitless.transform
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
+import net.auoeke.extensions.*
 import net.auoeke.extensions.asm.*
-import net.auoeke.extensions.cast
-import net.auoeke.extensions.find
-import net.auoeke.extensions.type
 import net.auoeke.huntinghamhills.plugin.transformer.MethodTransformer
 import net.auoeke.huntinghamhills.plugin.transformer.TransformerPlugin
 import net.auoeke.limitless.config.Configuration
@@ -35,12 +33,8 @@ class Transformer : TransformerPlugin(), Opcodes {
         putMethod("getMaxLevel", 8183)
     }
 
-    override fun shouldApplyMixin(targetName: String, mixinName: String): Boolean = true.also {
-        incompatibleMixins.forEach {
-            if (FabricLoader.getInstance().isModLoaded(it.key) && it.value.matches(mixinName.substringAfter("net.auoeke.limitless.asm.mixin."))) {
-                return false
-            }
-        }
+    override fun shouldApplyMixin(targetName: String, mixinName: String): Boolean = incompatibleMixins.none {
+        FabricLoader.getInstance().isModLoaded(it.key) && it.value.matches(mixinName.substringAfter("${pkg.dotted}."))
     }
 
     @MethodTransformer(8229)
@@ -48,7 +42,7 @@ class Transformer : TransformerPlugin(), Opcodes {
         val instructions = method.instructions
         val iterator = instructions.iterator()
 
-        iterator.find({it.opcode == Opcodes.INVOKEVIRTUAL && it.cast<MethodInsnNode>().name == this.method("getMaxLevel")}) {
+        iterator.find({it.opcode == Opcodes.INVOKEVIRTUAL && it.cast<MethodInsnNode>().name == method("getMaxLevel")}) {
             while (iterator.previous().type != AbstractInsnNode.LINE) {
                 iterator.remove()
             }

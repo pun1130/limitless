@@ -1,6 +1,7 @@
 package net.auoeke.limitless.transform.mixin.enchantment;
 
 import net.auoeke.limitless.config.Configuration;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +20,7 @@ abstract class ItemStackMixin {
     }
 
     @Redirect(method = "addEnchantment", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;createNbt(Lnet/minecraft/util/Identifier;I)Lnet/minecraft/nbt/NbtCompound;"))
-    public NbtCompound disableNarrowingConversion(Identifier id, int level) {
+    public NbtCompound disableNarrowingConversion(Identifier id, int truncated, Enchantment enchantment, int level) {
         return EnchantmentHelper.createNbt(id, level);
     }
 }
