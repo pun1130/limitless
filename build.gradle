@@ -72,18 +72,6 @@ task modrinth(type: TaskModrinthUpload) {
 
     doFirst {
         logger.lifecycle(/Enter the changelog ending with "EOF"./)
-        changelog = ""
-
-        for (def reader = System.in.newReader(), line; true; changelog += line + System.lineSeparator()) {
-            line = reader.readLine()
-
-            if (line.endsWith("EOF")) {
-                if (line.length() > 3) {
-                    changelog += line.replaceFirst(/EOF$/, "")
-                }
-
-                break
-            }
-        }
+        changelog = new Scanner(System.in).useDelimiter(/EOF$/).next().replaceFirst(/EOF$/, "")
     }
 }
