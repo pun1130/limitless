@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "limitless",
-    "version": "1.5.8",
+    "version": "${version}",
     "description": "a mod about enchanting and exceeding Minecraft's limits",
     "contact": {
         "issues": "https://git.auoeke.net/limitless/issues",
