@@ -13,7 +13,6 @@
         "enchantment.EnchantRandomlyLootFunctionMixin",
         "enchantment.ItemStackMixin",
         "enchantment.SimpleRegistryMixin",
-        "enchantment.dummy.EnchantBookFactoryDummyMixin",
         "normalization.AnvilScreenHandlerMixin",
         "normalization.PlayerEntityMixin"
     ],

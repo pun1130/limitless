@@ -3,12 +3,21 @@ import com.modrinth.minotaur.TaskModrinthUpload
 plugins {
     id("wheel-fabric").version("latest.integration")
     id("kbootstrap").version("latest.integration")
+    id("net.auoeke.extensions").version("latest.integration")
     id("com.modrinth.minotaur").version("latest.integration")
 }
 
 group = "net.auoeke"
-version = "1.5.11"
+version = "1.5.12"
 description = "a mod about enchanting and exceeding Minecraft's limits"
+
+loom {
+    accessWidenerPath = file("resources/limitless.accesswidener")
+}
+
+kextensions {
+    configurations = ["api", "include"]
+}
 
 sourceSets {
     main {
@@ -17,7 +26,7 @@ sourceSets {
 
         resources {
             srcDir("resources")
-            include("assets/", "data/", "*.json")
+            include("assets/", "data/", "*.json", "*.accesswidener")
         }
     }
 
@@ -37,10 +46,9 @@ dependencies {
         mod("api-tag-extensions"),
         mod("net.fabricmc.fabric-api:fabric-command-api-v1:latest.integration"),
         mod("net.auoeke:huntingham-hills:latest.integration"),
-        mod("net.auoeke:reflect"),
+        mod("net.auoeke:reflect:latest.integration"),
         bloated("cloth-config"),
-        api("net.auoeke:extensions"),
-        api("net.auoeke:asm-extensions"),
+        api("net.bytebuddy:byte-buddy-agent:latest.release")
     )
 
     bloated("mod-menu:2.0.14")

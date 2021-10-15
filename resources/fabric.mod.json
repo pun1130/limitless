@@ -7,32 +7,23 @@
         "issues": "https://git.auoeke.net/limitless/issues",
         "sources": "https://git.auoeke.net/limitless"
     },
-    "authors": [
-        "auoeke"
-    ],
+    "authors": ["auoeke"],
     "license": "GNU LGPL v3.0",
     "icon": "assets/limitless/icon.png",
+    "accessWidener": "limitless.accesswidener",
     "entrypoints": {
-        "main": [
-            {
-                "adapter": "kbootstrap",
-                "value": "net.auoeke.limitless.Limitless"
-            }
-        ],
-        "client": [
-            {
-                "adapter": "kbootstrap",
-                "value": "net.auoeke.limitless.Limitless"
-            }
-        ],
-        "modmenu": [
-            {
-                "adapter": "kbootstrap",
-                "value": "net.auoeke.limitless.Limitless$ModMenu"
-            }
-        ]
+        "main": [{
+            "adapter": "kbootstrap",
+            "value": "net.auoeke.limitless.Limitless"
+        }],
+        "client": [{
+            "adapter": "kbootstrap",
+            "value": "net.auoeke.limitless.Limitless"
+        }],
+        "modmenu": [{
+            "adapter": "kbootstrap",
+            "value": "net.auoeke.limitless.Limitless$ModMenu"
+        }]
     },
-    "mixins": [
-        "limitless.mixins.json"
-    ]
+    "mixins": ["limitless.mixins.json"]
 }
