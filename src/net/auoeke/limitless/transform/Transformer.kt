@@ -140,6 +140,7 @@ class Transformer : TransformerPlugin(), Opcodes {
 
         val Enchantment: String = internal(1887)
         val enchantmentClassNames = ObjectOpenHashSet(arrayOf(Enchantment))
+        val nonEnchantmentClassNames = ObjectOpenHashSet(arrayOf(internalName<Any>()))
 
         val getMaxLevel: String = method(8183)
         val getMaxPower: String = method(20742)
@@ -150,7 +151,23 @@ class Transformer : TransformerPlugin(), Opcodes {
         ).mapValues {it.value.toRegex()}
 
         init {
-            ByteBuddyAgent.install().transformDefinitions(::transform)
+            ByteBuddyAgent.install().pretransform {_, loader, _, _, bytecode -> bytecode.mapIf(loader == type.loader, ::transform)}
+        }
+
+        @Suppress("ExplicitThis")
+        val ClassNode.isEnchantment get(): Boolean = false.also {
+            when {
+                superName in enchantmentClassNames -> {
+                    enchantmentClassNames += name
+                    return true
+                }
+                superName in nonEnchantmentClassNames -> nonEnchantmentClassNames += name
+                this@Companion.type.resource("/${superName.slashed}.class")?.let {ClassNode(it, ClassReader.SKIP_CODE).isEnchantment} == true -> {
+                    enchantmentClassNames += name
+                    return true
+                }
+                else -> nonEnchantmentClassNames.add(superName, name)
+            }
         }
 
         @Suppress("unused")
@@ -159,50 +176,46 @@ class Transformer : TransformerPlugin(), Opcodes {
             val methods = node.methods
             var transformed = false
 
-            if (node.superName in enchantmentClassNames) {
-                enchantmentClassNames += node.name
+            if (node.isEnchantment) for (i in 0 until methods.size) {
+                val method = methods[i]
 
-                for (i in 0 until methods.size) {
-                    val method = methods[i]
+                when (method.name) {
+                    getMaxLevel -> if (method.desc == "()I") {
+                        method.name = limitless_getOriginalMaxLevel
 
-                    when (method.name) {
-                        getMaxLevel -> if (method.desc == "()I") {
-                            method.name = limitless_getOriginalMaxLevel
-
-                            node.method(Opcodes.ACC_PUBLIC, getMaxLevel, method.desc).instructions = InstructionList {
-                                aload(0) // this
-                                getfield(node.name, limitless_useGlobalMaxLevel, "Z") // I
-                                ifeq("custom")
-                                getstatic(Configuration.INTERNAL_NAME, "instance", Configuration.DESCRIPTOR) // Configuration
-                                getfield(Configuration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
-                                getfield(EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I") // I
-                                ireturn()
-                                label("custom")
-                                aload(0) // this
-                                getfield(node.name, limitless_maxLevel, "I") // I
-                                dup() // I I
-                                ldc(Int.MIN_VALUE) // I I I
-                                if_icmpne("end") // I
-                                pop()
-                                aload(0) // this
-                                invokespecial(node.name, limitless_getOriginalMaxLevel, method.desc) // I
-                                label("end")
-                                ireturn()
-                            }
+                        node.method(Opcodes.ACC_PUBLIC, getMaxLevel, method.desc).instructions = InstructionList {
+                            aload(0) // this
+                            getfield(node.name, limitless_useGlobalMaxLevel, "Z") // I
+                            ifeq("custom")
+                            getstatic(Configuration.INTERNAL_NAME, "instance", Configuration.DESCRIPTOR) // Configuration
+                            getfield(Configuration.INTERNAL_NAME, "enchantment", EnchantmentConfiguration.DESCRIPTOR) // EnchantmentConfiguration
+                            getfield(EnchantmentConfiguration.INTERNAL_NAME, "globalMaxLevel", "I") // I
+                            ireturn()
+                            label("custom")
+                            aload(0) // this
+                            getfield(node.name, limitless_maxLevel, "I") // I
+                            dup() // I I
+                            ldc(Int.MIN_VALUE) // I I I
+                            if_icmpne("end") // I
+                            pop()
+                            aload(0) // this
+                            invokespecial(node.name, limitless_getOriginalMaxLevel, method.desc) // I
+                            label("end")
+                            ireturn()
                         }
-                        getMaxPower -> if (method.desc == "(I)I") {
-                            method.name = "limitless_getOriginalMaxPower"
-
-                            node.method(Opcodes.ACC_PUBLIC, getMaxPower, "(I)I").instructions = InstructionList {
-                                ldc(Int.MAX_VALUE)
-                                ireturn()
-                            }
-                        }
-                        else -> continue
                     }
+                    getMaxPower -> if (method.desc == "(I)I") {
+                        method.name = "limitless_getOriginalMaxPower"
 
-                    transformed = true
+                        node.method(Opcodes.ACC_PUBLIC, getMaxPower, "(I)I").instructions = InstructionList {
+                            ldc(Int.MAX_VALUE)
+                            ireturn()
+                        }
+                    }
+                    else -> continue
                 }
+
+                transformed = true
             }
 
             return when {
