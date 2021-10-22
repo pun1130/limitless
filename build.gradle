@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.auoeke"
-version = "1.5.12"
+version = "1.5.13"
 description = "a mod about enchanting and exceeding Minecraft's limits"
 
 loom {
